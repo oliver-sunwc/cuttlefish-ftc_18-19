@@ -1,10 +1,13 @@
     package org.firstinspires.ftc.teamcode;
 
+        import android.graphics.Color;
+
         import com.qualcomm.hardware.bosch.BNO055IMU;
         import com.qualcomm.hardware.bosch.JustLoggingAccelerationIntegrator;
         import com.qualcomm.robotcore.hardware.AnalogInput;
         import com.qualcomm.robotcore.hardware.ColorSensor;
         import com.qualcomm.robotcore.hardware.DcMotor;
+        import com.qualcomm.robotcore.hardware.DcMotorSimple;
         import com.qualcomm.robotcore.hardware.DistanceSensor;
         import com.qualcomm.robotcore.hardware.HardwareMap;
         import com.qualcomm.robotcore.hardware.Servo;
@@ -51,9 +54,21 @@ public class roverHMAP {
     public void init(HardwareMap ahwMap) {
         hwMap = ahwMap;
 
+        /*Motors*/
         fL = hwMap.get(DcMotor.class, "FL");
         fR = hwMap.get(DcMotor.class, "FR");
         bL = hwMap.get(DcMotor.class, "BL");
         bR = hwMap.get(DcMotor.class, "BR");
+
+        bR.setDirection(DcMotor.Direction.REVERSE);
+        fR.setDirection(DcMotor.Direction.REVERSE);
+
+        /*Servos*/
+        MArmL = hwMap.get(Servo.class, "LArm");
+        MArmR = hwMap.get(Servo.class, "RArm");
+
+        /*Sensors*/
+        gS = hwMap.get(   ColorSensor.class, "gS");
+        mS = hwMap.get(DistanceSensor.class, "mS");
     }
 }
