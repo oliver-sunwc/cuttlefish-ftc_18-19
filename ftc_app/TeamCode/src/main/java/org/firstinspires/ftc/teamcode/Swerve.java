@@ -65,6 +65,9 @@ public class Swerve extends OpMode {
         motorFL.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         motorFR.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
+        motorFL.setDirection(DcMotorSimple.Direction.REVERSE);
+        motorBL.setDirection(DcMotorSimple.Direction.REVERSE);
+
         servoFR = hardwareMap.servo.get("sFR");
         servoFL = hardwareMap.servo.get("sFL");
         servoBR = hardwareMap.servo.get("sBR");

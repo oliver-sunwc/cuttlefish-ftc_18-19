@@ -26,7 +26,7 @@ import com.qualcomm.robotcore.util.Range;
 
         ElapsedTime timer = new ElapsedTime();
 
-        hMap robot = new hMap();
+        roverHMAP robot = new roverHMAP();
 
         @Override
         public void runOpMode() throws InterruptedException {
