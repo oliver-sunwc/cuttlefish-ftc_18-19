@@ -15,12 +15,12 @@ import com.qualcomm.robotcore.util.Range;
 public class roverTANK extends OpMode {
 
     roverHMAP robot = new roverHMAP();
-
+    boolean dirToggle = false;
+    double lx, rx,ly,ry;
 
     @Override
     public void init(){
         robot.init(hardwareMap);
-        boolean dirToggle = false;
     }
 
     @Override
@@ -30,16 +30,26 @@ public class roverTANK extends OpMode {
 
     @Override
     public void loop(){
-
+        double lx = gamepad1.left_stick_x;
+        double rx = gamepad1.left_stick_x;
+        double ly = -gamepad1.left_stick_y;
+        double ry = -gamepad1.right_stick_y;
 
     }
 
-    void drive() {
-        robot.fL.setPower(gamepad1.left_stick_y);
-        robot.bL.setPower(gamepad1.left_stick_y);
-        robot.fR.setPower(gamepad1.right_stick_y);
-        robot.bR.setPower(gamepad1.right_stick_y);
+    void driveTank(double ly, double ry) {
+        robot.fL.setPower(ly);
+        robot.bL.setPower(ly);
+        robot.fR.setPower(ry);
+        robot.bR.setPower(ry);
 
+    }
+
+    void driveArcade(double ry, double lx){
+        robot.fL.setPower(ry + lx);
+        robot.bL.setPower(ry + lx);
+        robot.fR.setPower(ry - lx);
+        robot.bR.setPower(ry - lx);
     }
 
     double scaleInput(double dVal) {

@@ -57,6 +57,7 @@ public class roverHMAP {
     public Servo boxClose;
     public Servo boxLeft;
     public Servo boxRight;
+    public Servo boxRotate;
 
     HardwareMap hwMap;
 
@@ -84,9 +85,10 @@ public class roverHMAP {
         MArmL = hwMap.get(Servo.class, "larm");
         MArmR = hwMap.get(Servo.class, "rarm");
 
-        boxClose = hwMap.get(Servo.class, "bc");
-        boxLeft = hwMap.get(Servo.class, "bl");
-        boxRight = hwMap.get(Servo.class, "br");
+        boxClose = hwMap.get(Servo.class, "cb");
+        boxLeft = hwMap.get(Servo.class, "lb");
+        boxRight = hwMap.get(Servo.class, "rb");
+        boxRotate = hwMap.get(Servo.class, "rotb");
 
         /*Sensors*/
         cMArmL = hwMap.get(   ColorSensor.class, "cL");
