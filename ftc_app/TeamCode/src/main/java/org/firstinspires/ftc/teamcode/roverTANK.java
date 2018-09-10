@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
@@ -11,20 +12,26 @@ import com.qualcomm.robotcore.util.Range;
  */
 
 @TeleOp(name = "Tank", group = "Rover")
-public class roverTANK extends LinearOpMode {
+public class roverTANK extends OpMode {
 
     roverHMAP robot = new roverHMAP();
 
+
     @Override
-    public void runOpMode() throws InterruptedException {
+    public void init(){
         robot.init(hardwareMap);
         boolean dirToggle = false;
+    }
 
-        waitForStart();
+    @Override
+    public void start(){
 
-        while (opModeIsActive()) {
+    }
 
-        }
+    @Override
+    public void loop(){
+
+
     }
 
     void drive() {
