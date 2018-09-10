@@ -34,8 +34,11 @@ public class roverHMAP {
     /*Sensors*/
 
     //This is the sensor that will sense the mineral to be knocked off the starting zone
-    public ColorSensor gS;
-    public DistanceSensor mS;
+    public ColorSensor cMArmL;
+    public DistanceSensor dMArmL;
+
+    public ColorSensor cMArmR;
+    public DistanceSensor dMArmR;
 
     /*Motors*/
     public DcMotor fL;
@@ -43,9 +46,17 @@ public class roverHMAP {
     public DcMotor bL;
     public DcMotor bR;
 
+    public DcMotor flip;
+    public DcMotor hangLeft;
+    public DcMotor hangRight;
+    public DcMotor intake;
     /*Servos*/
     public Servo MArmL;
     public Servo MArmR;
+
+    public Servo boxClose;
+    public Servo boxLeft;
+    public Servo boxRight;
 
     HardwareMap hwMap;
 
@@ -55,20 +66,33 @@ public class roverHMAP {
         hwMap = ahwMap;
 
         /*Motors*/
-        fL = hwMap.get(DcMotor.class, "FL");
-        fR = hwMap.get(DcMotor.class, "FR");
-        bL = hwMap.get(DcMotor.class, "BL");
-        bR = hwMap.get(DcMotor.class, "BR");
+        fL = hwMap.get(DcMotor.class, "fl");
+        fR = hwMap.get(DcMotor.class, "fr");
+        bL = hwMap.get(DcMotor.class, "bl");
+        bR = hwMap.get(DcMotor.class, "br");
+
+        flip = hwMap.get(DcMotor.class,"f");
+        hangLeft = hwMap.get(DcMotor.class,"hl");
+        hangRight = hwMap.get(DcMotor.class,"hr");
+        intake = hwMap.get(DcMotor.class,"i");
+
 
         bR.setDirection(DcMotor.Direction.REVERSE);
         fR.setDirection(DcMotor.Direction.REVERSE);
 
         /*Servos*/
-        MArmL = hwMap.get(Servo.class, "LArm");
-        MArmR = hwMap.get(Servo.class, "RArm");
+        MArmL = hwMap.get(Servo.class, "larm");
+        MArmR = hwMap.get(Servo.class, "rarm");
+
+        boxClose = hwMap.get(Servo.class, "bc");
+        boxLeft = hwMap.get(Servo.class, "bl");
+        boxRight = hwMap.get(Servo.class, "br");
 
         /*Sensors*/
-        gS = hwMap.get(   ColorSensor.class, "gS");
-        mS = hwMap.get(DistanceSensor.class, "mS");
+        cMArmL = hwMap.get(   ColorSensor.class, "cL");
+        dMArmL = hwMap.get(DistanceSensor.class, "dL");
+
+        cMArmR = hwMap.get(   ColorSensor.class, "cR");
+        dMArmR = hwMap.get(DistanceSensor.class, "dR");
     }
 }
