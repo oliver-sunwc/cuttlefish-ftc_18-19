@@ -38,18 +38,18 @@ public class roverTANK extends OpMode {
     }
 
     void driveTank(double ly, double ry) {
-        robot.fL.setPower(ly);
-        robot.bL.setPower(ly);
-        robot.fR.setPower(ry);
-        robot.bR.setPower(ry);
+        robot.fl.setPower(ly);
+        robot.bl.setPower(ly);
+        robot.fr.setPower(ry);
+        robot.br.setPower(ry);
 
     }
 
     void driveArcade(double ry, double lx){
-        robot.fL.setPower(ry + lx);
-        robot.bL.setPower(ry + lx);
-        robot.fR.setPower(ry - lx);
-        robot.bR.setPower(ry - lx);
+        robot.fl.setPower(ry + lx);
+        robot.bl.setPower(ry + lx);
+        robot.fr.setPower(ry - lx);
+        robot.br.setPower(ry - lx);
     }
 
     double scaleInput(double dVal) {

@@ -41,10 +41,10 @@ public class roverHMAP {
     public DistanceSensor dMArmR;
 
     /*Motors*/
-    public DcMotor fL;
-    public DcMotor fR;
-    public DcMotor bL;
-    public DcMotor bR;
+    public DcMotor fl;
+    public DcMotor fr;
+    public DcMotor bl;
+    public DcMotor br;
 
     public DcMotor flip;
     public DcMotor hangLeft;
@@ -67,10 +67,10 @@ public class roverHMAP {
         hwMap = ahwMap;
 
         /*Motors*/
-        fL = hwMap.get(DcMotor.class, "fl");
-        fR = hwMap.get(DcMotor.class, "fr");
-        bL = hwMap.get(DcMotor.class, "bl");
-        bR = hwMap.get(DcMotor.class, "br");
+        fl = hwMap.get(DcMotor.class, "fl");
+        fr = hwMap.get(DcMotor.class, "fr");
+        bl = hwMap.get(DcMotor.class, "bl");
+        br = hwMap.get(DcMotor.class, "br");
 
         flip = hwMap.get(DcMotor.class,"f");
         hangLeft = hwMap.get(DcMotor.class,"hl");
@@ -78,8 +78,8 @@ public class roverHMAP {
         intake = hwMap.get(DcMotor.class,"i");
 
 
-        bR.setDirection(DcMotor.Direction.REVERSE);
-        fR.setDirection(DcMotor.Direction.REVERSE);
+        br.setDirection(DcMotor.Direction.REVERSE);
+        fr.setDirection(DcMotor.Direction.REVERSE);
 
         /*Servos*/
         MArmL = hwMap.get(Servo.class, "larm");
