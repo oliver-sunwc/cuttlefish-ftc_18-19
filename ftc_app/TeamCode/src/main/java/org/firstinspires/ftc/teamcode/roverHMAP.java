@@ -97,4 +97,96 @@ public class roverHMAP {
         cMArmR = hwMap.get(   ColorSensor.class, "cR");
         dMArmR = hwMap.get(DistanceSensor.class, "cR");
     }
+
+    //------------------------------------------------------------------------------------------------------------------------------
+    //Driving Power Functions
+    void stopDriving() {
+        fl.setPower(0);
+        fr.setPower(0);
+        bl.setPower(0);
+        br.setPower(0);
+    }
+
+    //distance=rate*duration duration=distance/rate
+    //power drives forward, -power drives backward
+    void VerticalDrive(double power) {
+        fl.setPower(power);
+        fr.setPower(power);
+        bl.setPower(power);
+        br.setPower(power);
+    }
+
+    void rotateRight(double power) {
+        fl.setPower(-power);
+        bl.setPower(-power);
+        fr.setPower(power);
+        br.setPower(power);
+    }
+
+    void rotateLeft(double power) {
+        rotateRight(-power);
+    }
+
+
+    //------------------------------------------------------------------------------------------------------------------------------
+    //Encoder Functions
+
+
+    void VerticalDriveDistance(double power, int distance) throws InterruptedException {
+        fl.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        br.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        bl.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        br.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        fl.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        br.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        bl.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        br.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+
+        VerticalDrive(power);
+
+        if(distance > 0) {
+            while (fl.getCurrentPosition() < distance &&
+                    fr.getCurrentPosition() < distance &&
+                    bl.getCurrentPosition() < distance &&
+                    br.getCurrentPosition() < distance) {
+            }
+        } else {
+            while (fl.getCurrentPosition() > distance &&
+                    fr.getCurrentPosition() > distance &&
+                    bl.getCurrentPosition() > distance &&
+                    br.getCurrentPosition() > distance) {
+            }
+        }
+
+        StopDriving();
+    }
+
+
+    void RotateDistance(double power, int distance) throws InterruptedException {
+        {
+            //reset encoders
+            fl.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+            fr.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+            bl.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+            br.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+
+            fl.setTargetPosition(distance);
+            fr.setTargetPosition(-distance);
+            bl.setTargetPosition(distance);
+            br.setTargetPosition(-distance);
+
+            fl.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            fr.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            bl.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            br.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
+            rotateRight(power);
+
+            while (fl.isBusy() && fr.isBusy() && bl.isBusy() && br.isBusy()) {
+                //wait until robot stops
+            }
+
+            StopDriving();
+        }
+    }
 }
