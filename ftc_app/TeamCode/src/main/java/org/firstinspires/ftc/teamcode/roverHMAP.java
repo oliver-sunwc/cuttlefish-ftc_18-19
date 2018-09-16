@@ -158,7 +158,7 @@ public class roverHMAP {
             }
         }
 
-        StopDriving();
+        stopDriving();
     }
 
 
@@ -186,7 +186,7 @@ public class roverHMAP {
                 //wait until robot stops
             }
 
-            StopDriving();
+            stopDriving();
         }
     }
 }
