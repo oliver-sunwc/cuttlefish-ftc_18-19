@@ -4,6 +4,7 @@ import android.graphics.Color;
 
 import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.hardware.bosch.JustLoggingAccelerationIntegrator;
+import com.qualcomm.hardware.rev.Rev2mDistanceSensor;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
@@ -41,18 +42,20 @@ import java.util.Locale;
 @TeleOp(name = "SensorTest")
 
 public class SensorTest extends OpMode {
-    NormalizedColorSensor sT;
-    DistanceSensor sD;
+    /*NormalizedColorSensor sT;
+    DistanceSensor sD;*/
+    DistanceSensor revD;
 
     @Override
     public void init(){
-        sT = hardwareMap.get(NormalizedColorSensor.class,"cs");
-        sD = hardwareMap.get(DistanceSensor.class, "ds");
+        /*sT = hardwareMap.get(NormalizedColorSensor.class,"cs");
+        sD = hardwareMap.get(DistanceSensor.class, "ds");*/
+        revD = hardwareMap.get(DistanceSensor.class, "revD");
     }
 
     @Override
     public void loop(){
-        NormalizedRGBA colors = sT.getNormalizedColors();
+        /*NormalizedRGBA colors = sT.getNormalizedColors();
         int color = colors.toColor();
         telemetry.addLine("raw Android color: ")
                 .addData("a", "%02x", Color.alpha(color))
@@ -73,6 +76,13 @@ public class SensorTest extends OpMode {
         telemetry.update();
         telemetry.addData("Distance (cm)",
                 String.format(Locale.US, "%.02f", sD.getDistance(DistanceUnit.CM)));
+        telemetry.update();*/
+        telemetry.addData("deviceName",revD.getDeviceName() );
+        telemetry.addData("range", String.format("%.01f mm", revD.getDistance(DistanceUnit.MM)));
+        telemetry.addData("range", String.format("%.01f cm", revD.getDistance(DistanceUnit.CM)));
+        telemetry.addData("range", String.format("%.01f m", revD.getDistance(DistanceUnit.METER)));
+        telemetry.addData("range", String.format("%.01f in", revD.getDistance(DistanceUnit.INCH)));
+
         telemetry.update();
     }
 }
