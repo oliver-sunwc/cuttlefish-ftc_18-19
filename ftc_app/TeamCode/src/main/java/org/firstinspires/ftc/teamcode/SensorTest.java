@@ -16,6 +16,7 @@ import com.qualcomm.robotcore.hardware.DistanceSensor;
 import com.qualcomm.robotcore.hardware.NormalizedColorSensor;
 import com.qualcomm.robotcore.hardware.NormalizedRGBA;
 import com.qualcomm.robotcore.hardware.Servo;
+import com.qualcomm.robotcore.hardware.AnalogInput;
 import com.qualcomm.robotcore.util.Range;
 
 import org.firstinspires.ftc.robotcontroller.external.samples.SensorColor;
@@ -45,12 +46,14 @@ public class SensorTest extends OpMode {
     /*NormalizedColorSensor sT;
     DistanceSensor sD;*/
     DistanceSensor revD;
+    AnalogInput ods;
 
     @Override
     public void init(){
         /*sT = hardwareMap.get(NormalizedColorSensor.class,"cs");
         sD = hardwareMap.get(DistanceSensor.class, "ds");*/
         revD = hardwareMap.get(DistanceSensor.class, "revD");
+        ods  = hardwareMap.get(AnalogInput.class   ,  "ods");
     }
 
     @Override
@@ -82,6 +85,8 @@ public class SensorTest extends OpMode {
         telemetry.addData("range", String.format("%.01f cm", revD.getDistance(DistanceUnit.CM)));
         telemetry.addData("range", String.format("%.01f m", revD.getDistance(DistanceUnit.METER)));
         telemetry.addData("range", String.format("%.01f in", revD.getDistance(DistanceUnit.INCH)));
+
+        telemetry.addData("range", ods.getVoltage());
 
         telemetry.update();
     }

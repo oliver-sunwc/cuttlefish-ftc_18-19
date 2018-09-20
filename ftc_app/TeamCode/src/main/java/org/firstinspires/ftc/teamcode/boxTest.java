@@ -41,12 +41,14 @@ public class boxTest extends LinearOpMode {
                 if(cs.red() < 2*cs.blue()) {
                     telemetry.addData("color","white");
                     s.setPosition(0.8);
+                    //s.setPosition(0.3);
                 } else{
                     telemetry.addData("color","yellow");
                     s.setPosition(0.3);
+                    //s.setPosition(0.8);
                 }
             } else {
-                s.setPosition(0.3);
+                s.setPosition(0.8);
             }
             telemetry.update();
         }
