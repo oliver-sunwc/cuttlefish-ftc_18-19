@@ -55,7 +55,7 @@ public class roverAuto extends LinearOpMode {
         robot.br.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         robot.bl.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         robot.br.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        
+
         robot.fl.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         robot.br.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         robot.bl.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
