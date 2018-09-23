@@ -45,15 +45,23 @@ import java.util.Locale;
 public class SensorTest extends OpMode {
     /*NormalizedColorSensor sT;
     DistanceSensor sD;*/
-    DistanceSensor revD;
-    AnalogInput ods;
+    ColorSensor cs;
+    DistanceSensor ds;
+    //DistanceSensor revD;
+    //AnalogInput ods;
+    ColorSensor csv;
+    DistanceSensor dsv;
 
     @Override
     public void init(){
         /*sT = hardwareMap.get(NormalizedColorSensor.class,"cs");
         sD = hardwareMap.get(DistanceSensor.class, "ds");*/
-        revD = hardwareMap.get(DistanceSensor.class, "revD");
-        ods  = hardwareMap.get(AnalogInput.class   ,  "ods");
+        //revD = hardwareMap.get(DistanceSensor.class, "revD");
+        //ods  = hardwareMap.get(AnalogInput.class   ,  "ods");
+        cs   = hardwareMap.get(ColorSensor.class   , "cs");
+        ds   = hardwareMap.get(DistanceSensor.class, "ds");
+        csv  = hardwareMap.get(ColorSensor.class, "csv");
+        dsv  = hardwareMap.get(DistanceSensor.class, "dsv");
     }
 
     @Override
@@ -80,14 +88,21 @@ public class SensorTest extends OpMode {
         telemetry.addData("Distance (cm)",
                 String.format(Locale.US, "%.02f", sD.getDistance(DistanceUnit.CM)));
         telemetry.update();*/
-        telemetry.addData("deviceName",revD.getDeviceName() );
+        /*telemetry.addData("deviceName",revD.getDeviceName() );
         telemetry.addData("range", String.format("%.01f mm", revD.getDistance(DistanceUnit.MM)));
         telemetry.addData("range", String.format("%.01f cm", revD.getDistance(DistanceUnit.CM)));
         telemetry.addData("range", String.format("%.01f m", revD.getDistance(DistanceUnit.METER)));
-        telemetry.addData("range", String.format("%.01f in", revD.getDistance(DistanceUnit.INCH)));
-
-        telemetry.addData("range", ods.getVoltage());
-
+        telemetry.addData("range", String.format("%.01f in", revD.getDistance(DistanceUnit.INCH)));*/
+        telemetry.addData("Red", cs.red());
+        telemetry.addData("Green", cs.green());
+        telemetry.addData("Blue", cs.blue());
+        telemetry.addData("Distance (cm)",
+                String.format(Locale.US, "%.02f", ds.getDistance(DistanceUnit.CM)));
+        telemetry.addData("Red V2", csv.red());
+        telemetry.addData("Green V2", csv.green());
+        telemetry.addData("Blue V2", csv.blue());
+        telemetry.addData("Distance V2 (cm)",
+                String.format(Locale.US, "%.02f", dsv.getDistance(DistanceUnit.CM)));
         telemetry.update();
     }
 }

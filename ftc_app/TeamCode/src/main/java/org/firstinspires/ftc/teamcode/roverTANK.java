@@ -34,7 +34,7 @@ public class roverTANK extends OpMode {
         double rx = gamepad1.left_stick_x;
         double ly = -gamepad1.left_stick_y;
         double ry = -gamepad1.right_stick_y;
-
+        driveTank(ly, ry);
     }
 
     void driveTank(double ly, double ry) {

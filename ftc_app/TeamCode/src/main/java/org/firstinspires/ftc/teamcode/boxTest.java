@@ -29,7 +29,7 @@ public class boxTest extends LinearOpMode {
         ds = hardwareMap.get(DistanceSensor.class,"cs");
         s = hardwareMap.get(Servo.class,"s");
 
-        s.setPosition(0.3);
+        s.setPosition(0.4);
         Thread.sleep(2000);
         waitForStart();
         while(opModeIsActive()){
@@ -40,15 +40,15 @@ public class boxTest extends LinearOpMode {
             if(ds.getDistance(DistanceUnit.MM) < 500){
                 if(cs.red() < 2*cs.blue()) {
                     telemetry.addData("color","white");
-                    s.setPosition(0.8);
-                    //s.setPosition(0.3);
+                    //s.setPosition(0.8);
+                    s.setPosition(0.4);
                 } else{
                     telemetry.addData("color","yellow");
-                    s.setPosition(0.3);
-                    //s.setPosition(0.8);
+                    //s.setPosition(0.3);
+                    s.setPosition(0.8);
                 }
             } else {
-                s.setPosition(0.8);
+                s.setPosition(0.4);
             }
             telemetry.update();
         }

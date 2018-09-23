@@ -37,10 +37,14 @@ public class tankbot extends OpMode {
 
     @Override
     public void loop(){
-        fl.setPower(-gamepad1.left_stick_y);
-        bl.setPower(-gamepad1.left_stick_y);
-        fr.setPower(-gamepad1.right_stick_y);
-        br.setPower(-gamepad1.right_stick_y);
+        driveArcade(gamepad1.right_stick_y, gamepad1.left_stick_x);
+    }
+
+    void driveArcade(double ry, double lx){
+        fl.setPower(ry + lx);
+        bl.setPower(ry + lx);
+        fr.setPower(ry - lx);
+        br.setPower(ry - lx);
     }
 
 
