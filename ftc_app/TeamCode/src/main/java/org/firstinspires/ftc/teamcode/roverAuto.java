@@ -235,5 +235,67 @@ public class roverAuto extends LinearOpMode {
         robot.angles = robot.imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
         return Double.parseDouble(formatAngle(robot.angles.angleUnit, robot.angles.firstAngle));
     }
+    public double normalize(double hi){
+        if(hi < 0){
+            hi = -hi;
+            hi = 180-hi;
+            hi += 180;
+        }
+        return hi;
+    }
+    public void gyroTurnRobotRight(double angle){
+        double rightTurnHeading = getHeading();
+        if(getHeading() <= 180 && getHeading() >= 180-angle-5){
+            robot.br.setPower(-0.2);
+            robot.fr.setPower(-0.2);
+            robot.bl.setPower(0.2);
+            robot.fl.setPower(0.2);
+            while(normalize(getHeading()) > normalize(rightTurnHeading) - (angle-3){
+        }
+            robot.br.setPower(0);
+            robot.fr.setPower(0);
+            robot.bl.setPower(0);
+            robot.fl.setPower(0);
+
+        } else {
+            robot.br.setPower(-0.2);
+            robot.fr.setPower(-0.2);
+            robot.bl.setPower(0.2);
+            robot.fl.setPower(0.2);
+            while(getHeading() > rightTurnHeading - (angle-3){
+            }
+            robot.br.setPower(0);
+            robot.fr.setPower(0);
+            robot.bl.setPower(0);
+            robot.fl.setPower(0);
+        }
+    }
+    public void gyroTurnRobotLeft(double angle){
+        double rightTurnHeading = getHeading();
+        if(getHeading() >= -180 && getHeading() <= -180+(angle+5)){
+            robot.br.setPower(0.2);
+            robot.fr.setPower(0.2);
+            robot.bl.setPower(-0.2);
+            robot.fl.setPower(-0.2);
+            while(normalize(getHeading()) < normalize(rightTurnHeading) + (angle-3){
+            }
+            robot.br.setPower(0);
+            robot.fr.setPower(0);
+            robot.bl.setPower(0);
+            robot.fl.setPower(0);
+
+        } else {
+            robot.br.setPower(0.2);
+            robot.fr.setPower(0.2);
+            robot.bl.setPower(-0.2);
+            robot.fl.setPower(-0.2);
+            while(getHeading() < rightTurnHeading + (angle-3)){
+            }
+            robot.br.setPower(0);
+            robot.fr.setPower(0);
+            robot.bl.setPower(0);
+            robot.fl.setPower(0);
+        }
+    }
     //insert methods
 }
