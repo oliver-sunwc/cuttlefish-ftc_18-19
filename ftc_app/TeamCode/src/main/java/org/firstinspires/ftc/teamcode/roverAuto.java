@@ -7,6 +7,7 @@ import com.qualcomm.robotcore.util.Range;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
+import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 
 import java.util.Locale;
 
@@ -14,7 +15,13 @@ public class roverAuto extends LinearOpMode {
     roverHMAP robot = new roverHMAP();
 
     public void runOpMode() throws InterruptedException{
-
+        verticalDrive(0.4);
+        do {
+            if (!Double.isNaN(robot.dMArmL.getDistance(DistanceUnit.CM))) {
+                stopDriving();
+                break;
+            }
+        } while(true);
     }
     //------------------------------------------------------------------------------------------------------------------------------
     //Driving Power Functions
