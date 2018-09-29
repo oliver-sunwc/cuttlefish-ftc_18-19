@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode;
 
 import android.graphics.Color;
 
+import com.google.blocks.ftcrobotcontroller.util.HardwareType;
 import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.hardware.bosch.JustLoggingAccelerationIntegrator;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
@@ -49,7 +50,7 @@ public class roverHMAP{
     public DistanceSensor dMArmR;
 
     double P_DRIVE_COEFF = 0.02;     // Larger is more responsive, but also less stable
-    public final double ticksPerInch = 89.123;
+    public final double ticksPerInch = 72.1;
     /*Motors*/
     public DcMotor fl;
     public DcMotor fr;
@@ -57,16 +58,13 @@ public class roverHMAP{
     public DcMotor br;
 
     public DcMotor flip;
-    public DcMotor hangLeft;
-    public DcMotor hangRight;
+    public DcMotor hang;
     public DcMotor intake;
     /*Servos*/
     public Servo MArmL;
     public Servo MArmR;
 
     public Servo boxClose;
-    public Servo boxLeft;
-    public Servo boxRight;
     public Servo boxRotate;
 
     HardwareMap hwMap;
@@ -83,8 +81,7 @@ public class roverHMAP{
         br = hwMap.get(DcMotor.class, "br");
 
         flip = hwMap.get(DcMotor.class,"f");
-        hangLeft = hwMap.get(DcMotor.class,"hl");
-        hangRight = hwMap.get(DcMotor.class,"hr");
+        hang = hwMap.get(DcMotor.class,"hl");
         intake = hwMap.get(DcMotor.class,"i");
 
 
@@ -96,16 +93,25 @@ public class roverHMAP{
         MArmR = hwMap.get(Servo.class, "rarm");
 
         boxClose = hwMap.get(Servo.class, "cb");
-        boxLeft = hwMap.get(Servo.class, "lb");
-        boxRight = hwMap.get(Servo.class, "rb");
         boxRotate = hwMap.get(Servo.class, "rotb");
 
         /*Sensors*/
-        cMArmL = hwMap.get(   ColorSensor.class, "cL");
+        cMArmL = hwMap.get(ColorSensor.class, "cL");
         dMArmL = hwMap.get(DistanceSensor.class, "cL");
 
-        cMArmR = hwMap.get(   ColorSensor.class, "cR");
+        cMArmR = hwMap.get(ColorSensor.class, "cR");
         dMArmR = hwMap.get(DistanceSensor.class, "cR");
+
+        BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
+        //parameters.angleUnit = HardwareType.BNO055IMU.AngleUnit.DEGREES;
+        //parameters.accelUnit = HardwareType.BNO055IMU.AccelUnit.METERS_PERSEC_PERSEC;
+        parameters.calibrationDataFile = "BNO055IMUCalibration.json"; // see the calibration sample opmode
+        parameters.loggingEnabled = true;
+        parameters.loggingTag = "IMU";
+        parameters.accelerationIntegrationAlgorithm = new JustLoggingAccelerationIntegrator();
+
+        imu = hwMap.get(BNO055IMU.class, "imu");
+        imu.initialize(parameters);
     }
 
 
