@@ -15,13 +15,7 @@ public class roverAuto extends LinearOpMode {
     roverHMAP robot = new roverHMAP();
 
     public void runOpMode() throws InterruptedException{
-        verticalDrive(0.4);
-        do {
-            if (!Double.isNaN(robot.dMArmL.getDistance(DistanceUnit.CM))) {
-                stopDriving();
-                break;
-            }
-        } while(true);
+
     }
     //------------------------------------------------------------------------------------------------------------------------------
     //Driving Power Functions
@@ -250,7 +244,7 @@ public class roverAuto extends LinearOpMode {
             robot.fr.setPower(-0.2);
             robot.bl.setPower(0.2);
             robot.fl.setPower(0.2);
-            while(normalize(getHeading()) > normalize(rightTurnHeading) - (angle-3){
+            while(normalize(getHeading()) > normalize(rightTurnHeading) - (angle-3)){
         }
             robot.br.setPower(0);
             robot.fr.setPower(0);
@@ -262,7 +256,7 @@ public class roverAuto extends LinearOpMode {
             robot.fr.setPower(-0.2);
             robot.bl.setPower(0.2);
             robot.fl.setPower(0.2);
-            while(getHeading() > rightTurnHeading - (angle-3){
+            while(getHeading() > rightTurnHeading - (angle-3)){
             }
             robot.br.setPower(0);
             robot.fr.setPower(0);
@@ -277,7 +271,7 @@ public class roverAuto extends LinearOpMode {
             robot.fr.setPower(0.2);
             robot.bl.setPower(-0.2);
             robot.fl.setPower(-0.2);
-            while(normalize(getHeading()) < normalize(rightTurnHeading) + (angle-3){
+            while(normalize(getHeading()) < normalize(rightTurnHeading) + (angle-3)){
             }
             robot.br.setPower(0);
             robot.fr.setPower(0);
