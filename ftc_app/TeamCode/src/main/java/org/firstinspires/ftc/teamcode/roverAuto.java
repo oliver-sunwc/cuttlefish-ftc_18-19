@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.util.Range;
 
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
@@ -12,8 +13,10 @@ import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import java.util.Locale;
 
 public class roverAuto extends LinearOpMode {
-    roverHMAP robot = new roverHMAP();
-
+    roverHMAP robot;
+    public roverAuto(roverHMAP hwmap){
+        robot = hwmap;
+    }
     public void runOpMode() throws InterruptedException{
 
     }
@@ -51,7 +54,7 @@ public class roverAuto extends LinearOpMode {
     //Encoder Functions
 
 
-    void verticalDriveDistance(double power, int distance) throws InterruptedException {
+    void verticalDriveDistance(double power, double distance) throws InterruptedException {
         robot.fl.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         robot.br.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         robot.bl.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
@@ -61,14 +64,18 @@ public class roverAuto extends LinearOpMode {
         robot.br.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         robot.bl.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         robot.br.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-
+        distance = (int)(distance*robot.ticksPerInch);
+        int flDist = robot.fl.getCurrentPosition();
+        int frDist = robot.fr.getCurrentPosition();
+        int blDist = robot.bl.getCurrentPosition();
+        int brDist = robot.br.getCurrentPosition();
         verticalDrive(power);
 
         if(distance > 0) {
-            while (robot.fl.getCurrentPosition() < distance &&
-                    robot.fr.getCurrentPosition() < distance &&
-                    robot.bl.getCurrentPosition() < distance &&
-                    robot.br.getCurrentPosition() < distance) {
+            while (robot.fl.getCurrentPosition() - flDist < distance &&
+                    robot.fr.getCurrentPosition() - frDist< distance &&
+                    robot.bl.getCurrentPosition() - blDist< distance &&
+                    robot.br.getCurrentPosition() - brDist< distance) {
             }
         } else {
             while (robot.fl.getCurrentPosition() > distance &&
@@ -237,13 +244,66 @@ public class roverAuto extends LinearOpMode {
         }
         return hi;
     }
-    public void gyroTurnRobotRight(double angle){
+    public void gyroTurnRobotRightAbsolute(double angle, double power){
+        double initHeading = getHeading();
+        if(getHeading() + angle > 179){
+            robot.br.setPower(-power);
+            robot.fr.setPower(-power);
+            robot.bl.setPower(power);
+            robot.fl.setPower(power);
+            while(normalize(getHeading()) < initHeading + angle - 2){
+            }
+            robot.br.setPower(0);
+            robot.fr.setPower(0);
+            robot.bl.setPower(0);
+            robot.fl.setPower(0);
+        } else {
+            robot.br.setPower(-power);
+            robot.fr.setPower(-power);
+            robot.bl.setPower(power);
+            robot.fl.setPower(power);
+            while(getHeading() < initHeading + angle - 2){
+            }
+            robot.br.setPower(0);
+            robot.fr.setPower(0);
+            robot.bl.setPower(0);
+            robot.fl.setPower(0);
+        }
+    }
+
+    public void gyroTurnRobotLeftAbsolute(double angle, double power){
+        double initHeading = getHeading();
+        if(getHeading() - angle < -179){
+            robot.br.setPower(power);
+            robot.fr.setPower(power);
+            robot.bl.setPower(-power);
+            robot.fl.setPower(-power);
+            while(normalize(getHeading()) < normalize(initHeading) - (angle - 2)){
+            }
+            robot.br.setPower(0);
+            robot.fr.setPower(0);
+            robot.bl.setPower(0);
+            robot.fl.setPower(0);
+        } else {
+            robot.br.setPower(power);
+            robot.fr.setPower(power);
+            robot.bl.setPower(-power);
+            robot.fl.setPower(-power);
+            while(getHeading() > initHeading-(angle-2)){
+            }
+            robot.br.setPower(0);
+            robot.fr.setPower(0);
+            robot.bl.setPower(0);
+            robot.fl.setPower(0);
+        }
+    }
+    public void gyroTurnRobotRight(double angle, double power){
         double rightTurnHeading = getHeading();
         if(getHeading() <= 180 && getHeading() >= 180-angle-5){
-            robot.br.setPower(-0.2);
-            robot.fr.setPower(-0.2);
-            robot.bl.setPower(0.2);
-            robot.fl.setPower(0.2);
+            robot.br.setPower(-power);
+            robot.fr.setPower(-power);
+            robot.bl.setPower(power);
+            robot.fl.setPower(power);
             while(normalize(getHeading()) > normalize(rightTurnHeading) - (angle-3)){
         }
             robot.br.setPower(0);
@@ -252,10 +312,10 @@ public class roverAuto extends LinearOpMode {
             robot.fl.setPower(0);
 
         } else {
-            robot.br.setPower(-0.2);
-            robot.fr.setPower(-0.2);
-            robot.bl.setPower(0.2);
-            robot.fl.setPower(0.2);
+            robot.br.setPower(-power);
+            robot.fr.setPower(-power);
+            robot.bl.setPower(power);
+            robot.fl.setPower(power);
             while(getHeading() > rightTurnHeading - (angle-3)){
             }
             robot.br.setPower(0);
@@ -264,13 +324,13 @@ public class roverAuto extends LinearOpMode {
             robot.fl.setPower(0);
         }
     }
-    public void gyroTurnRobotLeft(double angle){
+    public void gyroTurnRobotLeft(double angle, double power){
         double rightTurnHeading = getHeading();
         if(getHeading() >= -180 && getHeading() <= -180+(angle+5)){
-            robot.br.setPower(0.2);
-            robot.fr.setPower(0.2);
-            robot.bl.setPower(-0.2);
-            robot.fl.setPower(-0.2);
+            robot.br.setPower(power);
+            robot.fr.setPower(power);
+            robot.bl.setPower(-power);
+            robot.fl.setPower(-power);
             while(normalize(getHeading()) < normalize(rightTurnHeading) + (angle-3)){
             }
             robot.br.setPower(0);
@@ -279,10 +339,10 @@ public class roverAuto extends LinearOpMode {
             robot.fl.setPower(0);
 
         } else {
-            robot.br.setPower(0.2);
-            robot.fr.setPower(0.2);
-            robot.bl.setPower(-0.2);
-            robot.fl.setPower(-0.2);
+            robot.br.setPower(power);
+            robot.fr.setPower(power);
+            robot.bl.setPower(-power);
+            robot.fl.setPower(-power);
             while(getHeading() < rightTurnHeading + (angle-3)){
             }
             robot.br.setPower(0);

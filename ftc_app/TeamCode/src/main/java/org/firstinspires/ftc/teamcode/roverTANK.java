@@ -7,11 +7,13 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.Range;
 
+import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
+
 /**
  * Manual with Arcade Drive
  */
 
-@TeleOp(name = "Tank", group = "Rover")
+@TeleOp(name = "TankFinal", group = "Rover")
 public class roverTANK extends OpMode {
 
     roverHMAP robot = new roverHMAP();
@@ -35,6 +37,10 @@ public class roverTANK extends OpMode {
         double ly = -gamepad1.left_stick_y;
         double ry = -gamepad1.right_stick_y;
         driveTank(ly, ry);
+
+        if(gamepad1.a){
+            robot.MArmL.setPosition(0.5);
+        }
     }
 
     void driveTank(double ly, double ry) {
@@ -42,6 +48,10 @@ public class roverTANK extends OpMode {
         robot.bl.setPower(ly);
         robot.fr.setPower(ry);
         robot.br.setPower(ry);
+
+        telemetry.addData("dl",robot.dMArmL.getDistance(DistanceUnit.CM));
+        telemetry.addData("dl",robot.dMArmL.getDistance(DistanceUnit.CM));
+        telemetry.update();
 
     }
 

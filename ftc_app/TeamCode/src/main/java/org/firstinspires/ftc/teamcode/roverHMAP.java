@@ -80,9 +80,13 @@ public class roverHMAP{
         bl = hwMap.get(DcMotor.class, "bl");
         br = hwMap.get(DcMotor.class, "br");
 
-        flip = hwMap.get(DcMotor.class,"f");
-        hang = hwMap.get(DcMotor.class,"hl");
-        intake = hwMap.get(DcMotor.class,"i");
+        fl.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        fr.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        bl.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        br.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        //flip = hwMap.get(DcMotor.class,"f");
+        //hang = hwMap.get(DcMotor.class,"hl");
+        //intake = hwMap.get(DcMotor.class,"i");
 
 
         br.setDirection(DcMotor.Direction.REVERSE);
@@ -92,8 +96,8 @@ public class roverHMAP{
         MArmL = hwMap.get(Servo.class, "larm");
         MArmR = hwMap.get(Servo.class, "rarm");
 
-        boxClose = hwMap.get(Servo.class, "cb");
-        boxRotate = hwMap.get(Servo.class, "rotb");
+        //boxClose = hwMap.get(Servo.class, "cb");
+        //boxRotate = hwMap.get(Servo.class, "rotb");
 
         /*Sensors*/
         cMArmL = hwMap.get(ColorSensor.class, "cL");
