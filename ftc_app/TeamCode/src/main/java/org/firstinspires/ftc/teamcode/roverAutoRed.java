@@ -32,11 +32,13 @@ public class roverAutoRed extends LinearOpMode {
         robot.MArmR.setPosition(0.18);
         telemetry.addData("gyro",robotAuto.getHeading());
         telemetry.update();
-        robotAuto.verticalDriveDistance(0.1,9.25);
-        telemetry.addData("stage one",1);
+        robotAuto.verticalDriveDistance(0.1,8.75);
+        telemetry.addData("stage one",robotAuto.getHeading());
         telemetry.update();
         Thread.sleep(500);
         robotAuto.verticalDrive(0.05);
+
+        // run till close loop
         do {
             if (!Double.isNaN(robot.dMArmL.getDistance(DistanceUnit.CM))  || !(Double.isNaN(robot.dMArmR.getDistance(DistanceUnit.CM)))) {
                 robotAuto.stopDriving();
@@ -49,8 +51,29 @@ public class roverAutoRed extends LinearOpMode {
         } while(true);
 
 
+        robotAuto.verticalDrive(0.03);
+        do {
+            if (robot.dMArmL.getDistance(DistanceUnit.CM) < 1.3  || robot.dMArmR.getDistance(DistanceUnit.CM)< 1.3) {
+                robotAuto.stopDriving();
+                break;
+            }
+
+            telemetry.addData("dl",robot.dMArmL.getDistance(DistanceUnit.CM));
+            telemetry.addData("dr",robot.dMArmR.getDistance(DistanceUnit.CM));
+            telemetry.update();
+        } while(true);
+
+
+
+
+
+
         telemetry.addData("stage two",2);
         telemetry.update();
+
+
+        // sense the color
+        Thread.sleep(250);
         timer.reset();
         while(timer.seconds() < 1) {
             if (robot.cMArmL.red() < 2 * robot.cMArmL.blue()) {
@@ -72,6 +95,9 @@ public class roverAutoRed extends LinearOpMode {
             telemetry.update();
             Thread.sleep(50);
         }
+
+
+        //color sense program
         if(leftColor.equals("white") && rightColor.equals("white")) {
             robot.MArmL.setPosition(0.2);
             robot.MArmR.setPosition(0.7);
@@ -86,7 +112,7 @@ public class roverAutoRed extends LinearOpMode {
         robotAuto.verticalDriveDistance(0.1,2);
         robot.MArmR.setPosition(0.7);
         robot.MArmL.setPosition(0.2);
-        robotAuto.verticalDriveDistance(-0.1,-3.5);
+        robotAuto.verticalDriveDistance(-0.1,-3.25);
         robotAuto.gyroTurnRobotLeft(90,0.1);
         robotAuto.verticalDriveDistance(0.1,24);
         robotAuto.gyroTurnRobotLeftAbsolute(-90,0.1);

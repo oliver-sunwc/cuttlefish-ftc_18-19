@@ -130,7 +130,10 @@ public class roverAuto extends LinearOpMode {
 
         // Ensure that the opmode is still active
         if (opModeIsActive()) {
-
+            robot.bl.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+            robot.fl.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+            robot.br.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+            robot.fr.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
             // Determine new target position, and pass to motor controller
             moveCounts = (int)(distance * robot.ticksPerInch);
             //newLeftTarget = motorBL.getCurrentPosition() + moveCounts;
