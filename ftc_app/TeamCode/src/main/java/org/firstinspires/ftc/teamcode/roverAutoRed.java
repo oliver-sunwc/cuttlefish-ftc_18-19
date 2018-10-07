@@ -99,7 +99,7 @@ public class roverAutoRed extends LinearOpMode {
 
             }
             robot.fl.setPower(0);
-            robot.bl.setPower(0);
+            robot.bl.setPower(1);
             robot.fr.setPower(0);
             robot.fl.setPower(0);
         }
@@ -110,7 +110,7 @@ public class roverAutoRed extends LinearOpMode {
 
             while(robot.dMArmR.getDistance(DistanceUnit.CM) - robot.dMArmL.getDistance(DistanceUnit.CM) > 1.5){
 
-            } 
+            }
             robot.fl.setPower(0);
             robot.bl.setPower(0);
             robot.fr.setPower(0);
