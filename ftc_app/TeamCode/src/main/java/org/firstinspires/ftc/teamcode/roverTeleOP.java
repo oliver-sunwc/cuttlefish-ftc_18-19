@@ -14,7 +14,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
  */
 
 @TeleOp(name = "TankFinal", group = "Rover")
-public class roverTANK extends OpMode {
+public class roverTeleOP extends OpMode {
 
     roverHMAP robot = new roverHMAP();
     boolean dirToggle = false;
@@ -23,6 +23,8 @@ public class roverTANK extends OpMode {
     @Override
     public void init(){
         robot.init(hardwareMap);
+        robot.MArmL.setPosition(0.2);
+        robot.MArmR.setPosition(0.7);
     }
 
     @Override
@@ -32,15 +34,11 @@ public class roverTANK extends OpMode {
 
     @Override
     public void loop(){
-        double lx = gamepad1.left_stick_x;
-        double rx = gamepad1.left_stick_x;
-        double ly = -gamepad1.left_stick_y;
-        double ry = -gamepad1.right_stick_y;
-        driveTank(ly, ry);
-
-        if(gamepad1.a){
-            robot.MArmL.setPosition(0.5);
-        }
+        double lx = scaleInput(gamepad1.left_stick_x);
+        double rx = scaleInput(gamepad1.left_stick_x);
+        double ly = scaleInput(-gamepad1.left_stick_y);
+        double ry = scaleInput(-gamepad1.right_stick_y);
+        driveArcade(ry, lx);
     }
 
     void driveTank(double ly, double ry) {
