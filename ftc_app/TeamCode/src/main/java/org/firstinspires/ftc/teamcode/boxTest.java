@@ -28,7 +28,6 @@ public class boxTest extends LinearOpMode {
         cs = hardwareMap.get(ColorSensor.class, "cs");
         ds = hardwareMap.get(DistanceSensor.class,"cs");
         s = hardwareMap.get(Servo.class,"s");
-
         s.setPosition(0.4);
         Thread.sleep(2000);
         waitForStart();

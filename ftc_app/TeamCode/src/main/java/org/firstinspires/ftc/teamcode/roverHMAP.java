@@ -57,15 +57,17 @@ public class roverHMAP{
     public DcMotor bl;
     public DcMotor br;
 
-    public DcMotor flip;
+    public DcMotor flipL;
+    public DcMotor flipR;
     public DcMotor hang;
     public DcMotor intake;
     /*Servos*/
     public Servo MArmL;
     public Servo MArmR;
+    public Servo intakeServo;
 
-    public Servo boxClose;
-    public Servo boxRotate;
+    public Servo boxL;
+    public Servo boxR;
 
     HardwareMap hwMap;
 
@@ -106,6 +108,25 @@ public class roverHMAP{
         cMArmR = hwMap.get(ColorSensor.class, "cR");
         dMArmR = hwMap.get(DistanceSensor.class, "cR");
 
+        flipL = hwMap.get(DcMotor.class,"fll");
+        flipR = hwMap.get(DcMotor.class,"flr");
+
+
+        flipL.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        flipR.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+
+        flipL.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        flipR.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
+        flipL.setDirection(DcMotorSimple.Direction.REVERSE);
+
+        boxL = hwMap.get(Servo.class,"bxl");
+        boxR = hwMap.get(Servo.class,"bxr");
+
+        intake = hwMap.get(DcMotor.class,"i");
+        intake.setMode(DcMotor.RunMode.RUN_USING_ENCODE R);
+
+        intakeServo = hwMap.get(Servo.class,"is");
         BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
         //parameters.angleUnit = HardwareType.BNO055IMU.AngleUnit.DEGREES;
         //parameters.accelUnit = HardwareType.BNO055IMU.AccelUnit.METERS_PERSEC_PERSEC;

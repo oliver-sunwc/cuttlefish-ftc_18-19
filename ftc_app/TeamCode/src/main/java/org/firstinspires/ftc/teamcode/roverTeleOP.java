@@ -20,6 +20,12 @@ public class roverTeleOP extends OpMode {
     boolean dirToggle = false;
     double lx, rx,ly,ry;
 
+    boolean flipUp, flipControl = false;
+    double boxPos=1;
+    boolean boxUpControl, boxDownControl = false;
+    boolean  intakeControl =false;
+    boolean intakeUp = true;
+
     @Override
     public void init(){
         robot.init(hardwareMap);
@@ -34,11 +40,85 @@ public class roverTeleOP extends OpMode {
 
     @Override
     public void loop(){
+        // toggle buttons
+        if(gamepad2.a){
+            flipControl = true;
+        }
+
+        if(!gamepad2.a && flipControl) {
+            if (flipUp) {
+                robot.flipL.setTargetPosition(robot.flipL.getCurrentPosition() - 400);
+                robot.flipR.setTargetPosition(robot.flipR.getCurrentPosition() - 400);
+                robot.flipL.setPower(-0.1);
+                robot.flipR.setPower(-0.1);
+                flipControl = false;
+                flipUp = false;
+            } else {
+                robot.flipL.setTargetPosition(robot.flipL.getCurrentPosition() + 400);
+                robot.flipR.setTargetPosition(robot.flipR.getCurrentPosition() + 400);
+                robot.flipL.setPower(0.1);
+                robot.flipR.setPower(0.1);
+                flipControl = false;
+                flipUp = true;
+            }
+        }
+
+        if(gamepad2.x){
+            intakeControl = true;
+        }
+
+        if(!gamepad2.x && intakeControl){
+            intakeControl = false;
+            intakeUp = !intakeUp;
+        }
+
+        if(intakeUp){
+            robot.intakeServo.setPosition(0.3);
+        } else {
+            robot.intakeServo.setPosition(1.0);
+        }
+
+        if(gamepad2.dpad_up){
+            boxUpControl=true;
+        }
+
+        if(!gamepad2.dpad_up && boxUpControl){
+            if(boxPos > 0.1) {
+                boxPos -= 0.1;
+            }
+            boxUpControl = false;
+        }
+
+        if(gamepad2.dpad_down){
+            boxDownControl = true;
+        }
+
+        if(!gamepad2.dpad_down && boxDownControl){
+            if(boxPos < 1) {
+                boxPos += 0.1;
+            }
+            boxDownControl = false;
+        }
+        robot.boxR.setPosition(boxPos);
+        robot.boxL.setPosition(1.06- boxPos);
+
+
+        if(gamepad2.left_stick_y > 0.05){
+            robot.intake.setPower(-0.5);
+        } else if(gamepad2.left_stick_y < -0.05){
+            robot.intake.setPower(0.5);
+        } else {
+            robot.intake.setPower(0);
+        }
         double lx = scaleInput(gamepad1.left_stick_x);
         double rx = scaleInput(gamepad1.left_stick_x);
         double ly = scaleInput(-gamepad1.left_stick_y);
         double ry = scaleInput(-gamepad1.right_stick_y);
         driveArcade(ry, lx);
+
+
+        telemetry.addData("boxPos",boxPos);
+        telemetry.update();
     }
 
     void driveTank(double ly, double ry) {
