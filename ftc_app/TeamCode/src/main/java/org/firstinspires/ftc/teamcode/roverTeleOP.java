@@ -87,9 +87,6 @@ public class roverTeleOP extends OpMode {
 
             if(flipUpStage == 1 && timer.seconds()>1) {
                 telemetry.addData("something",2);
-                robot.intake.setPower(0);
-                robot.intake.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-                robot.intake.setPower(0);
                 robot.flipL.setTargetPosition(robot.flipL.getCurrentPosition() + 385);
                 robot.flipR.setTargetPosition(robot.flipR.getCurrentPosition() + 385);
                 robot.flipL.setPower(0.1);
@@ -110,17 +107,29 @@ public class roverTeleOP extends OpMode {
 
         if(flipDownSequence){
             if(flipDownStage == 0){
-
+                setBox(0.1);
+                flipUpStage++;
+                timer.reset();
             }
-            if(flipDownStage == 1){
-
+            if(flipDownStage == 1 && timer.seconds() > 1){
+                robot.flipL.setTargetPosition(robot.flipL.getCurrentPosition() - 385);
+                robot.flipR.setTargetPosition(robot.flipR.getCurrentPosition() - 385);
+                robot.flipL.setPower(-0.1);
+                robot.flipR.setPower(-0.1);
+                flipDownStage ++;
+                timer.reset();
             }
-            if(flipDownStage == 2)
-            robot.flipL.setTargetPosition(robot.flipL.getCurrentPosition() - 385);
-            robot.flipR.setTargetPosition(robot.flipR.getCurrentPosition() - 385);
-            robot.flipL.setPower(-0.1);
-            robot.flipR.setPower(-0.1);
+            if(flipDownStage == 2 && timer.seconds() > 2){
+                setBox(0.4);
+                flipDownStage++;
+            }
+            if(flipUpStage == 3){
+                flipDownSequence =false;
+            }
+
         }
+
+
         if(!gamepad2.x){
             intakeControl = true;
         }
