@@ -124,7 +124,7 @@ public class roverHMAP{
         boxR = hwMap.get(Servo.class,"bxr");
 
         intake = hwMap.get(DcMotor.class,"i");
-        intake.setMode(DcMotor.RunMode.RUN_USING_ENCODE R);
+        intake.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
         intakeServo = hwMap.get(Servo.class,"is");
         BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();

@@ -9,6 +9,11 @@ import com.qualcomm.robotcore.util.Range;
 
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 
+import java.io.BufferedWriter;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.PrintWriter;
+
 /**
  * Manual with Arcade Drive
  */
@@ -18,19 +23,25 @@ public class roverTeleOP extends OpMode {
 
     roverHMAP robot = new roverHMAP();
     boolean dirToggle = false;
-    double lx, rx,ly,ry;
+    double lx, rx, ly, ry;
 
     boolean flipUp, flipControl = false;
-    double boxPos=1;
+    double boxPos = 1;
     boolean boxUpControl, boxDownControl = false;
-    boolean  intakeControl =false;
+    boolean  intakeControl = false;
     boolean intakeUp = true;
 
+    boolean flipUpSequence, flipDownSequence = false;
+    int flipUpStage, flipDownStage = 0;
+
+    ElapsedTime timer = new ElapsedTime();
     @Override
-    public void init(){
+    public void init() {
+
         robot.init(hardwareMap);
         robot.MArmL.setPosition(0.2);
         robot.MArmR.setPosition(0.7);
+        setBox(0.4);
     }
 
     @Override
@@ -41,33 +52,84 @@ public class roverTeleOP extends OpMode {
     @Override
     public void loop(){
         // toggle buttons
-        if(gamepad2.a){
+        if(!gamepad2.a){
             flipControl = true;
         }
 
-        if(!gamepad2.a && flipControl) {
+        if(gamepad2.a && flipControl) {
             if (flipUp) {
-                robot.flipL.setTargetPosition(robot.flipL.getCurrentPosition() - 400);
-                robot.flipR.setTargetPosition(robot.flipR.getCurrentPosition() - 400);
-                robot.flipL.setPower(-0.1);
-                robot.flipR.setPower(-0.1);
+                if(!flipUpSequence) {
+                    flipDownSequence = true;
+                    flipDownStage = 0;
+                }
+
                 flipControl = false;
                 flipUp = false;
             } else {
-                robot.flipL.setTargetPosition(robot.flipL.getCurrentPosition() + 400);
-                robot.flipR.setTargetPosition(robot.flipR.getCurrentPosition() + 400);
-                robot.flipL.setPower(0.1);
-                robot.flipR.setPower(0.1);
+                if(!flipDownSequence) {
+                    flipUpSequence = true;
+                    flipUpStage = 0;
+                }
+
                 flipControl = false;
                 flipUp = true;
             }
         }
 
-        if(gamepad2.x){
+        if(flipUpSequence){
+            if(flipUpStage == 0) {
+                /*robot.intake.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+                int currPos = robot.intake.getCurrentPosition();
+                int finalPos = currPos % 560;
+                int moveTicks = 0;
+                if(finalPos < 260){
+                    moveTicks = 280 -finalPos;
+                } else {
+                    moveTicks = 560+280-finalPos;
+                }
+                robot.intake.setTargetPosition(robot.intake.getCurrentPosition() - moveTicks);
+                robot.intake.setPower(-0.2);*/
+
+                setBox(/*move that boi back*/0.07);
+                flipUpStage++;
+                telemetry.addData("something",1);
+                timer.reset();
+            }
+
+            if(flipUpStage == 1 && timer.seconds()>2) {
+                telemetry.addData("something",2);
+                robot.intake.setPower(0);
+                robot.intake.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+                robot.intake.setPower(0);
+                robot.flipL.setTargetPosition(robot.flipL.getCurrentPosition() + 385);
+                robot.flipR.setTargetPosition(robot.flipR.getCurrentPosition() + 385);
+                robot.flipL.setPower(0.1);
+                robot.flipR.setPower(0.1);
+                flipUpStage++;
+                timer.reset();
+            }
+
+            if(flipUpStage == 2 && timer.seconds() > 2){
+                setBox(1.0/*some position that sets it ready*/);
+                flipUpStage++;
+            }
+
+            if(flipUpStage == 3){
+                flipUpSequence = false;
+            }
+        }
+
+        if(flipDownSequence){
+            robot.flipL.setTargetPosition(robot.flipL.getCurrentPosition() - 385);
+            robot.flipR.setTargetPosition(robot.flipR.getCurrentPosition() - 385);
+            robot.flipL.setPower(-0.1);
+            robot.flipR.setPower(-0.1);
+        }
+        if(!gamepad2.x){
             intakeControl = true;
         }
 
-        if(!gamepad2.x && intakeControl){
+        if(gamepad2.x && intakeControl){
             intakeControl = false;
             intakeUp = !intakeUp;
         }
@@ -78,29 +140,32 @@ public class roverTeleOP extends OpMode {
             robot.intakeServo.setPosition(1.0);
         }
 
-        if(gamepad2.dpad_up){
+        /*if(!gamepad2.dpad_up){
             boxUpControl=true;
         }
 
-        if(!gamepad2.dpad_up && boxUpControl){
+        if(gamepad2.dpad_up && boxUpControl){
+
             if(boxPos > 0.1) {
                 boxPos -= 0.1;
             }
             boxUpControl = false;
         }
 
-        if(gamepad2.dpad_down){
+        if(!gamepad2.dpad_down){
             boxDownControl = true;
         }
 
-        if(!gamepad2.dpad_down && boxDownControl){
+        if(gamepad2.dpad_down && boxDownControl){
             if(boxPos < 1) {
                 boxPos += 0.1;
             }
             boxDownControl = false;
         }
-        robot.boxR.setPosition(boxPos);
-        robot.boxL.setPosition(1.06- boxPos);
+
+        if(!flipUpSequence && !flipDownSequence) {
+            setBox(boxPos);
+        }*/
 
 
         if(gamepad2.left_stick_y > 0.05){
@@ -118,6 +183,7 @@ public class roverTeleOP extends OpMode {
 
 
         telemetry.addData("boxPos",boxPos);
+        telemetry.addData("getPos",robot.boxR.getPosition());
         telemetry.update();
     }
 
@@ -131,6 +197,13 @@ public class roverTeleOP extends OpMode {
         telemetry.addData("dl",robot.dMArmL.getDistance(DistanceUnit.CM));
         telemetry.update();
 
+    }
+
+    void setBox(double pos){
+        if(0 <= pos && pos <= 1.0) {
+            robot.boxR.setPosition(pos);
+            robot.boxL.setPosition(1.06 - pos);
+        }
     }
 
     void driveArcade(double ry, double lx){
