@@ -78,25 +78,14 @@ public class roverTeleOP extends OpMode {
 
         if(flipUpSequence){
             if(flipUpStage == 0) {
-                /*robot.intake.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-                int currPos = robot.intake.getCurrentPosition();
-                int finalPos = currPos % 560;
-                int moveTicks = 0;
-                if(finalPos < 260){
-                    moveTicks = 280 -finalPos;
-                } else {
-                    moveTicks = 560+280-finalPos;
-                }
-                robot.intake.setTargetPosition(robot.intake.getCurrentPosition() - moveTicks);
-                robot.intake.setPower(-0.2);*/
 
-                setBox(/*move that boi back*/0.07);
+                setBox(/*move that boi back*/0.1);
                 flipUpStage++;
                 telemetry.addData("something",1);
                 timer.reset();
             }
 
-            if(flipUpStage == 1 && timer.seconds()>2) {
+            if(flipUpStage == 1 && timer.seconds()>1) {
                 telemetry.addData("something",2);
                 robot.intake.setPower(0);
                 robot.intake.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
@@ -109,7 +98,7 @@ public class roverTeleOP extends OpMode {
                 timer.reset();
             }
 
-            if(flipUpStage == 2 && timer.seconds() > 2){
+            if(flipUpStage == 2 && timer.seconds() > 1){
                 setBox(1.0/*some position that sets it ready*/);
                 flipUpStage++;
             }
@@ -120,6 +109,13 @@ public class roverTeleOP extends OpMode {
         }
 
         if(flipDownSequence){
+            if(flipDownStage == 0){
+
+            }
+            if(flipDownStage == 1){
+
+            }
+            if(flipDownStage == 2)
             robot.flipL.setTargetPosition(robot.flipL.getCurrentPosition() - 385);
             robot.flipR.setTargetPosition(robot.flipR.getCurrentPosition() - 385);
             robot.flipL.setPower(-0.1);
