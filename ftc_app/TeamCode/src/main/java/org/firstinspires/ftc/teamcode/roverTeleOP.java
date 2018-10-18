@@ -39,16 +39,13 @@ public class roverTeleOP extends OpMode {
     boolean flipUpSequence, flipDownSequence = false;
     int flipUpStage, flipDownStage = 0;
 
-<<<<<<< HEAD
     ElapsedTime motorTime = new ElapsedTime();
-=======
     boolean flapUp, flapControl = false;
     boolean teethUp, teethControl = false;
     int initialPosition;
 
     boolean secondUp, secondUpControl = false;
 
->>>>>>> cf0cca3230266144caba1eb67aed8e7f4d6b1684
     ElapsedTime timer = new ElapsedTime();
     double time;
     @Override
@@ -170,7 +167,7 @@ public class roverTeleOP extends OpMode {
         if(flipDownSequence){
             if(flipDownStage == 0){
                 setBox(0.1);
-                flipUpStage++;
+                flipDownStage++;
                 timer.reset();
             }
             if(flipDownStage == 1 && timer.seconds() > 1){
@@ -185,7 +182,7 @@ public class roverTeleOP extends OpMode {
                 setBox(0.4);
                 flipDownStage++;
             }
-            if(flipUpStage == 3){
+            if(flipDownStage == 3){
                 flipDownSequence =false;
             }
 
