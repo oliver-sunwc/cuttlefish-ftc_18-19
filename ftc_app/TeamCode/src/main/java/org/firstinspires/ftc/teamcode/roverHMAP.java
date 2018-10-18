@@ -69,6 +69,8 @@ public class roverHMAP{
     public Servo boxL;
     public Servo boxR;
 
+    public Servo boxTeeth;
+    public Servo boxFlap;
     HardwareMap hwMap;
 
     public roverHMAP() {}
@@ -127,6 +129,14 @@ public class roverHMAP{
         intake.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
         intakeServo = hwMap.get(Servo.class,"is");
+
+        hang = hwMap.get(DcMotor.class,"h");
+        hang.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        hang.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
+        boxTeeth = hwMap.get(Servo.class,"bt");
+        boxFlap = hwMap.get(Servo.class,"bf");
+        //hang.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
         //parameters.angleUnit = HardwareType.BNO055IMU.AngleUnit.DEGREES;
         //parameters.accelUnit = HardwareType.BNO055IMU.AccelUnit.METERS_PERSEC_PERSEC;
