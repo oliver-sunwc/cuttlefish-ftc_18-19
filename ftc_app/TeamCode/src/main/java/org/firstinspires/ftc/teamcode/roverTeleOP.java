@@ -26,6 +26,7 @@ import java.io.PrintWriter;
 public class roverTeleOP extends OpMode {
 
     roverHMAP robot = new roverHMAP();
+    boolean ninja, dirReversed, dirControl = false;
     boolean dirToggle = false;
     double lx, rx, ly, ry;
 
@@ -38,7 +39,16 @@ public class roverTeleOP extends OpMode {
     boolean flipUpSequence, flipDownSequence = false;
     int flipUpStage, flipDownStage = 0;
 
+<<<<<<< HEAD
     ElapsedTime motorTime = new ElapsedTime();
+=======
+    boolean flapUp, flapControl = false;
+    boolean teethUp, teethControl = false;
+    int initialPosition;
+
+    boolean secondUp, secondUpControl = false;
+
+>>>>>>> cf0cca3230266144caba1eb67aed8e7f4d6b1684
     ElapsedTime timer = new ElapsedTime();
     double time;
     @Override
@@ -48,6 +58,8 @@ public class roverTeleOP extends OpMode {
         robot.MArmL.setPosition(0.2);
         robot.MArmR.setPosition(0.7);
         setBox(0.4);
+
+        initialPosition = robot.hang.getCurrentPosition();
     }
 
     @Override
@@ -57,10 +69,36 @@ public class roverTeleOP extends OpMode {
 
     @Override
     public void loop(){
+
+        if(!gamepad2.right_bumper){
+            secondUpControl = true;
+        }
+
+        if(gamepad2.right_bumper && secondUpControl){
+            secondUp = !secondUp;
+            secondUpControl = false;
+        }
+
+
+
+        if(gamepad1.right_bumper){
+            ninja= true;
+        } else {
+            ninja = false;
+        }
         // toggle buttons
+        if(!gamepad1.b){
+            dirControl = true;
+        }
+
+        if(gamepad1.b && dirControl){
+            dirReversed = !dirReversed;
+            dirControl = false;
+        }
         if(!gamepad2.a){
             flipControl = true;
         }
+
 
         if(gamepad2.a && flipControl) {
             if (flipUp) {
@@ -82,31 +120,35 @@ public class roverTeleOP extends OpMode {
             }
         }
 
+        if(!gamepad2.y){
+            flapControl = true;
+        }
+
+        if(gamepad2.y && flapControl){
+            flapUp = !flapUp;
+            flapControl = false;
+        }
+
+        if(!gamepad2.b){
+            teethControl = true;
+        }
+
+        if(gamepad2.b && teethControl){
+            teethUp = !teethUp;
+            teethControl = false;
+        }
+
         if(flipUpSequence){
             if(flipUpStage == 0) {
-                /*robot.intake.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-                int currPos = robot.intake.getCurrentPosition();
-                int finalPos = currPos % 560;
-                int moveTicks = 0;
-                if(finalPos < 260){
-                    moveTicks = 280 -finalPos;
-                } else {
-                    moveTicks = 560+280-finalPos;
-                }
-                robot.intake.setTargetPosition(robot.intake.getCurrentPosition() - moveTicks);
-                robot.intake.setPower(-0.2);*/
 
-                setBox(/*move that boi back*/0.07);
+                setBox(/*move that boi back*/0.1);
                 flipUpStage++;
                 telemetry.addData("something",1);
                 timer.reset();
             }
 
-            if(flipUpStage == 1 && timer.seconds()>2) {
+            if(flipUpStage == 1 && timer.seconds()>1) {
                 telemetry.addData("something",2);
-                robot.intake.setPower(0);
-                robot.intake.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-                robot.intake.setPower(0);
                 robot.flipL.setTargetPosition(robot.flipL.getCurrentPosition() + 385);
                 robot.flipR.setTargetPosition(robot.flipR.getCurrentPosition() + 385);
                 robot.flipL.setPower(0.1);
@@ -115,7 +157,7 @@ public class roverTeleOP extends OpMode {
                 timer.reset();
             }
 
-            if(flipUpStage == 2 && timer.seconds() > 2){
+            if(flipUpStage == 2 && timer.seconds() > 1){
                 setBox(1.0/*some position that sets it ready*/);
                 flipUpStage++;
             }
@@ -126,11 +168,39 @@ public class roverTeleOP extends OpMode {
         }
 
         if(flipDownSequence){
-            robot.flipL.setTargetPosition(robot.flipL.getCurrentPosition() - 385);
-            robot.flipR.setTargetPosition(robot.flipR.getCurrentPosition() - 385);
-            robot.flipL.setPower(-0.1);
-            robot.flipR.setPower(-0.1);
+            if(flipDownStage == 0){
+                setBox(0.1);
+                flipUpStage++;
+                timer.reset();
+            }
+            if(flipDownStage == 1 && timer.seconds() > 1){
+                robot.flipL.setTargetPosition(robot.flipL.getCurrentPosition() - 385);
+                robot.flipR.setTargetPosition(robot.flipR.getCurrentPosition() - 385);
+                robot.flipL.setPower(-0.1);
+                robot.flipR.setPower(-0.1);
+                flipDownStage ++;
+                timer.reset();
+            }
+            if(flipDownStage == 2 && timer.seconds() > 2){
+                setBox(0.4);
+                flipDownStage++;
+            }
+            if(flipUpStage == 3){
+                flipDownSequence =false;
+            }
+
         }
+
+        if(!flipUpSequence && !flipDownSequence){
+            if(secondUp){
+                setBox(1.0);
+                robot.intakeServo.setPosition(0.5);
+            } else {
+                setBox(0.4);
+                robot.intakeServo.setPosition(1.0);
+            }
+        }
+
         if(!gamepad2.x){
             intakeControl = true;
         }
@@ -140,39 +210,37 @@ public class roverTeleOP extends OpMode {
             intakeUp = !intakeUp;
         }
 
-        if(intakeUp){
-            robot.intakeServo.setPosition(0.3);
+
+        if(gamepad2.dpad_up){
+            robot.hang.setPower(1.0);
+            initialPosition += 250;
+
+        } else if(gamepad2.dpad_down){
+            robot.hang.setPower(-1.0);
+            initialPosition -= 250;
+        } else{
+            robot.hang.setTargetPosition(initialPosition);
+        }
+        robot.hang.setTargetPosition(initialPosition);
+        if(robot.hang.getCurrentPosition() - 30 < initialPosition){
+            robot.hang.setPower(1.0);
+        } else if (robot.hang.getCurrentPosition() + 30 > initialPosition) {
+            robot.hang.setPower(-1.0);
+        }
+
+
+
+        if(flapUp){
+            robot.boxFlap.setPosition(0.1);
         } else {
-            robot.intakeServo.setPosition(1.0);
+            robot.boxFlap.setPosition(0.6);
         }
 
-        /*if(!gamepad2.dpad_up){
-            boxUpControl=true;
+        if(teethUp){
+            robot.boxTeeth.setPosition(0.1);
+        } else {
+            robot.boxTeeth.setPosition(0.6);
         }
-
-        if(gamepad2.dpad_up && boxUpControl){
-
-            if(boxPos > 0.1) {
-                boxPos -= 0.1;
-            }
-            boxUpControl = false;
-        }
-
-        if(!gamepad2.dpad_down){
-            boxDownControl = true;
-        }
-
-        if(gamepad2.dpad_down && boxDownControl){
-            if(boxPos < 1) {
-                boxPos += 0.1;
-            }
-            boxDownControl = false;
-        }
-
-        if(!flipUpSequence && !flipDownSequence) {
-            setBox(boxPos);
-        }*/
-
 
         if(gamepad2.left_stick_y > 0.05){
             robot.intake.setPower(-0.5);
@@ -182,9 +250,16 @@ public class roverTeleOP extends OpMode {
             robot.intake.setPower(0);
         }
         double lx = scaleInput(gamepad1.left_stick_x);
-        double rx = scaleInput(gamepad1.left_stick_x);
-        double ly = scaleInput(-gamepad1.left_stick_y);
+
         double ry = scaleInput(-gamepad1.right_stick_y);
+
+        if(dirReversed){
+            ry*=-1;
+         }
+        if(ninja){
+            ry/=2;
+            lx/=2;
+        }
         driveArcade(ry, lx);
 
 
