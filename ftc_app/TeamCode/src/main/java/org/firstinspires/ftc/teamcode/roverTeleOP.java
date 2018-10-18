@@ -1,17 +1,21 @@
 package org.firstinspires.ftc.teamcode;
 
+import com.qualcomm.robotcore.util.ReadWriteFile;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.Range;
+import org.firstinspires.ftc.robotcore.internal.system.AppUtil;
 
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 
 import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.PrintWriter;
 
 /**
@@ -34,7 +38,9 @@ public class roverTeleOP extends OpMode {
     boolean flipUpSequence, flipDownSequence = false;
     int flipUpStage, flipDownStage = 0;
 
+    ElapsedTime motorTime = new ElapsedTime();
     ElapsedTime timer = new ElapsedTime();
+    double time;
     @Override
     public void init() {
 
@@ -192,6 +198,17 @@ public class roverTeleOP extends OpMode {
         robot.bl.setPower(ly);
         robot.fr.setPower(ry);
         robot.br.setPower(ry);
+
+        if(ly != 0 || ry != 0) {
+            motorTime.reset();
+        } else {
+            time = motorTime.seconds()*1.0;
+            String filename = "MotorLife.json";
+            File file = AppUtil.getInstance().getSettingsFile(filename);
+            ReadWriteFile.writeFile(file, "motor life " + Double.toString(time));
+
+            telemetry.log().add("saved to '%s'", filename);
+        }
 
         telemetry.addData("dl",robot.dMArmL.getDistance(DistanceUnit.CM));
         telemetry.addData("dl",robot.dMArmL.getDistance(DistanceUnit.CM));
