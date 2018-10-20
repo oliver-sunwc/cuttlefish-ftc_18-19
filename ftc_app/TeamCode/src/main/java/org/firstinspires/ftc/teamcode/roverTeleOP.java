@@ -67,6 +67,9 @@ public class roverTeleOP extends OpMode {
     @Override
     public void loop(){
 
+        robot.flipL.setPower(gamepad2.left_stick_y);
+        robot.flipR.setPower(-gamepad2.left_stick_y);
+
         if(!gamepad2.right_bumper){
             secondUpControl = true;
         }
@@ -75,8 +78,6 @@ public class roverTeleOP extends OpMode {
             secondUp = !secondUp;
             secondUpControl = false;
         }
-
-
 
         if(gamepad1.right_bumper){
             ninja= true;
@@ -137,25 +138,25 @@ public class roverTeleOP extends OpMode {
 
         if(flipUpSequence){
             if(flipUpStage == 0) {
-
-                setBox(/*move that boi back*/0.1);
+                /*yeets the box back, in order to move it out of the bar's way*/
+                setBox(0.1);
                 flipUpStage++;
-                telemetry.addData("something",1);
+                telemetry.addData("upstage",1);
                 timer.reset();
             }
 
             if(flipUpStage == 1 && timer.seconds()>1) {
-                telemetry.addData("something",2);
+                telemetry.addData("upstage",2);
                 robot.flipL.setTargetPosition(robot.flipL.getCurrentPosition() + 385);
                 robot.flipR.setTargetPosition(robot.flipR.getCurrentPosition() + 385);
-                robot.flipL.setPower(0.1);
-                robot.flipR.setPower(0.1);
+                robot.flipL.setPower(0.2);
+                robot.flipR.setPower(0.2);
                 flipUpStage++;
                 timer.reset();
             }
 
             if(flipUpStage == 2 && timer.seconds() > 1){
-                setBox(1.0/*some position that sets it ready*/);
+                setBox(1.0/*yeets the claw into megadunk*/);
                 flipUpStage++;
             }
 
@@ -173,19 +174,19 @@ public class roverTeleOP extends OpMode {
             if(flipDownStage == 1 && timer.seconds() > 1){
                 robot.flipL.setTargetPosition(robot.flipL.getCurrentPosition() - 385);
                 robot.flipR.setTargetPosition(robot.flipR.getCurrentPosition() - 385);
-                robot.flipL.setPower(-0.1);
-                robot.flipR.setPower(-0.1);
+                robot.flipL.setPower(-0.2);
+                robot.flipR.setPower(-0.2);
                 flipDownStage ++;
                 timer.reset();
             }
             if(flipDownStage == 2 && timer.seconds() > 2){
+                /*yeets the claw forwards, in order to collecc*/
                 setBox(0.4);
                 flipDownStage++;
             }
             if(flipDownStage == 3){
                 flipDownSequence =false;
             }
-
         }
 
         if(!flipUpSequence && !flipDownSequence){
@@ -290,8 +291,8 @@ public class roverTeleOP extends OpMode {
 
     void setBox(double pos){
         if(0 <= pos && pos <= 1.0) {
-            robot.boxR.setPosition(pos);
-            robot.boxL.setPosition(1.06 - pos);
+            robot.boxR.setPosition(1.06 - pos);
+            robot.boxL.setPosition(pos);
         }
     }
 
