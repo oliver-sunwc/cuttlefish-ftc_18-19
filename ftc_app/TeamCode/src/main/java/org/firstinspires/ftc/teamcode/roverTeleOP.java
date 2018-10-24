@@ -46,6 +46,8 @@ public class roverTeleOP extends OpMode {
 
     boolean secondUp, secondUpControl = false;
 
+    double tempos = 0.5;
+
     ElapsedTime timer = new ElapsedTime();
     double time;
     @Override
@@ -69,6 +71,17 @@ public class roverTeleOP extends OpMode {
 
         robot.flipL.setPower(gamepad2.left_stick_y);
         robot.flipR.setPower(-gamepad2.left_stick_y);
+
+
+        if(gamepad1.left_bumper) {
+            tempos += 0.1;
+            robot.boxL.setPosition(tempos);
+            robot.boxR.setPosition(1.06 - tempos);
+        } else if(gamepad1.right_bumper) {
+            tempos -= 0.1;
+            robot.boxL.setPosition(tempos);
+            robot.boxR.setPosition(1.06 - tempos);
+        }
 
         if(!gamepad2.right_bumper){
             secondUpControl = true;
@@ -263,6 +276,8 @@ public class roverTeleOP extends OpMode {
 
         telemetry.addData("boxPos",boxPos);
         telemetry.addData("getPos",robot.boxR.getPosition());
+        telemetry.addData("lpos", robot.fl.getCurrentPosition());
+        telemetry.addData("rpos", robot.fr.getCurrentPosition());
         telemetry.update();
     }
 
