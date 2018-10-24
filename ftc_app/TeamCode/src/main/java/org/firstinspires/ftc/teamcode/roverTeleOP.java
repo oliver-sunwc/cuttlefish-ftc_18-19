@@ -69,20 +69,6 @@ public class roverTeleOP extends OpMode {
     @Override
     public void loop(){
 
-        robot.flipL.setPower(gamepad2.left_stick_y);
-        robot.flipR.setPower(-gamepad2.left_stick_y);
-
-
-        if(gamepad1.left_bumper) {
-            tempos += 0.1;
-            robot.boxL.setPosition(tempos);
-            robot.boxR.setPosition(1.06 - tempos);
-        } else if(gamepad1.right_bumper) {
-            tempos -= 0.1;
-            robot.boxL.setPosition(tempos);
-            robot.boxR.setPosition(1.06 - tempos);
-        }
-
         if(!gamepad2.right_bumper){
             secondUpControl = true;
         }
