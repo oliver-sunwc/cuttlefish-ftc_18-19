@@ -105,7 +105,7 @@ public class roverHMAP{
 
         /*Sensors*/
         cMArmL = hwMap.get(ColorSensor.class, "cL");
-        dMArmL = hwMap.get(DistanceSensor.class, "cL");
+        dMArmL = hwMap.get(DistanceSensor.class, "cL" );
 
         cMArmR = hwMap.get(ColorSensor.class, "cR");
         dMArmR = hwMap.get(DistanceSensor.class, "cR");
