@@ -62,11 +62,11 @@ public class roverTeleOP extends OpMode {
         robot.MArmR.setPosition(0.8);
         boxPos=0.45;
         setBox(boxPos);
-        relativeTicks = robot.flipL.getCurrentPosition()+50;
-        robot.flipL.setTargetPosition(robot.flipL.getCurrentPosition() + 50);
-        robot.flipR.setTargetPosition(robot.flipR.getCurrentPosition() + 50);
-        robot.flipL.setPower(0.1);
-        robot.flipR.setPower(0.1);
+        relativeTicks = robot.flipL.getCurrentPosition() + 75;
+        robot.flipL.setTargetPosition(robot.flipL.getCurrentPosition() + 75);
+        robot.flipR.setTargetPosition(robot.flipR.getCurrentPosition() + 75);
+        robot.flipL.setPower(0.2);
+        robot.flipR.setPower(0.2);
         initialPosition = robot.hang.getCurrentPosition();
 
 
@@ -161,9 +161,10 @@ public class roverTeleOP extends OpMode {
 
             if(flipUpStage == 1 && timer.seconds()>0.4) {
                 telemetry.addData("upstage",2);
-                relativeTicks = robot.flipL.getCurrentPosition() + 420;
-                robot.flipL.setTargetPosition(robot.flipL.getCurrentPosition() + 420);
-                robot.flipR.setTargetPosition(robot.flipR.getCurrentPosition() + 420);
+                robot.flipL.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+                relativeTicks = robot.flipL.getCurrentPosition() + 400;
+                robot.flipL.setTargetPosition(robot.flipL.getCurrentPosition() + 400);
+                robot.flipR.setTargetPosition(robot.flipR.getCurrentPosition() + 400);
                 robot.flipL.setPower(0.2);
                 robot.flipR.setPower(0.2);
                 flipUpStage++;
@@ -190,22 +191,24 @@ public class roverTeleOP extends OpMode {
                 relativeTicks = robot.flipL.getCurrentPosition() - 300;
                 robot.flipL.setTargetPosition(robot.flipL.getCurrentPosition() - 300);
                 robot.flipR.setTargetPosition(robot.flipR.getCurrentPosition() - 300);
-                robot.flipL.setPower(-0.07);
-                robot.flipR.setPower(-0.07);
+                robot.flipL.setPower(-0.14);
+                robot.flipR.setPower(-0.14);
                 flipDownStage ++;
                 timer.reset();
             }
             if(flipDownStage == 2 && timer.seconds() > 1){
                 /*yeets the claw forwards, in order to collecc*/
                 boxPos = 0.45;
-                relativeTicks = robot.flipL.getCurrentPosition() - 120;
-                robot.flipL.setTargetPosition(robot.flipL.getCurrentPosition() - 120);
-                robot.flipR.setTargetPosition(robot.flipR.getCurrentPosition() - 120);
-                robot.flipL.setPower(-0.1);
-                robot.flipR.setPower(-0.1);
+                relativeTicks = robot.flipL.getCurrentPosition() - 100;
+                robot.flipL.setTargetPosition(robot.flipL.getCurrentPosition() - 100);
+                robot.flipR.setTargetPosition(robot.flipR.getCurrentPosition() - 100);
+                robot.flipL.setPower(-0.14);
+                robot.flipR.setPower(-0.14);
 
                 flipDownStage++;
+                timer.reset();
             }
+
             if(flipDownStage == 3){
                 flipDownSequence =false;
             }
