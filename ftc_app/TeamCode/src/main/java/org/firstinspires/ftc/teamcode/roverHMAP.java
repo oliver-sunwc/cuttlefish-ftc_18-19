@@ -120,6 +120,8 @@ public class roverHMAP{
         flipL.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         flipR.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
+        flipL.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        flipR.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         flipL.setDirection(DcMotorSimple.Direction.REVERSE);
 
         boxL = hwMap.get(Servo.class,"bxl");
