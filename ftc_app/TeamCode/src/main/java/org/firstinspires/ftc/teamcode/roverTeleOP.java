@@ -75,7 +75,7 @@ public class roverTeleOP extends OpMode {
 
     @Override
     public void loop(){
-        if(Math.abs(robot.flipL.getCurrentPosition() - relativeTicks) < 10) {
+        if(Math.abs(robot.flipL.getTargetPosition - robot.flipL.getCurrentPosition()) < 10) {
             robot.flipL.setPower(0);
             robot.flipR.setPower(0);
         }
@@ -329,6 +329,15 @@ public class roverTeleOP extends OpMode {
             robot.boxR.setPosition(1.06 - pos);
             robot.boxL.setPosition(pos);
         }
+    }
+
+    void encoderFlip(int pos, double power) {
+        robot.flipL.setMode(DcMotor.RunMode.RUN_USING_ENCODERS);
+        robot.flipR.setMode(DcMotor.RunMode.RUN_USING_ENCODERS);
+        robot.flipL.setTargetPosition(robot.flipL.getCurrentPosition() + pos, power);
+        robot.flipR.setTargetPosition(robot.flipR.getCurrentPosition() + pos, power);
+        robot.flipL.setPower(power);
+        robot.flipR.setPower(power);
     }
 
     void driveArcade(double ry, double lx){
