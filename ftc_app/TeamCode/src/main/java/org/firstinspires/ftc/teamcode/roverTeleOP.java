@@ -75,10 +75,10 @@ public class roverTeleOP extends OpMode {
 
     @Override
     public void loop(){
-        if(Math.abs(robot.flipL.getTargetPosition - robot.flipL.getCurrentPosition()) < 10) {
+        /*if(Math.abs(robot.flipL.getTargetPosition - robot.flipL.getCurrentPosition()) < 10) {
             robot.flipL.setPower(0);
             robot.flipR.setPower(0);
-        }
+        }*/
 
         if(!gamepad2.right_bumper){
             secondUpControl = true;
