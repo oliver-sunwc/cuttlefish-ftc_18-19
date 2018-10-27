@@ -17,6 +17,7 @@ import java.io.IOException;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.PrintWriter;
+import java.lang.*;
 
 /**
  * Manual with Arcade Drive
@@ -74,15 +75,10 @@ public class roverTeleOP extends OpMode {
 
     @Override
     public void loop(){
-        /*if(robot.flipL.getCurrentPosition() < relativeTicks) {
-            robot.flipL.setPower(0.03);
-            robot.flipR.setPower(0.03);
+        if(Math.abs(robot.flipL.getCurrentPosition() - relativeTicks) < 10) {
+            robot.flipL.setPower(0);
+            robot.flipR.setPower(0);
         }
-
-        if(robot.flipL.getCurrentPosition() > relativeTicks) {
-            robot.flipL.setPower(-0.01);
-            robot.flipR.setPower(-0.01);
-        }*/
 
         if(!gamepad2.right_bumper){
             secondUpControl = true;
