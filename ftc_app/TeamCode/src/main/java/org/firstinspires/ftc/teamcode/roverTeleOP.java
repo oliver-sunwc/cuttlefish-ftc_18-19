@@ -72,6 +72,7 @@ public class roverTeleOP extends OpMode {
 
     @Override
     public void loop(){
+<<<<<<< HEAD
         telemetry.addData("currPosL", robot.flipL.getCurrentPosition());
         telemetry.addData("currPosR", robot.flipR.getCurrentPosition());
         telemetry.addData("timer",begTimer.seconds());
@@ -106,6 +107,12 @@ public class roverTeleOP extends OpMode {
             robot.flipR.setPower(-0.05);
             initPhase = false;
         }
+=======
+        /*if(Math.abs(robot.flipL.getTargetPosition - robot.flipL.getCurrentPosition()) < 10) {
+            robot.flipL.setPower(0);
+            robot.flipR.setPower(0);
+        }*/
+>>>>>>> 3078495fa40143745283dbe5a6b318fd564e089a
 
         if(!gamepad2.right_bumper){
             secondUpControl = true;
@@ -360,6 +367,15 @@ public class roverTeleOP extends OpMode {
             robot.boxR.setPosition(1.06 - pos);
             robot.boxL.setPosition(pos);
         }
+    }
+
+    void encoderFlip(int pos, double power) {
+        robot.flipL.setMode(DcMotor.RunMode.RUN_USING_ENCODERS);
+        robot.flipR.setMode(DcMotor.RunMode.RUN_USING_ENCODERS);
+        robot.flipL.setTargetPosition(robot.flipL.getCurrentPosition() + pos, power);
+        robot.flipR.setTargetPosition(robot.flipR.getCurrentPosition() + pos, power);
+        robot.flipL.setPower(power);
+        robot.flipR.setPower(power);
     }
 
     void driveArcade(double ry, double lx){
