@@ -48,7 +48,7 @@ public class ExampleBlueVision extends OpenCVPipeline {
     private boolean showContours = true;
     // To keep it such that we don't have to instantiate a new Mat every call to processFrame,
     // we declare the Mats up here and reuse them. This is easier on the garbage collector.
-    private Mat hsv = new Mat();
+    public Mat hsv = new Mat();
     private Mat thresholded = new Mat();
 
     // this is just here so we can expose it later thru getContours.
@@ -65,11 +65,11 @@ public class ExampleBlueVision extends OpenCVPipeline {
     @Override
     public Mat processFrame(Mat rgba, Mat gray) {
         // First, we change the colorspace from RGBA to HSV, which is usually better for color
-        //Imgproc.cvtColor(rgba, hsv, Imgproc.COLOR_RGB2HSV, 3);
+        Imgproc.cvtColor(rgba, hsv, Imgproc.COLOR_RGB2HSV, 3);
         // Then, we threshold our hsv image so that we get a black/white binary image where white
         // is the blues listed in the specified range of values
         // you can use a program like WPILib GRIP to find these values, or just play around.
-        Core.inRange(rgba, new Scalar(0, 0, 0), new Scalar(255, 255, 255), thresholded);
+        Core.inRange(hsv, new Scalar(0, 200, 100), new Scalar(50, 255, 255), thresholded);
 
         // we blur the thresholded image to remove noise
         // there are other types of blur like box blur or gaussian which can be explored.

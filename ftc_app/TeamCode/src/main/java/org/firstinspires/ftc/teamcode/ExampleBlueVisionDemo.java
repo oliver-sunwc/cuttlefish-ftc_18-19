@@ -4,6 +4,7 @@ import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.corningrobotics.enderbots.endercv.CameraViewDisplay;
+import org.opencv.core.Mat;
 import org.opencv.core.MatOfPoint;
 import org.opencv.core.Rect;
 import org.opencv.imgproc.Imgproc;
@@ -68,7 +69,14 @@ public class ExampleBlueVisionDemo extends OpMode {
         for (int i = 0; i < contours.size(); i++) {
             // get the bounding rectangle of a single contour, we use it to get the x/y center
             // yes there's a mass center using Imgproc.moments but w/e
+
             Rect boundingRect = Imgproc.boundingRect(contours.get(i));
+            double rgb[] = blueVision.hsv.get(0,0);
+            telemetry.addData("len",rgb.length);
+            telemetry.addData("r",rgb[0]);
+            telemetry.addData("g",rgb[1]);
+            telemetry.addData("b",rgb[2]);
+            //telemetry.addData("hi",blueVision.hsv.get(0,0).toString());
             telemetry.addData("contour" + Integer.toString(i),
                     String.format(Locale.getDefault(), "(%d, %d)", (boundingRect.x + boundingRect.width) / 2, (boundingRect.y + boundingRect.height) / 2));
             telemetry.update();
