@@ -5,6 +5,7 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.util.Range;
 
+import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
@@ -14,6 +15,7 @@ import java.util.Locale;
 
 public class roverAuto extends LinearOpMode {
     roverHMAP robot;
+    public String telVar;
     public roverAuto(roverHMAP hwmap){
         robot = hwmap;
     }
@@ -36,6 +38,25 @@ public class roverAuto extends LinearOpMode {
         robot.fr.setPower(power);
         robot.bl.setPower(power);
         robot.br.setPower(power);
+    }
+
+    void verticalDrive2(double power, double angle){
+        if(getHeading() - angle > 4){
+            robot.fl.setPower(0.8*power);
+            robot.fr.setPower(0.8*power);
+            robot.bl.setPower(1.2*power);
+            robot.br.setPower(1.2*power);
+        } else if (angle - getHeading() > 4){
+            robot.fl.setPower(1.2*power);
+            robot.fr.setPower(1.2*power);
+            robot.bl.setPower(0.8*power);
+            robot.br.setPower(0.8*power);
+        }else if(angle - getHeading() < 2 && angle - getHeading() > -2){
+            robot.fl.setPower(power);
+            robot.fr.setPower(power);
+            robot.bl.setPower(power);
+            robot.br.setPower(power);
+        }
     }
 
     void rotateRight(double power) {
@@ -117,10 +138,36 @@ public class roverAuto extends LinearOpMode {
         }
     }
 
-    void gyroDrive( double speed, double distance, double angle)throws InterruptedException {
+     void gyroAlign0() throws InterruptedException{
+         if(getHeading() > 1){
+             while(getHeading() >= 0.5) {
+                 robot.fl.setPower(0.15);
+                 robot.bl.setPower(0.15);
+             }
+         }
+         robot.fl.setPower(0);
+         robot.bl.setPower(0);
+     }
+
+     void gyroAlign1() throws InterruptedException{
+         if(getHeading() < 2){
+             while(getHeading() <= 1.55) {
+                 robot.fr.setPower(0.15);
+                 robot.br.setPower(0.15);
+             }
+         }
+         robot.fr.setPower(0);
+         robot.br.setPower(0);
+     }
+
+    public void gyroDrive ( double speed,
+                            double distance,
+                            double angle)  throws InterruptedException{
 
         int     newLeftTarget;
+        int newLeftTargetB;
         int     newRightTarget;
+        int newRightTargetB;
         int     moveCounts;
         double  max;
         double  error;
@@ -129,16 +176,19 @@ public class roverAuto extends LinearOpMode {
         double  rightSpeed;
 
         // Ensure that the opmode is still active
-        if (opModeIsActive()) {
-            robot.bl.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-            robot.fl.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-            robot.br.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-            robot.fr.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+
+            robot.bl.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            robot.fl.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            robot.br.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            robot.fr.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
             // Determine new target position, and pass to motor controller
             moveCounts = (int)(distance * robot.ticksPerInch);
-            //newLeftTarget = motorBL.getCurrentPosition() + moveCounts;
-            newLeftTarget = robot.bl.getCurrentPosition() + moveCounts;
-            newRightTarget = robot.br.getCurrentPosition() + moveCounts;
+            //newLeftTarget = robot.bl.getCurrentPosition() + moveCounts;
+            newLeftTarget = robot.fl.getCurrentPosition() + moveCounts;
+            newRightTarget = robot.fr.getCurrentPosition() + moveCounts;
+            newLeftTargetB = robot.bl.getCurrentPosition() + moveCounts;
+            newRightTargetB = robot.br.getCurrentPosition() + moveCounts;
 
             // Set Target and Turn On RUN_TO_POSITION
             robot.bl.setTargetPosition(newLeftTarget);
@@ -148,30 +198,30 @@ public class roverAuto extends LinearOpMode {
 
             robot.bl.setMode(DcMotor.RunMode.RUN_TO_POSITION);
             robot.fl.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            robot.fr.setMode(DcMotor.RunMode.RUN_TO_POSITION);
             robot.br.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            robot.fr.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
             // start motion
-            speed = Range.clip(Math.abs(speed), 0.0, 1.0);
+            speed = Range.clip(Math.abs(speed), -1, 1.0);
             robot.bl.setPower(speed);
             robot.fl.setPower(speed);
             robot.fr.setPower(speed);
             robot.br.setPower(speed);
 
-            // keep looping while we are still active, and BOTH motors are running.
-            while (opModeIsActive() &&
+            //
+        telVar = Boolean.toString(robot.fl.isBusy());
+            while (
                     (robot.bl.isBusy() && robot.fr.isBusy() && robot.fl.isBusy() && robot.br.isBusy())) {
-
                 // adjust relative speed based on heading error.
                 error = getError(angle);
-                steer = getSteer(error, robot.P_DRIVE_COEFF);
+                steer = getSteer(error, 0.008);
 
                 // if driving in reverse, the motor correction also needs to be reversed
                 if (distance < 0)
                     steer *= -1.0;
 
-                leftSpeed = speed - steer;
-                rightSpeed = speed + steer;
+                leftSpeed = speed + steer;
+                rightSpeed = speed - steer;
 
                 // Normalize speeds if either one exceeds +/- 1.0;
                 max = Math.max(Math.abs(leftSpeed), Math.abs(rightSpeed));
@@ -186,26 +236,21 @@ public class roverAuto extends LinearOpMode {
                 robot.br.setPower(rightSpeed);
                 robot.fr.setPower(rightSpeed);
 
-                // Display drive status for the driver.
-                telemetry.addData("Err/St",  "%5.1f/%5.1f",  error, steer);
-                telemetry.addData("Target",  "%7d:%7d",      newLeftTarget,  newRightTarget);
-                telemetry.addData("Speed",   "%5.2f:%5.2f",  leftSpeed, rightSpeed);
-                telemetry.update();
+
             }
 
             // Stop all motion;
             robot.br.setPower(0);
-            robot.fl.setPower(0);
             robot.fr.setPower(0);
+            robot.fl.setPower(0);
             robot.bl.setPower(0);
 
             // Turn off RUN_TO_POSITION
-            robot.br.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-            robot.fl.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
             robot.fr.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            robot.fl.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            robot.br.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
             robot.bl.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         }
-    }
 
     public double getError(double targetAngle) {
 
@@ -302,6 +347,17 @@ public class roverAuto extends LinearOpMode {
         }
     }
 
+    public void gyroDrive2(double power, double angle, double coeff){
+        double error;
+        while(Double.isNaN(robot.dMArmL.getDistance(DistanceUnit.CM))  || Double.isNaN(robot.dMArmR.getDistance(DistanceUnit.CM))){
+            error = coeff*(angle - getHeading());
+            robot.fr.setPower(Range.clip(power + error,-1,1));
+            robot.br.setPower(Range.clip(power + error,-1,1));
+            robot.bl.setPower(Range.clip(power - error,-1,1));
+            robot.fl.setPower(Range.clip(power - error,-1,1));
+        }
+    }
+
     public void gyroTurnRobotRight(double angle, double power){
         double rightTurnHeading = getHeading();
         if(getHeading() <= 180 && getHeading() >= 180+angle+5){
@@ -355,6 +411,12 @@ public class roverAuto extends LinearOpMode {
             robot.bl.setPower(0);
             robot.fl.setPower(0);
         }
+    }
+    double leftDistTo(int red, int green, int blue){
+        return Math.pow(Math.pow(robot.cMArmL.red() - red,2) + Math.pow(robot.cMArmL.green() - green,2) + Math.pow(robot.cMArmL.blue() - blue,2),0.5);
+    }
+    double rightDistTo(int red, int green, int blue){
+        return Math.pow(Math.pow(robot.cMArmR.red() - red,2) + Math.pow(robot.cMArmR.green() - green,2) + Math.pow(robot.cMArmR.blue() - blue,2),0.5);
     }
     //insert methods
 }
