@@ -22,8 +22,8 @@ import java.util.List;
 import java.util.Locale;
 
 import static com.google.blocks.ftcrobotcontroller.util.HardwareType.BNO055IMU;
-@Autonomous(name="autBlueCraterFinal",group="rover")
-public class roverAutoBlueCraterFinal extends LinearOpMode {
+@Autonomous(name="autRedCraterFinal",group="rover")
+public class roverAutoRedCraterFinal extends LinearOpMode {
     roverHMAP robot;
     roverAuto robotAuto;
     AnalogInput ods;
@@ -65,7 +65,6 @@ public class roverAutoBlueCraterFinal extends LinearOpMode {
 
 
 
-        robot.intakeServo.setPosition(0.6);
 
         robot.hang.setTargetPosition(robot.hang.getCurrentPosition()-500);
         robot.hang.setPower(-0.6);
@@ -87,7 +86,8 @@ public class roverAutoBlueCraterFinal extends LinearOpMode {
         Thread.sleep(500);
 
 
-        robotAuto.verticalDriveDistance(0.2,2.5);
+        robotAuto.verticalDriveDistance(0.1,3.5);
+        Thread.sleep(500);
         telemetry.addData("gyro",robotAuto.getHeading());
         telemetry.update();
 
@@ -137,7 +137,7 @@ public class roverAutoBlueCraterFinal extends LinearOpMode {
         Thread.sleep(500);
         //robotAuto.gyroTurnRobotRight(19,0.3);
         if(!left) {
-            while (robotAuto.getHeading() > -100) {
+            while (robotAuto.getHeading() > -95) {
                 robot.fl.setPower(0.1);
                 robot.bl.setPower(0.1);
                 robot.fr.setPower(-0.1);
@@ -151,7 +151,7 @@ public class roverAutoBlueCraterFinal extends LinearOpMode {
             Thread.sleep(500);
             for (int i = 0; i < contours.size(); i++) {
                 Rect boundRec = Imgproc.boundingRect(contours.get(i));
-                if (boundRec.x + boundRec.width > 4 * blueVision.hsv.width() / 5) {
+                if (boundRec.x + boundRec.width > 4 * blueVision.hsv.width() / 5 && boundRec.y > blueVision.hsv.height()/5) {
                     counter++;
                 }
                 telemetry.addData("boundRec" + i, boundRec.x + boundRec.width);
@@ -169,20 +169,75 @@ public class roverAutoBlueCraterFinal extends LinearOpMode {
         }
         if(left) {
             telemetry.addData("left",left);
+            telemetry.update();
+            Thread.sleep(250);
+            robot.fl.setPower(-0.1);
+            robot.bl.setPower(-0.1);
+            robot.fr.setPower(0.1);
+            robot.br.setPower(0.1);
+            while(robotAuto.getHeading() < -25){
+
+            }
+            robotAuto.stopDriving();
+
+            robotAuto.verticalDriveDistance(0.1,5);
+
+            robot.fl.setPower(-0.1);
+            robot.bl.setPower(-0.1);
+            robot.fr.setPower(0.1);
+            robot.br.setPower(0.1);
+            while(robotAuto.getHeading() < 30){
+
+            }
+            robotAuto.stopDriving();
+
+
         } else if(center){
             telemetry.addData("center",center);
+            telemetry.update();
+
+            robotAuto.gyroTurnRobotLeft(20,0.3);
+            robot.fl.setPower(-0.1);
+            robot.bl.setPower(-0.1);
+            robot.fr.setPower(0.1);
+            robot.br.setPower(0.1);
+            while(robotAuto.getHeading() < -25){
+
+            }
+            robotAuto.stopDriving();
+
+            robotAuto.verticalDriveDistance(0.1,5);
+            robot.fl.setPower(-0.1);
+            robot.bl.setPower(-0.1);
+            robot.fr.setPower(0.1);
+            robot.br.setPower(0.1);
+            while(robotAuto.getHeading() < -5){
+
+            }
+            robotAuto.stopDriving();
+
         } else {
             telemetry.addData("right",right);
+            telemetry.update();
+            robotAuto.gyroTurnRobotLeft(20,0.3);
+            robot.fl.setPower(-0.1);
+            robot.bl.setPower(-0.1);
+            robot.fr.setPower(0.1);
+            robot.br.setPower(0.1);
+            while(robotAuto.getHeading() < -50){
+
+            }
+            robotAuto.stopDriving();
         }
-        telemetry.update();
         sleep(1000);
 
         //insert hit code
 
-        robotAuto.verticalDriveDistance(-0.3,-15);
+        robotAuto.verticalDriveDistance(-0.3,-25);
         robotAuto.gyroTurnRobotRight(0.2,60);
         telemetry.addData("gyro",robotAuto.getHeading());
         telemetry.update();
+        Thread.sleep(2000);
         while(robotAuto.getHeading() > -10){
             robot.fl.setPower(0.1);
             robot.bl.setPower(0.1);

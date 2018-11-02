@@ -412,6 +412,12 @@ public class roverAuto extends LinearOpMode {
             robot.fl.setPower(0);
         }
     }
+
+    void extendSlide(double power){
+        robot.flipL.setPower(power);
+        robot.flipR.setPower(-power);
+    }
+
     double leftDistTo(int red, int green, int blue){
         return Math.pow(Math.pow(robot.cMArmL.red() - red,2) + Math.pow(robot.cMArmL.green() - green,2) + Math.pow(robot.cMArmL.blue() - blue,2),0.5);
     }

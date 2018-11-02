@@ -62,15 +62,7 @@ public class roverHMAP{
     public DcMotor hang;
     public DcMotor intake;
     /*Servos*/
-    public Servo MArmL;
-    public Servo MArmR;
-    public Servo intakeServo;
 
-    public Servo boxL;
-    public Servo boxR;
-
-    public Servo boxTeeth;
-    public Servo boxFlap;
     HardwareMap hwMap;
 
     public roverHMAP() {}
@@ -96,9 +88,6 @@ public class roverHMAP{
         br.setDirection(DcMotor.Direction.REVERSE);
         fr.setDirection(DcMotor.Direction.REVERSE);
 
-        /*Servos*/
-        MArmL = hwMap.get(Servo.class, "larm");
-        MArmR = hwMap.get(Servo.class, "rarm");
 
         //boxClose = hwMap.get(Servo.class, "cb");
         //boxRotate = hwMap.get(Servo.class, "rotb");
@@ -117,27 +106,20 @@ public class roverHMAP{
         flipL.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         flipR.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
-        flipL.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        flipR.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        flipL.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        flipR.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
-        flipL.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        flipR.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+
         flipL.setDirection(DcMotorSimple.Direction.REVERSE);
 
-        boxL = hwMap.get(Servo.class,"bxl");
-        boxR = hwMap.get(Servo.class,"bxr");
 
         intake = hwMap.get(DcMotor.class,"i");
         intake.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-
-        intakeServo = hwMap.get(Servo.class,"is");
 
         hang = hwMap.get(DcMotor.class,"h");
         hang.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         hang.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
-        boxTeeth = hwMap.get(Servo.class,"bt");
-        boxFlap = hwMap.get(Servo.class,"bf");
         //hang.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
         //parameters.angleUnit = HardwareType.BNO055IMU.AngleUnit.DEGREES;
