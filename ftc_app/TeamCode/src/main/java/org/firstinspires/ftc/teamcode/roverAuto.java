@@ -361,10 +361,10 @@ public class roverAuto extends LinearOpMode {
     public void gyroTurnRobotRight(double angle, double power){
         double rightTurnHeading = getHeading();
         if(getHeading() <= 180 && getHeading() >= 180+angle+5){
-            robot.br.setPower(-power);
-            robot.fr.setPower(-power);
-            robot.bl.setPower(power);
-            robot.fl.setPower(power);
+            robot.bl.setPower(-power);
+            robot.fl.setPower(-power);
+            robot.br.setPower(power);
+            robot.fr.setPower(power);
             while(normalize(getHeading()) > normalize(rightTurnHeading) - (angle-3)){
         }
             robot.br.setPower(0);
@@ -373,10 +373,10 @@ public class roverAuto extends LinearOpMode {
             robot.fl.setPower(0);
 
         } else {
-            robot.br.setPower(power);
-            robot.fr.setPower(power);
-            robot.bl.setPower(-power);
-            robot.fl.setPower(-power);
+            robot.bl.setPower(power);
+            robot.fl.setPower(power);
+            robot.br.setPower(-power);
+            robot.fr.setPower(-power);
             while(getHeading() > rightTurnHeading - (angle-3)){
             }
             robot.br.setPower(0);
