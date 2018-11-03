@@ -60,6 +60,7 @@ public class roverAutoRedCraterFinal extends LinearOpMode {
         blueVision.setShowCountours(true);
         // start the vision system
         blueVision.enable();
+        robot.gameMarker.setPosition(0.8);
 
         waitForStart();
 
@@ -82,7 +83,7 @@ public class roverAutoRedCraterFinal extends LinearOpMode {
         Thread.sleep(1000);
         robot.hang.setTargetPosition(robot.hang.getCurrentPosition() + 1200);
         robot.hang.setPower(0.7);
-        Thread.sleep(1500);
+        Thread.sleep(1000);
 
 
 
@@ -91,14 +92,13 @@ public class roverAutoRedCraterFinal extends LinearOpMode {
 
         //gyroDrive(0.1,18,0);
         //robotAuto.verticalDriveDistance(0.1,10);
-        Thread.sleep(500);
 
 
         robot.intakeDrop.setPosition(1.0);
         robotAuto.verticalDriveDistance(0.2,1.7);
-        sleep(250);
+        sleep(100);
         robotAuto.gyroAlign0();
-        Thread.sleep(250);
+        Thread.sleep(100);
         robotAuto.moveForward(0.1);
         while(robot.dBack.getDistance(DistanceUnit.CM) < 5.9 ){
 
@@ -107,7 +107,7 @@ public class roverAutoRedCraterFinal extends LinearOpMode {
 
 
         //robotAuto.verticalDriveDistance(0.1,3.5);
-        Thread.sleep(500);
+        Thread.sleep(100);
         telemetry.addData("gyro",robotAuto.getHeading());
         telemetry.update();
 
@@ -132,7 +132,6 @@ public class roverAutoRedCraterFinal extends LinearOpMode {
 
         telemetry.addData("performing","left view");
         telemetry.update();
-        Thread.sleep(500);
         int counter=0;
         telemetry.update();
         telemetry.addData("gyro",robotAuto.getHeading());
@@ -154,7 +153,6 @@ public class roverAutoRedCraterFinal extends LinearOpMode {
         telemetry.addData("counter",counter);
         telemetry.update();
 
-        Thread.sleep(500);
         //robotAuto.gyroTurnRobotRight(19,0.3);
         if(!left) {
             while (robotAuto.getHeading() > -95) {
@@ -168,7 +166,7 @@ public class roverAutoRedCraterFinal extends LinearOpMode {
             telemetry.addData("gyro", getHeading());
             telemetry.addData("performing", "center view");
             telemetry.update();
-            Thread.sleep(500);
+            Thread.sleep(100);
             for (int i = 0; i < contours.size(); i++) {
                 Rect boundRec = Imgproc.boundingRect(contours.get(i));
                 if (boundRec.x + boundRec.width > 4 * blueVision.hsv.width() / 5 && boundRec.y > blueVision.hsv.height()/5) {
@@ -190,7 +188,7 @@ public class roverAutoRedCraterFinal extends LinearOpMode {
         if(left) {
             telemetry.addData("left",left);
             telemetry.update();
-            Thread.sleep(250);
+            Thread.sleep(100);
             robot.fl.setPower(-0.1);
             robot.bl.setPower(-0.1);
             robot.fr.setPower(0.1);
@@ -200,8 +198,7 @@ public class roverAutoRedCraterFinal extends LinearOpMode {
             }
             robotAuto.stopDriving();
 
-            robotAuto.verticalDriveDistance(0.1,3.8);
-
+            robotAuto.verticalDriveDistance(0.1,1.5);
 
             robot.intakeDrop.setPosition(1.0);
 
@@ -209,20 +206,58 @@ public class roverAutoRedCraterFinal extends LinearOpMode {
             robot.bl.setPower(-0.1);
             robot.fr.setPower(0.1);
             robot.br.setPower(0.1);
-            while(robotAuto.getHeading() < 32){
+            while(robotAuto.getHeading() < 27){
 
             }
             robotAuto.stopDriving();
 
-
-
-            robot.flipL.setTargetPosition(robot.flipL.getCurrentPosition() - 2000);
-            robot.flipR.setTargetPosition(robot.flipR.getCurrentPosition()+2000);
+            robot.flipL.setTargetPosition(robot.flipL.getCurrentPosition() - 2200);
+            robot.flipR.setTargetPosition(robot.flipR.getCurrentPosition() + 2200);
             robot.flipL.setPower(-0.5);
             robot.flipR.setPower(0.5);
-            sleep(2000);
+            while(robot.flipL.isBusy() && robot.flipR.isBusy()) {
+            }
+            robot.flipL.setTargetPosition(robot.flipL.getCurrentPosition() + 2200);
+            robot.flipR.setTargetPosition(robot.flipR.getCurrentPosition() - 2200);
+            robot.flipL.setPower(0.5);
+            robot.flipR.setPower(-0.5);
 
+            while(robotAuto.getHeading() < 80) {
+                robot.fr.setPower(0.17);
+                robot.br.setPower(0.17);
+            }
+            robotAuto.stopDriving();
 
+            robotAuto.gyroAlign90();
+
+            robotAuto.verticalDriveDistance(0.2,26.5);
+
+            /*robotAuto.verticalDrive(0.2);
+            while(robot.dRight.getDistance(DistanceUnit.CM) > 48) {
+                telemetry.addData("dR", robot.dRight.getDistance(DistanceUnit.CM));
+                telemetry.update();
+            }*/
+            robotAuto.stopDriving();
+            Thread.sleep(100);
+
+            robot.fr.setPower(0.2);
+            robot.br.setPower(0.2);
+            while(robotAuto.getHeading() < 105){
+
+            }
+            robotAuto.stopDriving();
+            Thread.sleep(100);
+            robot.fr.setPower(0.07);
+            robot.br.setPower(0.07);
+            while(robotAuto.getHeading() < 127){
+
+            }
+            robotAuto.stopDriving();
+            sleep(100);
+            robotAuto.verticalDriveDistance(0.3,27);
+            robot.gameMarker.setPosition(0);
+            Thread.sleep(500);
+            robotAuto.verticalDriveDistance(-0.5,-44);
         } else if(center){
             telemetry.addData("center",center);
             telemetry.update();
@@ -237,12 +272,12 @@ public class roverAutoRedCraterFinal extends LinearOpMode {
             }
             robotAuto.stopDriving();
 
-            robotAuto.verticalDriveDistance(0.1,5);
+            robotAuto.verticalDriveDistance(0.1,3);
             robot.fl.setPower(-0.1);
             robot.bl.setPower(-0.1);
             robot.fr.setPower(0.1);
             robot.br.setPower(0.1);
-            while(robotAuto.getHeading() < -2){
+            while(robotAuto.getHeading() > 1.5){
 
             }
             robotAuto.stopDriving();
@@ -251,8 +286,49 @@ public class roverAutoRedCraterFinal extends LinearOpMode {
             robot.flipR.setTargetPosition(robot.flipR.getCurrentPosition() + 1500);
             robot.flipL.setPower(-0.5);
             robot.flipR.setPower(0.5);
-            sleep(1500);
+            while(robot.flipL.isBusy() && robot.flipR.isBusy()) {
+            }
+            robot.flipL.setTargetPosition(robot.flipL.getCurrentPosition() + 1500);
+            robot.flipR.setTargetPosition(robot.flipR.getCurrentPosition() - 1500);
+            robot.flipL.setPower(0.5);
+            robot.flipR.setPower(-0.5);
+            while(robotAuto.getHeading() < 80) {
+                robot.fl.setPower(-0.15);
+                robot.fl.setPower(-0.15);
+                robot.fr.setPower(0.15);
+                robot.br.setPower(0.15);
+            }
+            robotAuto.stopDriving();
 
+            robotAuto.gyroAlign90();
+
+            robotAuto.verticalDriveDistance(0.2,28);
+            /*robotAuto.verticalDrive(0.2);
+            while(robot.dRight.getDistance(DistanceUnit.CM) > 48) {
+                telemetry.addData("dR", robot.dRight.getDistance(DistanceUnit.CM));
+                telemetry.update();
+            }*/
+            robotAuto.stopDriving();
+            Thread.sleep(100);
+
+            robot.fr.setPower(0.2);
+            robot.br.setPower(0.2);
+            while(robotAuto.getHeading() < 105){
+
+            }
+            robotAuto.stopDriving();
+            Thread.sleep(100);
+            robot.fr.setPower(0.07);
+            robot.br.setPower(0.07);
+            while(robotAuto.getHeading() < 127){
+
+            }
+            robotAuto.stopDriving();
+            sleep(100);
+            robotAuto.verticalDriveDistance(0.3,27);
+            robot.gameMarker.setPosition(0);
+            Thread.sleep(2500);
+            robotAuto.verticalDriveDistance(-0.5,-46);
         } else {
             telemetry.addData("right",right);
             telemetry.update();
@@ -270,10 +346,69 @@ public class roverAutoRedCraterFinal extends LinearOpMode {
             robot.flipR.setTargetPosition(robot.flipR.getCurrentPosition() + 2200);
             robot.flipL.setPower(-0.5);
             robot.flipR.setPower(0.5);
-            sleep(2000);
+            while(robot.flipL.isBusy() && robot.flipR.isBusy()) {
+            }
+            robot.flipL.setTargetPosition(robot.flipL.getCurrentPosition() + 2200);
+            robot.flipR.setTargetPosition(robot.flipR.getCurrentPosition() - 2200);
+            robot.flipL.setPower(0.5);
+            robot.flipR.setPower(-0.5);
+            while(robotAuto.getHeading() < 80) {
+                robot.fl.setPower(-0.15);
+                robot.fl.setPower(-0.15);
+                robot.fr.setPower(0.12);
+                robot.br.setPower(0.12);
+            }
+            robotAuto.stopDriving();
 
+            robotAuto.gyroAlign90();
+
+            robotAuto.verticalDriveDistance(0.2,26.5);
+            /*robotAuto.verticalDrive(0.2);
+            while(robot.dRight.getDistance(DistanceUnit.CM) > 48) {
+                telemetry.addData("dR", robot.dRight.getDistance(DistanceUnit.CM));
+                telemetry.update();
+            }*/
+            robotAuto.stopDriving();
+            Thread.sleep(100);
+
+            robot.fr.setPower(0.2);
+            robot.br.setPower(0.2);
+            while(robotAuto.getHeading() < 105){
+
+            }
+            robotAuto.stopDriving();
+            Thread.sleep(100);
+            robot.fr.setPower(0.07);
+            robot.br.setPower(0.07);
+            while(robotAuto.getHeading() < 127){
+
+            }
+            robotAuto.stopDriving();
+            sleep(100);
+            robotAuto.verticalDriveDistance(0.3,27);
+            robot.gameMarker.setPosition(0);
+            Thread.sleep(2500);
+            robotAuto.verticalDriveDistance(-0.5,-46);
         }
-        sleep(1000);
+        sleep(100);
+
+
+
+        /*while(Double.isNaN(robot.dRight.getDistance(DistanceUnit.CM))) {
+            robotAuto.verticalDrive(0.4);
+        }
+        if(robot.dRight.getDistance(DistanceUnit.CM) < 15) {
+            robotAuto.stopDriving();
+        }
+
+        sleep(150);
+
+        while(robotAuto.getHeading() < 100) {
+            robot.br.setPower(0.5);
+            robot.fr.setPower(0.5);
+        }*/
+
+
 
         //insert hit code
 
@@ -300,7 +435,7 @@ public class roverAutoRedCraterFinal extends LinearOpMode {
 
         int     newLeftTarget;
         int newLeftTargetB;
-        int     newRightTarget;
+          int     newRightTarget;
         int newRightTargetB;
         int     moveCounts;
         double  max;

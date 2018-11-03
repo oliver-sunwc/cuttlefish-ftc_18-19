@@ -170,8 +170,7 @@ public class roverTeleOP extends OpMode {
             telemetry.log().add("saved to '%s'", filename);
         }
 
-        telemetry.addData("dl",robot.dMArmL.getDistance(DistanceUnit.CM));
-        telemetry.addData("dl",robot.dMArmL.getDistance(DistanceUnit.CM));
+
         telemetry.update();
 
     }

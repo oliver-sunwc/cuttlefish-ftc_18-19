@@ -41,14 +41,8 @@ public class roverHMAP{
     public Acceleration gravity;
 
     /*Sensors*/
-
-    //This is the sensor that will sense the mineral to be knocked off the starting zone
-    public ColorSensor cMArmL;
-    public DistanceSensor dMArmL;
-
+    public DistanceSensor dRight;
     public DistanceSensor dBack;
-    public ColorSensor cMArmR;
-    public DistanceSensor dMArmR;
 
     double P_DRIVE_COEFF = 0.02;     // Larger is more responsive, but also less stable
     public final double ticksPerInch = 72.1;
@@ -64,6 +58,7 @@ public class roverHMAP{
     public DcMotor intake;
     /*Servos*/
     public Servo intakeDrop;
+    public Servo gameMarker;
 
     HardwareMap hwMap;
 
@@ -72,7 +67,7 @@ public class roverHMAP{
     public void init(HardwareMap ahwMap) {
         hwMap = ahwMap;
 
-        dBack = hwMap.get(DistanceSensor.class,"db");
+
         /*Motors*/
         fl = hwMap.get(DcMotor.class, "fl");
         fr = hwMap.get(DcMotor.class, "fr");
@@ -96,11 +91,10 @@ public class roverHMAP{
         //boxRotate = hwMap.get(Servo.class, "rotb");
 
         /*Sensors*/
-        cMArmL = hwMap.get(ColorSensor.class, "cL");
-        dMArmL = hwMap.get(DistanceSensor.class, "cL" );
+        dRight = hwMap.get(DistanceSensor.class,"dr");
+        dBack = hwMap.get(DistanceSensor.class, "db");
 
-        cMArmR = hwMap.get(ColorSensor.class, "cR");
-        dMArmR = hwMap.get(DistanceSensor.class, "cR");
+        gameMarker = hwMap.get(Servo.class,"gm");
 
         flipL = hwMap.get(DcMotor.class,"fll");
         flipR = hwMap.get(DcMotor.class,"flr");

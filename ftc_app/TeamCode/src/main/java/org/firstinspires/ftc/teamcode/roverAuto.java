@@ -165,6 +165,22 @@ public class roverAuto extends LinearOpMode {
          robot.br.setPower(0);
      }
 
+    void gyroAlign90() throws InterruptedException{
+        if(getHeading() < 88){
+            while(getHeading() <= 88.5) {
+                robot.fr.setPower(0.1);
+                robot.br.setPower(0.1);
+            }
+        } else if(getHeading() > 92){
+            while(getHeading()>91.5){
+                robot.fr.setPower(-0.1);
+                robot.br.setPower(-0.1);
+            }
+        }
+        robot.fr.setPower(0);
+        robot.br.setPower(0);
+    }
+
     public void gyroDrive ( double speed,
                             double distance,
                             double angle)  throws InterruptedException{
@@ -352,16 +368,6 @@ public class roverAuto extends LinearOpMode {
         }
     }
 
-    public void gyroDrive2(double power, double angle, double coeff){
-        double error;
-        while(Double.isNaN(robot.dMArmL.getDistance(DistanceUnit.CM))  || Double.isNaN(robot.dMArmR.getDistance(DistanceUnit.CM))){
-            error = coeff*(angle - getHeading());
-            robot.fr.setPower(Range.clip(power + error,-1,1));
-            robot.br.setPower(Range.clip(power + error,-1,1));
-            robot.bl.setPower(Range.clip(power - error,-1,1));
-            robot.fl.setPower(Range.clip(power - error,-1,1));
-        }
-    }
 
     public void gyroTurnRobotRight(double angle, double power){
         double rightTurnHeading = getHeading();
@@ -423,11 +429,6 @@ public class roverAuto extends LinearOpMode {
         robot.flipR.setPower(-power);
     }
 
-    double leftDistTo(int red, int green, int blue){
-        return Math.pow(Math.pow(robot.cMArmL.red() - red,2) + Math.pow(robot.cMArmL.green() - green,2) + Math.pow(robot.cMArmL.blue() - blue,2),0.5);
-    }
-    double rightDistTo(int red, int green, int blue){
-        return Math.pow(Math.pow(robot.cMArmR.red() - red,2) + Math.pow(robot.cMArmR.green() - green,2) + Math.pow(robot.cMArmR.blue() - blue,2),0.5);
-    }
+
     //insert methods
 }
