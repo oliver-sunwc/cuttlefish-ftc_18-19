@@ -46,6 +46,7 @@ public class roverHMAP{
     public ColorSensor cMArmL;
     public DistanceSensor dMArmL;
 
+    public DistanceSensor dBack;
     public ColorSensor cMArmR;
     public DistanceSensor dMArmR;
 
@@ -62,6 +63,7 @@ public class roverHMAP{
     public DcMotor hang;
     public DcMotor intake;
     /*Servos*/
+    public Servo intakeDrop;
 
     HardwareMap hwMap;
 
@@ -70,6 +72,7 @@ public class roverHMAP{
     public void init(HardwareMap ahwMap) {
         hwMap = ahwMap;
 
+        dBack = hwMap.get(DistanceSensor.class,"db");
         /*Motors*/
         fl = hwMap.get(DcMotor.class, "fl");
         fr = hwMap.get(DcMotor.class, "fr");
@@ -106,15 +109,18 @@ public class roverHMAP{
         flipL.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         flipR.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
-        flipL.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        flipR.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        flipL.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        flipR.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
 
         flipL.setDirection(DcMotorSimple.Direction.REVERSE);
 
+        flipL.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        flipR.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
+        intakeDrop = hwMap.get(Servo.class,"s");
         intake = hwMap.get(DcMotor.class,"i");
-        intake.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        intake.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
         hang = hwMap.get(DcMotor.class,"h");
         hang.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);

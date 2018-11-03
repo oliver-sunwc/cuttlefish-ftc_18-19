@@ -29,13 +29,14 @@ public class roverTeleOP extends OpMode {
     roverHMAP robot = new roverHMAP();
     boolean ninja, dirReversed, dirControl = false;
     boolean dirToggle = false;
-    double lx, rx, ly, ry;
 
 
     ElapsedTime motorTime = new ElapsedTime();
 
     int initialPosition;
 
+    int flipLPosition;
+    int flipRPosition;
 
 
     double time;
@@ -43,6 +44,8 @@ public class roverTeleOP extends OpMode {
     public void init() {
 
         robot.init(hardwareMap);
+        flipLPosition = robot.flipL.getCurrentPosition();
+        flipRPosition = robot.flipR.getCurrentPosition();
     }
     @Override
     public void start(){
@@ -91,18 +94,44 @@ public class roverTeleOP extends OpMode {
 
 
         if(gamepad2.left_stick_y > 0.05){
-            robot.intake.setPower(-0.5);
+            robot.intake.setPower(gamepad2.left_stick_y);
         } else if(gamepad2.left_stick_y < -0.05){
-            robot.intake.setPower(0.5);
+            robot.intake.setPower(gamepad2.left_stick_y);
         } else {
             robot.intake.setPower(0);
         }
 
-        robot.flipL.setPower(-gamepad2.right_stick_y);
-        robot.flipR.setPower(gamepad2.right_stick_y);
+        /*robot.flipL.setPower(gamepad2.right_stick_y);
+        robot.flipR.setPower(-gamepad2.right_stick_y);
+        robot.flipL.setTargetPosition((int) (robot.flipL.getCurrentPosition() + gamepad2.right_stick_y * 200));
+        robot.flipR.setTargetPosition((int) (robot.flipR.getCurrentPosition() - gamepad2.right_stick_y * 200));*/
+
+        if(gamepad2.right_stick_y>0.05){
+            robot.flipL.setPower(gamepad2.right_stick_y);
+            robot.flipR.setPower(-gamepad2.right_stick_y);
+            flipLPosition = (int)(flipLPosition + gamepad2.right_stick_y*200);
+            flipRPosition = (int)(flipRPosition - gamepad2.right_stick_y*200);
+            robot.flipL.setTargetPosition((int)(flipLPosition + gamepad2.right_stick_y*200));
+            robot.flipR.setTargetPosition((int)(flipRPosition - gamepad2.right_stick_y*200));
 
 
+        } else if(gamepad2.right_stick_y < -0.05){
+            robot.flipL.setPower(gamepad2.right_stick_y);
+            robot.flipR.setPower(-gamepad2.right_stick_y);
+            flipLPosition = (int)(flipLPosition + gamepad2.right_stick_y*200);
+            flipRPosition = (int)(flipRPosition - gamepad2.right_stick_y*200);
+            robot.flipL.setTargetPosition((int)(flipLPosition + gamepad2.right_stick_y*200));
+            robot.flipR.setTargetPosition((int)(flipRPosition - gamepad2.right_stick_y*200));
+        } else{
+            robot.flipL.setTargetPosition(flipLPosition);
+            robot.flipR.setTargetPosition(flipRPosition);
+        }
 
+        robot.flipL.setTargetPosition(flipLPosition);
+        robot.flipR.setTargetPosition(flipRPosition);
+
+
+        double lx = scaleInput(gamepad1.left_stick_x);
         double ry = scaleInput(-gamepad1.right_stick_y);
 
         if(dirReversed){

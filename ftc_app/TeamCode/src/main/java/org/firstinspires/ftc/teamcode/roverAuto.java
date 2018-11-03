@@ -109,7 +109,12 @@ public class roverAuto extends LinearOpMode {
         stopDriving();
     }
 
-
+    void moveForward(double power){
+        robot.fl.setPower(power);
+        robot.fr.setPower(power);
+        robot.br.setPower(power);
+        robot.bl.setPower(power);
+    }
     void RotateDistance(double power, int distance) throws InterruptedException {
         {
             //reset encoders
