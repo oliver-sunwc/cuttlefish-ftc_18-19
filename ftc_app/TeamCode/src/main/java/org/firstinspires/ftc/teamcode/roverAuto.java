@@ -31,6 +31,7 @@ public class roverAuto extends LinearOpMode {
         robot.br.setPower(0);
     }
 
+
     //distance=rate*duration duration=distance/rate
     //power drives forward, -power drives backward
     void verticalDrive(double power) {
