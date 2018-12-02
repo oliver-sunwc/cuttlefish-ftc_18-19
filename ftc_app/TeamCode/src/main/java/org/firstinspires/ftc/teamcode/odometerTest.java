@@ -35,7 +35,7 @@ public class odometerTest extends OpMode {
                 } catch (IOException e) {
                     e.printStackTrace();
 
- 
+
                 }
             }
             odo.reset();
