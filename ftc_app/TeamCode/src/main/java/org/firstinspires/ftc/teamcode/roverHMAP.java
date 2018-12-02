@@ -2,7 +2,7 @@ package org.firstinspires.ftc.teamcode;
 
 import android.graphics.Color;
 
-import com.google.blocks.ftcrobotcontroller.util.HardwareType;
+//  n import com.google.blocks.ftcrobotcontroller.util.HardwareType;
 import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.hardware.bosch.JustLoggingAccelerationIntegrator;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
@@ -29,7 +29,7 @@ import java.util.Locale;
  * Created by oliversun on 10/7/17.
  */
 
-public class roverHMAP{
+public class roverHMAP {
 
     //Gyro
 

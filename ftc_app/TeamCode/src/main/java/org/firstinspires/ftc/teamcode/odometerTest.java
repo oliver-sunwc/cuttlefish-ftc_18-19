@@ -25,14 +25,17 @@ public class odometerTest extends OpMode {
     @Override
     public void loop() {
         if(gamepad1.left_stick_y != 0) {
-            motor.setPower(1);
+            motor.setPower(-gamepad1.left_stick_y);
             time = odo.time(TimeUnit.MILLISECONDS) + "";
         } else {
+            motor.setPower(0);
             if(odo.time(TimeUnit.MILLISECONDS) > 250) {
                 try {
                     odoWrite(time);
                 } catch (IOException e) {
                     e.printStackTrace();
+
+ 
                 }
             }
             odo.reset();
