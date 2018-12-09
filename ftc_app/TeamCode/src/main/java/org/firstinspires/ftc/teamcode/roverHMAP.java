@@ -39,9 +39,6 @@ public class roverHMAP {
     public Orientation angles;
     public Acceleration gravity;
 
-    /*Sensors*/
-    public DistanceSensor dRight;
-    public DistanceSensor dBack;
 
     double P_DRIVE_COEFF = 0.02;     // Larger is more responsive, but also less stable
     public final double ticksPerInch = 72.1;
@@ -51,13 +48,6 @@ public class roverHMAP {
     public DcMotor bl;
     public DcMotor br;
 
-    public DcMotor flipL;
-    public DcMotor flipR;
-    public DcMotor hang;
-    public DcMotor intake;
-    /*Servos*/
-    public Servo intakeDrop;
-    public Servo gameMarker;
 
     HardwareMap hwMap;
 
@@ -89,35 +79,6 @@ public class roverHMAP {
         //boxClose = hwMap.get(Servo.class, "cb");
         //boxRotate = hwMap.get(Servo.class, "rotb");
 
-        /*Sensors*/
-        dRight = hwMap.get(DistanceSensor.class,"dr");
-        dBack = hwMap.get(DistanceSensor.class, "db");
-
-        gameMarker = hwMap.get(Servo.class,"gm");
-
-        flipL = hwMap.get(DcMotor.class,"fll");
-        flipR = hwMap.get(DcMotor.class,"flr");
-
-
-        flipL.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        flipR.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-
-        flipL.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        flipR.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-
-
-        flipL.setDirection(DcMotorSimple.Direction.REVERSE);
-
-        flipL.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        flipR.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-
-        intakeDrop = hwMap.get(Servo.class,"s");
-        intake = hwMap.get(DcMotor.class,"i");
-        intake.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-
-        hang = hwMap.get(DcMotor.class,"h");
-        hang.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        hang.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
         //hang.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();

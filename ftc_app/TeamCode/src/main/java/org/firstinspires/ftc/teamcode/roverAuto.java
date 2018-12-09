@@ -14,14 +14,15 @@ import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import java.util.Locale;
 
 public class roverAuto extends LinearOpMode {
-    roverHMAP robot;
+
+    /*roverHMAP robot;
     public String telVar;
     public roverAuto(roverHMAP hwmap){
         robot = hwmap;
-    }
+    } */
     public void runOpMode() throws InterruptedException{
 
-    }
+    } /*
     //------------------------------------------------------------------------------------------------------------------------------
     //Driving Power Functions
     void stopDriving() {
@@ -290,7 +291,7 @@ public class roverAuto extends LinearOpMode {
      * @param error   Error angle in robot relative degrees
      * @param PCoeff  Proportional Gain Coefficient
      * @return
-     */
+
     public double getSteer(double error, double PCoeff) {
         return Range.clip(error * PCoeff, -1, 1);
     }
@@ -428,7 +429,7 @@ public class roverAuto extends LinearOpMode {
     void extendSlide(double power){
         robot.flipL.setPower(power);
         robot.flipR.setPower(-power);
-    }
+    }*/
 
 
     //insert methods
