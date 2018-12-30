@@ -47,7 +47,7 @@ public class roverHMAP {
     public DcMotor fr;
     public DcMotor bl;
     public DcMotor br;
-
+    //public DcMotor hang;
 
     HardwareMap hwMap;
 
@@ -67,17 +67,11 @@ public class roverHMAP {
         fr.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         bl.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         br.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        //flip = hwMap.get(DcMotor.class,"f");
-        //hang = hwMap.get(DcMotor.class,"hl");
-        //intake = hwMap.get(DcMotor.class,"i");
+        //hang = hwMap.get(DcMotor.class,"h");
 
 
         br.setDirection(DcMotor.Direction.REVERSE);
         fr.setDirection(DcMotor.Direction.REVERSE);
-
-
-        //boxClose = hwMap.get(Servo.class, "cb");
-        //boxRotate = hwMap.get(Servo.class, "rotb");
 
 
         //hang.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);

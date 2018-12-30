@@ -22,12 +22,13 @@ import java.lang.*;
 /**
  * Manual with Arcade Drive
  */
-
 @TeleOp(name = "TankFinal", group = "Rover")
 public class roverTeleOp extends OpMode {
 
     roverHMAP robot = new roverHMAP();
     double lx,ly,rx;
+    double hang;
+    double hangPow = 0.8;
 
     @Override
     public void init() {
@@ -41,9 +42,20 @@ public class roverTeleOp extends OpMode {
 
     @Override
     public void loop(){
-        lx = scaleInput(gamepad1.left_stick_x);
-        ly = scaleInput(gamepad1.left_stick_y);
-        rx = scaleInput(-gamepad1.right_stick_x);
+        lx = Math.pow(gamepad1.left_stick_x, 3);
+        ly = Math.pow(gamepad1.left_stick_y, 3);
+        rx = -Math.pow(gamepad1.right_stick_x, 3);
+
+        if(gamepad2.dpad_up) {
+            //robot.hang.setPower(hangPow);
+        } else if (gamepad2.dpad_down) {
+            //robot.hang.setPower(-hangPow);
+        }
+
+        telemetry.addData("lx", lx);
+        telemetry.addData("ly", ly);
+        telemetry.addData("rx", rx);
+        telemetry.update();
         mecanumDrive(lx,ly,rx,0);
     }
 
