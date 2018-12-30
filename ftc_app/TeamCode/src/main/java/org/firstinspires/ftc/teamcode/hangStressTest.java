@@ -22,17 +22,14 @@ import java.lang.*;
 /**
  * Manual with Arcade Drive
  */
-@TeleOp(name = "TankFinal", group = "Rover")
-public class roverTeleOp extends OpMode {
-
-    roverHMAP robot = new roverHMAP();
-    double rx,ry,lx;
-    double hang;
-    double hangPow = 0.8;
+@TeleOp(name = "hangTest", group = "Rover")
+public class hangStressTest extends OpMode {
+    DcMotor hang;
+    double hangPow = -1;
 
     @Override
     public void init() {
-        robot.init(hardwareMap);
+        hang = hardwareMap.get(DcMotor.class, "h");
     }
 
     @Override
@@ -42,32 +39,13 @@ public class roverTeleOp extends OpMode {
 
     @Override
     public void loop(){
-        if(gamepad1.right_stick_y != 0 || gamepad1.right_stick_x == 0) {
-            rx = Math.pow(gamepad1.right_stick_x, 3);
+        if(gamepad1.dpad_up) {
+            hang.setPower(hangPow);
+        } else if(gamepad1.dpad_down) {
+            hang.setPower(-hangPow);
         } else {
-            rx += gamepad1.right_stick_x/250;
+            hang.setPower(0);
         }
-        ry = Math.pow(gamepad1.right_stick_y, 3);
-        lx = -Math.pow(gamepad1.left_stick_x, 3);
-
-        if(gamepad2.dpad_up) {
-            //robot.hang.setPower(hangPow);
-        } else if (gamepad2.dpad_down) {
-            //robot.hang.setPower(-hangPow);
-        }
-
-        telemetry.addData("lx", lx);
-        telemetry.addData("ry", ry);
-        telemetry.addData("rx", rx);
-        telemetry.update();
-        mecanumDrive(rx,ry,lx,0);
-    }
-
-    public void mecanumDrive(double lx,double ly,double rx,double k){
-        robot.fl.setPower(Range.clip((1+k)*(ry + lx - rx),-1,1));
-        robot.bl.setPower(Range.clip((1-k)*(ry + lx + rx),-1,1));
-        robot.fr.setPower(Range.clip((1+k)*(ry - lx + rx),-1,1));
-        robot.br.setPower(Range.clip((1-k)*(ry - lx - rx),-1,1));
     }
 
     double scaleInput(double dVal) {
