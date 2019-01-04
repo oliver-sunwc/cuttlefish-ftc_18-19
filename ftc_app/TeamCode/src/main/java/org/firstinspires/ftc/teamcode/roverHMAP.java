@@ -47,7 +47,9 @@ public class roverHMAP {
     public DcMotor fr;
     public DcMotor bl;
     public DcMotor br;
-    //public DcMotor hang;
+
+    public DcMotor hang;
+    public DcMotor spine;
 
     HardwareMap hwMap;
 
@@ -67,14 +69,18 @@ public class roverHMAP {
         fr.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         bl.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         br.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        //hang = hwMap.get(DcMotor.class,"h");
 
+        hang = hwMap.get(DcMotor.class,"h");
+        hang.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+
+        spine = hwMap.get(DcMotor.class,"s");
+        spine.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
         br.setDirection(DcMotor.Direction.REVERSE);
         fr.setDirection(DcMotor.Direction.REVERSE);
 
 
-        //hang.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+
         BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
         //parameters.angleUnit = HardwareType.BNO055IMU.AngleUnit.DEGREES;
         //parameters.accelUnit = HardwareType.BNO055IMU.AccelUnit.METERS_PERSEC_PERSEC;

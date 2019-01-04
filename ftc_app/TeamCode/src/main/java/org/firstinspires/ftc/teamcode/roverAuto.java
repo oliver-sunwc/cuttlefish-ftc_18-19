@@ -42,24 +42,6 @@ public class roverAuto extends LinearOpMode {
         robot.br.setPower(power);
     }
 
-    /*void verticalDrive2(double power, double angle){
-        if(getHeading() - angle > 4){
-            robot.fl.setPower(0.8*power);
-            robot.fr.setPower(0.8*power);
-            robot.bl.setPower(1.2*power);
-            robot.br.setPower(1.2*power);
-        } else if (angle - getHeading() > 4){
-            robot.fl.setPower(1.2*power);
-            robot.fr.setPower(1.2*power);
-            robot.bl.setPower(0.8*power);
-            robot.br.setPower(0.8*power);
-        }else if(angle - getHeading() < 2 && angle - getHeading() > -2){
-            robot.fl.setPower(power);
-            robot.fr.setPower(power);
-            robot.bl.setPower(power);
-            robot.br.setPower(power);
-        }
-    }
 
     void rotateRight(double power) {
         robot.fl.setPower(-power);
@@ -286,11 +268,11 @@ public class roverAuto extends LinearOpMode {
         return robotError;
     }
 
-    /**
+    /*
      * returns desired steering force.  +/- 1 range.  +ve = steer left
      * @param error   Error angle in robot relative degrees
      * @param PCoeff  Proportional Gain Coefficient
-     * @return
+     * @return*/
 
     public double getSteer(double error, double PCoeff) {
         return Range.clip(error * PCoeff, -1, 1);
@@ -425,11 +407,6 @@ public class roverAuto extends LinearOpMode {
             robot.fl.setPower(0);
         }
     }
-
-    void extendSlide(double power){
-        robot.flipL.setPower(power);
-        robot.flipR.setPower(-power);
-    }*/
 
 
     //insert methods
