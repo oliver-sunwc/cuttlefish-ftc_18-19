@@ -15,14 +15,14 @@ import java.util.Locale;
 
 public class roverAuto extends LinearOpMode {
 
-    /*roverHMAP robot;
+    roverHMAP robot;
     public String telVar;
     public roverAuto(roverHMAP hwmap){
         robot = hwmap;
-    } */
+    }
     public void runOpMode() throws InterruptedException{
 
-    } /*
+    }
     //------------------------------------------------------------------------------------------------------------------------------
     //Driving Power Functions
     void stopDriving() {
@@ -42,7 +42,7 @@ public class roverAuto extends LinearOpMode {
         robot.br.setPower(power);
     }
 
-    void verticalDrive2(double power, double angle){
+    /*void verticalDrive2(double power, double angle){
         if(getHeading() - angle > 4){
             robot.fl.setPower(0.8*power);
             robot.fr.setPower(0.8*power);

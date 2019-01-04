@@ -49,5 +49,3 @@ public class odometerTest extends OpMode {
         printWriter.print(input);
     }
 }
-
-
