@@ -30,6 +30,9 @@ public class roverTeleOp extends OpMode {
     double hang;
     double hangPow = 0.8;
 
+    boolean fliptog = false;
+    boolean f;
+
     ElapsedTime stallTime = new ElapsedTime();
 
     @Override
@@ -44,6 +47,18 @@ public class roverTeleOp extends OpMode {
 
     @Override
     public void loop(){
+        if(!f && gamepad2.x) {
+            if (!fliptog) {
+                fliptog = true;
+                robot.test.setPosition(0.9);
+            } else {
+                fliptog = false;
+                robot.test.setPosition(0.1);
+            }
+        }
+
+        f = gamepad2.x;
+
         if(gamepad1.right_stick_y != 0 || gamepad1.right_stick_x == 0) {
             rx = Math.pow(gamepad1.right_stick_x, 3);
         } else {
@@ -61,6 +76,10 @@ public class roverTeleOp extends OpMode {
         }
 
         robot.spine.setPower(gamepad2.left_stick_y);
+
+        if(gamepad2.left_trigger != 0.1 && gamepad2.right_trigger > 0.1) {
+            hangStall();
+        }
 
         telemetry.addData("lx", lx);
         telemetry.addData("ry", ry);

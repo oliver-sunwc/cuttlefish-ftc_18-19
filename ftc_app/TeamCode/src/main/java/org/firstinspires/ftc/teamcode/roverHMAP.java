@@ -38,7 +38,7 @@ public class roverHMAP {
     // State used for updating telemetry
     public Orientation angles;
     public Acceleration gravity;
-    public AnalogInput landerS;
+    //public AnalogInput landerS;
 
 
     double P_DRIVE_COEFF = 0.02;     // Larger is more responsive, but also less stable
@@ -52,6 +52,8 @@ public class roverHMAP {
 
     public DcMotor hang;
     public DcMotor spine;
+
+    public Servo test;
 
     HardwareMap hwMap;
 
@@ -73,7 +75,8 @@ public class roverHMAP {
         br.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
         hang = hwMap.get(DcMotor.class,"h");
-        hang.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        hang.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        hang.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
         spine = hwMap.get(DcMotor.class,"s");
         spine.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
@@ -83,6 +86,9 @@ public class roverHMAP {
 
         /*Sensors*/
         //landerS = hwMap.get(AnalogInput.class, "lS");
+
+        /*Servos*/
+        test = hwMap.get(Servo.class, "t");
 
 
 
