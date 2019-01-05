@@ -30,6 +30,8 @@ public class roverTeleOp extends OpMode {
     double hang;
     double hangPow = 0.8;
 
+    ElapsedTime stallTime = new ElapsedTime();
+
     @Override
     public void init() {
         robot.init(hardwareMap);
@@ -51,10 +53,14 @@ public class roverTeleOp extends OpMode {
         lx = -Math.pow(gamepad1.left_stick_x, 3);
 
         if(gamepad2.dpad_up) {
-            //robot.hang.setPower(hangPow);
+            robot.hang.setPower(-hangPow);
         } else if (gamepad2.dpad_down) {
-            //robot.hang.setPower(-hangPow);
+            robot.hang.setPower(hangPow);
+        } else {
+            robot.hang.setPower(0);
         }
+
+        robot.spine.setPower(gamepad2.left_stick_y);
 
         telemetry.addData("lx", lx);
         telemetry.addData("ry", ry);
@@ -63,11 +69,20 @@ public class roverTeleOp extends OpMode {
         mecanumDrive(rx,ry,lx,0);
     }
 
-    public void mecanumDrive(double lx,double ly,double rx,double k){
-        robot.fl.setPower(Range.clip((1+k)*(ry + lx - rx),-1,1));
-        robot.bl.setPower(Range.clip((1-k)*(ry + lx + rx),-1,1));
-        robot.fr.setPower(Range.clip((1+k)*(ry - lx + rx),-1,1));
-        robot.br.setPower(Range.clip((1-k)*(ry - lx - rx),-1,1));
+    void mecanumDrive(double lx,double ly,double rx,double k){
+        robot.fl.setPower(Range.clip((1+k)*(ry + rx - lx),-1,1));
+        robot.bl.setPower(Range.clip((1-k)*(ry + rx + lx),-1,1));
+        robot.fr.setPower(Range.clip((1+k)*(ry - rx + lx),-1,1));
+        robot.br.setPower(Range.clip((1-k)*(ry - rx - lx),-1,1));
+    }
+
+    void hangStall() {
+        stallTime.reset();
+        if(stallTime.seconds() < 3) {
+            robot.hang.setPower(0.4);
+        } else {
+            robot.hang.setPower(0);
+        }
     }
 
     double scaleInput(double dVal) {

@@ -38,10 +38,12 @@ public class roverHMAP {
     // State used for updating telemetry
     public Orientation angles;
     public Acceleration gravity;
+    public AnalogInput landerS;
 
 
     double P_DRIVE_COEFF = 0.02;     // Larger is more responsive, but also less stable
     public final double ticksPerInch = 72.1;
+    public final double voltage_to_in = 72.2891566265;
     /*Motors*/
     public DcMotor fl;
     public DcMotor fr;
@@ -78,6 +80,9 @@ public class roverHMAP {
 
         br.setDirection(DcMotor.Direction.REVERSE);
         fr.setDirection(DcMotor.Direction.REVERSE);
+
+        /*Sensors*/
+        //landerS = hwMap.get(AnalogInput.class, "lS");
 
 
 
