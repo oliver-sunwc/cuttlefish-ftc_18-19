@@ -136,6 +136,14 @@ public class roverAuto extends LinearOpMode {
          }
          robot.fl.setPower(0);
          robot.bl.setPower(0);
+
+         if(getHeading() < -1){
+             while(getHeading() <= -0.5) {
+                 robot.fr.setPower(0.15);
+                 robot.br.setPower(0.15);
+             }
+         robot.fr.setPower(0);
+         robot.br.setPower(0);         }
      }
 
      void gyroAlign1() throws InterruptedException{

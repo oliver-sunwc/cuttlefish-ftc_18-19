@@ -42,7 +42,7 @@ public class roverHMAP {
 
 
     double P_DRIVE_COEFF = 0.02;     // Larger is more responsive, but also less stable
-    public final double ticksPerInch = 72.1;
+    public final double ticksPerInch = 90.3;
     public final double voltage_to_in = 72.2891566265;
     /*Motors*/
     public DcMotor fl;
@@ -53,6 +53,7 @@ public class roverHMAP {
     public DcMotor hang;
     public DcMotor spine;
 
+    public DcMotor intake;
     public Servo test;
 
     HardwareMap hwMap;
@@ -90,6 +91,8 @@ public class roverHMAP {
         /*Servos*/
         test = hwMap.get(Servo.class, "t");
 
+        intake = hwMap.get(DcMotor.class,"i");
+        intake.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
 
         BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();

@@ -28,16 +28,30 @@ public class autoSandbox extends LinearOpMode {
         robotAuto = new roverAuto(robot);
 
         waitForStart();
-
         robot.hang.setTargetPosition(robot.hang.getCurrentPosition() + 500);
         robot.hang.setPower(0.6);
-        Thread.sleep(750);
-        robot.hang.setTargetPosition(robot.hang.getCurrentPosition() - 1700);
-        robot.hang.setPower(-0.3);
+        telemetry.addData("position:","brake disengaged");
+        telemetry.update();
         Thread.sleep(1000);
-        robot.hang.setTargetPosition(robot.hang.getCurrentPosition() - 1200);
+
+        robot.hang.setTargetPosition(robot.hang.getCurrentPosition() - 3500);
+        robot.hang.setPower(-0.4);
+        telemetry.addData("position:","firstDrop");
+        telemetry.update();
+        Thread.sleep(3000);
+
+
+        robot.hang.setTargetPosition(robot.hang.getCurrentPosition() - 2000);
         robot.hang.setPower(-0.7);
-        Thread.sleep(1000);
+        telemetry.addData("position:","secondDrop");
+        telemetry.update();
+        Thread.sleep(2000);
+
+        //gyro align
+        robotAuto.verticalDriveDistance(-0.4,-10 );
+        //robotAuto.gyroAlign0();
+
+
 
         /*robotAuto.verticalDrive(0.3);
         if(robot.landerS.getVoltage()*robot.voltage_to_in > 6) {

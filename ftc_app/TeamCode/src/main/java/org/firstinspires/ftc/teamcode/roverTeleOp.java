@@ -47,6 +47,15 @@ public class roverTeleOp extends OpMode {
 
     @Override
     public void loop(){
+
+        if(gamepad2.a){
+            robot.intake.setPower(1);
+        } if(gamepad2.b){
+            robot.intake.setPower(0.5);
+        } else {
+            robot.intake.setPower(-gamepad2.right_stick_y);
+        }
+
         if(!f && gamepad2.x) {
             if (!fliptog) {
                 fliptog = true;
@@ -56,6 +65,7 @@ public class roverTeleOp extends OpMode {
                 robot.test.setPosition(0.1);
             }
         }
+
 
         f = gamepad2.x;
 
