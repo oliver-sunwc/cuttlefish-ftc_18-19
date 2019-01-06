@@ -49,16 +49,21 @@ public class autoSandbox extends LinearOpMode {
 
         //gyro align
         robotAuto.verticalDriveDistance(-0.4,-10 );
-        //robotAuto.gyroAlign0();
 
 
-
+        //align with sensor
         /*robotAuto.verticalDrive(0.3);
         if(robot.landerS.getVoltage()*robot.voltage_to_in > 6) {
             robotAuto.stopDriving();
         }*/
 
+        /*
+        extend slide and drop intake loop
+         */
 
+        /*
+        intake the cube
+        */
     }
 }
 
