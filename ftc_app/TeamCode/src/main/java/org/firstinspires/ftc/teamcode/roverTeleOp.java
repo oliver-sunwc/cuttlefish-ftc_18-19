@@ -77,6 +77,12 @@ public class roverTeleOp extends OpMode {
         ry = Math.pow(gamepad1.right_stick_y, 3);
         lx = -Math.pow(gamepad1.left_stick_x, 3);
 
+
+        if(gamepad1.right_bumper){
+            ry/=3;
+            lx/=3;
+            rx/=3;
+        }
         if(gamepad2.dpad_up) {
             robot.hang.setPower(-hangPow);
         } else if (gamepad2.dpad_down) {

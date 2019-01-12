@@ -56,6 +56,8 @@ public class roverHMAP {
     public DcMotor intake;
     public Servo test;
 
+    public DistanceSensor dist;
+
     HardwareMap hwMap;
 
     public roverHMAP() {}
@@ -77,13 +79,15 @@ public class roverHMAP {
 
         hang = hwMap.get(DcMotor.class,"h");
         hang.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        hang.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        hang.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
         spine = hwMap.get(DcMotor.class,"s");
         spine.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
         br.setDirection(DcMotor.Direction.REVERSE);
         fr.setDirection(DcMotor.Direction.REVERSE);
+
+        dist = hwMap.get(DistanceSensor.class,"d");
 
         /*Sensors*/
         //landerS = hwMap.get(AnalogInput.class, "lS");
