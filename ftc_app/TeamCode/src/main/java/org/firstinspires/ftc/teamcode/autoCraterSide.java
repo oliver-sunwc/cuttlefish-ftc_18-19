@@ -37,6 +37,8 @@ public class autoCraterSide extends LinearOpMode {
         vision.enable();
 
         waitForStart();
+        robot.hang.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
         robot.hang.setTargetPosition(robot.hang.getCurrentPosition() + 500);
         robot.hang.setPower(0.6);
         telemetry.addData("position:","brake disengaged");
@@ -50,11 +52,10 @@ public class autoCraterSide extends LinearOpMode {
         Thread.sleep(3000);
 
 
-        robot.hang.setTargetPosition(robot.hang.getCurrentPosition() - 2000);
+        robot.hang.setTargetPosition(robot.hang.getCurrentPosition() - 1000);
         robot.hang.setPower(-0.7);
         telemetry.addData("position:","secondDrop");
         telemetry.update();
-        Thread.sleep(2000);
 
         robotAuto.verticalDriveDistance(-0.4,-1 );
         //gyro align
@@ -74,14 +75,16 @@ public class autoCraterSide extends LinearOpMode {
         }
         robotAuto.stopDriving();
 
+
+        Thread.sleep(10000);
         // do vision thing
-        while(robotAuto.getHeading() < 90){
+        /*while(robotAuto.getHeading() < 90){
             robot.fl.setPower(-0.2);
             robot.bl.setPower(-0.2);
             robot.br.setPower(0.2);
             robot.fr.setPower(0.2);
         }
-        robotAuto.stopDriving();
+        robotAuto.stopDriving();*/
 
         //align with sensor
         /*robotAuto.verticalDrive(0.3);
