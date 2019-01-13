@@ -37,6 +37,8 @@ public class autoCraterSide extends LinearOpMode {
         vision.enable();
 
         waitForStart();
+        robot.hang.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
         robot.hang.setTargetPosition(robot.hang.getCurrentPosition() + 500);
         robot.hang.setPower(0.6);
         telemetry.addData("position:","brake disengaged");
@@ -47,17 +49,20 @@ public class autoCraterSide extends LinearOpMode {
         robot.hang.setPower(-0.4);
         telemetry.addData("position:","firstDrop");
         telemetry.update();
-        Thread.sleep(3000);
+        Thread.sleep(2000);
 
 
-        robot.hang.setTargetPosition(robot.hang.getCurrentPosition() - 2000);
+        robot.hang.setTargetPosition(robot.hang.getCurrentPosition() - 1400);
         robot.hang.setPower(-0.7);
         telemetry.addData("position:","secondDrop");
         telemetry.update();
-        Thread.sleep(2000);
 
+        Thread.sleep(1000);
         robotAuto.verticalDriveDistance(-0.4,-1 );
         //gyro align
+
+        robot.hang.setTargetPosition(robot.hang.getCurrentPosition());
+        robot.hang.setPower(0);
 
         Thread.sleep(1000);
         telemetry.addData("dist",robot.dist.getDistance(DistanceUnit.CM));
@@ -68,18 +73,24 @@ public class autoCraterSide extends LinearOpMode {
          // gyro align
 
         robotAuto.moveForward(-0.2);
-        while(robot.dist.getDistance(DistanceUnit.CM) < 15){
+        while(robot.dist.getDistance(DistanceUnit.CM) < 25){
             telemetry.addData("dist",robot.dist.getDistance(DistanceUnit.CM));
             telemetry.update();
-        }
-        robotAuto.stopDriving();
 
+        }
+
+        robotAuto.stopDriving();
+        telemetry.addData("gyro",robotAuto.getHeading());
+        telemetry.update();
+        Thread.sleep(2000);
         // do vision thing
-        while(robotAuto.getHeading() < 90){
-            robot.fl.setPower(-0.2);
-            robot.bl.setPower(-0.2);
-            robot.br.setPower(0.2);
-            robot.fr.setPower(0.2);
+        while(robotAuto.getHeading() > -90){
+            telemetry.addData("gyro",robotAuto.getHeading());
+            telemetry.update();
+            robot.fl.setPower(0.2);
+            robot.bl.setPower(0.2);
+            robot.br.setPower(-0.2);
+            robot.fr.setPower(-0.2);
         }
         robotAuto.stopDriving();
 
