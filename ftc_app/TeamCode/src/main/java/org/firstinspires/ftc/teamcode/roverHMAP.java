@@ -55,6 +55,8 @@ public class roverHMAP {
 
     public DcMotor intake;
     public Servo test;
+    public Servo flipArm;
+    public Servo rotateArm;
 
     public DistanceSensor dist;
 
@@ -94,6 +96,9 @@ public class roverHMAP {
 
         /*Servos*/
         test = hwMap.get(Servo.class, "t");
+
+        flipArm = hwMap.get(Servo.class, "fA");
+        rotateArm = hwMap.get(Servo.class, "rA");
 
         intake = hwMap.get(DcMotor.class,"i");
         intake.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);

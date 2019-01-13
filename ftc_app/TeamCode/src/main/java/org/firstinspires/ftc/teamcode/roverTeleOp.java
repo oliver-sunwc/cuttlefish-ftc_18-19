@@ -32,6 +32,10 @@ public class roverTeleOp extends OpMode {
 
     boolean fliptog = false;
     boolean f;
+    boolean rotatetog = false;
+    boolean r;
+    boolean ninja;
+    boolean n;
 
     ElapsedTime stallTime = new ElapsedTime();
 
@@ -59,15 +63,36 @@ public class roverTeleOp extends OpMode {
         if(!f && gamepad2.x) {
             if (!fliptog) {
                 fliptog = true;
-                robot.test.setPosition(0.9);
+                robot.flipArm.setPosition(0.9);
             } else {
                 fliptog = false;
-                robot.test.setPosition(0.1);
+                robot.flipArm.setPosition(0.1);
             }
         }
 
-
         f = gamepad2.x;
+
+        if(!r && gamepad2.y) {
+            if(!rotatetog) {
+                rotatetog = true;
+                robot.rotateArm.setPosition(0.9);
+            } else {
+                rotatetog = false;
+                robot.rotateArm.setPosition(0.1);
+            }
+        }
+
+        r = gamepad2.y;
+
+        if(!n && gamepad1.right_bumper) {
+            if(!ninja) {
+                ninja = true;
+            } else {
+                ninja = false;
+            }
+        }
+
+        n = gamepad1.right_bumper;
 
         if(gamepad1.right_stick_y != 0 || gamepad1.right_stick_x == 0) {
             rx = Math.pow(gamepad1.right_stick_x, 3);
@@ -76,7 +101,6 @@ public class roverTeleOp extends OpMode {
         }
         ry = Math.pow(gamepad1.right_stick_y, 3);
         lx = -Math.pow(gamepad1.left_stick_x, 3);
-
 
         if(gamepad1.right_bumper){
             ry/=3;
@@ -101,7 +125,11 @@ public class roverTeleOp extends OpMode {
         telemetry.addData("ry", ry);
         telemetry.addData("rx", rx);
         telemetry.update();
-        mecanumDrive(rx,ry,lx,0);
+        if(!ninja) {
+            mecanumDrive(rx, ry, lx, 0);
+        } else {
+            mecanumDrive(rx/2, ry/2, lx/2, 0);
+        }
     }
 
     void mecanumDrive(double lx,double ly,double rx,double k){
