@@ -68,11 +68,11 @@ public class autoCraterSide extends LinearOpMode {
         telemetry.addData("dist",robot.dist.getDistance(DistanceUnit.CM));
         telemetry.update();
 
-        robotAuto.verticalDriveDistance(-0.1,-5);
+        robotAuto.verticalDriveDistance(0.1,5);
 
          // gyro align
 
-        robotAuto.moveForward(-0.2);
+        robotAuto.moveForward(0.2);
         while(robot.dist.getDistance(DistanceUnit.CM) < 25){
             telemetry.addData("dist",robot.dist.getDistance(DistanceUnit.CM));
             telemetry.update();
