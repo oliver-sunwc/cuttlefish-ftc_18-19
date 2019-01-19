@@ -34,8 +34,13 @@ public class roverTeleOp extends OpMode {
     boolean f;
     boolean rotatetog = false;
     boolean r;
-    boolean ninja;
+    boolean ninja = false;
     boolean n;
+    int intakeTog = 0;
+    boolean i;
+    int flipAng = 120;
+    boolean inNinja = false;
+    boolean iN;
 
     ElapsedTime stallTime = new ElapsedTime();
 
@@ -52,13 +57,34 @@ public class roverTeleOp extends OpMode {
     @Override
     public void loop(){
 
-        if(gamepad2.a){
-            robot.intake.setPower(1);
-        } if(gamepad2.b){
-            robot.intake.setPower(0.5);
-        } else {
-            robot.intake.setPower(-gamepad2.right_stick_y);
+        if(gamepad2.right_bumper && !iN) {
+            if(!inNinja) {
+                inNinja = true;
+            } else {
+                inNinja = false;
+            }
         }
+
+        iN = gamepad2.right_bumper;
+
+        if(gamepad2.a && !i) {
+            if(intakeTog == 0) {
+                intakeTog = 1; }
+            else if(intakeTog == 1) {
+                intakeTog = 0;
+            }
+        }
+
+
+        if(intakeTog == 0) {
+            robot.inFlip.setPower(-0.5);
+            robot.inFlip.setTargetPosition(-1);
+        } else if(intakeTog == 1) {
+            robot.inFlip.setPower(0.5);
+            robot.inFlip.setTargetPosition(flipAng);
+        }
+
+        i = gamepad2.a;
 
         if(!f && gamepad2.x) {
             if (!fliptog) {
@@ -99,7 +125,7 @@ public class roverTeleOp extends OpMode {
         } else {
             rx += gamepad1.right_stick_x/250;
         }
-        ry = Math.pow(gamepad1.right_stick_y, 3);
+        ry = -Math.pow(gamepad1.right_stick_y, 3);
         lx = -Math.pow(gamepad1.left_stick_x, 3);
 
         if(gamepad1.right_bumper){
@@ -116,6 +142,12 @@ public class roverTeleOp extends OpMode {
         }
 
         robot.spine.setPower(gamepad2.left_stick_y);
+
+        if(inNinja) {
+            robot.intake.setPower(gamepad2.right_stick_y/2);
+        } else {
+            robot.intake.setPower(gamepad2.right_stick_y);
+        }
 
         if(gamepad2.left_trigger != 0.1 && gamepad2.right_trigger > 0.1) {
             hangStall();

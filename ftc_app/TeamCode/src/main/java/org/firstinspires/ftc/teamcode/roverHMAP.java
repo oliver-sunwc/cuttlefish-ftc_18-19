@@ -53,6 +53,7 @@ public class roverHMAP {
     public DcMotor hang;
     public DcMotor spine;
 
+    public DcMotor inFlip;
     public DcMotor intake;
     public Servo test;
     public Servo flipArm;
@@ -95,13 +96,15 @@ public class roverHMAP {
         //landerS = hwMap.get(AnalogInput.class, "lS");
 
         /*Servos*/
-        test = hwMap.get(Servo.class, "t");
+        //test = hwMap.get(Servo.class, "t");
 
         flipArm = hwMap.get(Servo.class, "fA");
         rotateArm = hwMap.get(Servo.class, "rA");
 
         intake = hwMap.get(DcMotor.class,"i");
         intake.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        inFlip = hwMap.get(DcMotor.class, "iF");
+        inFlip.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
 
         BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();

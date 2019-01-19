@@ -39,21 +39,21 @@ public class autoCraterSide extends LinearOpMode {
         waitForStart();
         robot.hang.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
-        robot.hang.setTargetPosition(robot.hang.getCurrentPosition() + 500);
-        robot.hang.setPower(0.6);
+        robot.hang.setTargetPosition(robot.hang.getCurrentPosition() + 700);
+        robot.hang.setPower(0.8);
         telemetry.addData("position:","brake disengaged");
         telemetry.update();
         Thread.sleep(1000);
 
         robot.hang.setTargetPosition(robot.hang.getCurrentPosition() - 3500);
-        robot.hang.setPower(-0.4);
+        robot.hang.setPower(-0.6);
         telemetry.addData("position:","firstDrop");
         telemetry.update();
         Thread.sleep(2000);
 
 
-        robot.hang.setTargetPosition(robot.hang.getCurrentPosition() - 1400);
-        robot.hang.setPower(-0.7);
+        robot.hang.setTargetPosition(robot.hang.getCurrentPosition() - 2000);
+        robot.hang.setPower(-0.9);
         telemetry.addData("position:","secondDrop");
         telemetry.update();
 
