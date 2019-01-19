@@ -55,8 +55,11 @@ public class roverHMAP {
 
     public DcMotor inFlip;
     public DcMotor intake;
-    public Servo test;
-    public Servo flipArm;
+
+    /*Servos*/
+    public Servo flap;
+    public Servo flipLArm;
+    public Servo flipRArm;
     public Servo rotateArm;
 
     public DistanceSensor dist;
@@ -82,7 +85,7 @@ public class roverHMAP {
 
         hang = hwMap.get(DcMotor.class,"h");
         hang.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        hang.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        hang.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
         spine = hwMap.get(DcMotor.class,"s");
         spine.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
@@ -96,9 +99,9 @@ public class roverHMAP {
         //landerS = hwMap.get(AnalogInput.class, "lS");
 
         /*Servos*/
-        //test = hwMap.get(Servo.class, "t");
-
-        flipArm = hwMap.get(Servo.class, "fA");
+        flap = hwMap.get(Servo.class, "f");
+        flipLArm = hwMap.get(Servo.class, "fLA");
+        flipRArm = hwMap.get(Servo.class, "fRA");
         rotateArm = hwMap.get(Servo.class, "rA");
 
         intake = hwMap.get(DcMotor.class,"i");

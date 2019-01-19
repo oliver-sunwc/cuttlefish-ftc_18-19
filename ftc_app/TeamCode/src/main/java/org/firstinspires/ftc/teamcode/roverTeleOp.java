@@ -28,7 +28,7 @@ public class roverTeleOp extends OpMode {
     roverHMAP robot = new roverHMAP();
     double rx,ry,lx;
     double hang;
-    double hangPow = 0.8;
+    double hangPow = 1;
 
     boolean fliptog = false;
     boolean f;
@@ -38,15 +38,19 @@ public class roverTeleOp extends OpMode {
     boolean n;
     int intakeTog = 0;
     boolean i;
-    int flipAng = 120;
+    int flipAng = 250;
     boolean inNinja = false;
     boolean iN;
+    boolean flapTog = false;
+    boolean fL;
 
     ElapsedTime stallTime = new ElapsedTime();
 
     @Override
     public void init() {
         robot.init(hardwareMap);
+        robot.inFlip.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        robot.inFlip.setMode(DcMotor.RunMode.RUN_TO_POSITION);
     }
 
     @Override
@@ -71,19 +75,14 @@ public class roverTeleOp extends OpMode {
         //intake flip toggle position
         if(gamepad2.a && !i) {
             if(intakeTog == 0) {
-                intakeTog = 1; }
-            else if(intakeTog == 1) {
+                intakeTog = 1;
+                robot.inFlip.setPower(-0.7);
+                robot.inFlip.setTargetPosition(0);
+            } else if(intakeTog == 1) {
                 intakeTog = 0;
+                robot.inFlip.setPower(0.7);
+                robot.inFlip.setTargetPosition(flipAng);
             }
-        }
-
-        //intake Toggle position - move the intake
-        if(intakeTog == 0) {
-            robot.inFlip.setPower(-0.5);
-            robot.inFlip.setTargetPosition(-1);
-        } else if(intakeTog == 1) {
-            robot.inFlip.setPower(0.5);
-            robot.inFlip.setTargetPosition(flipAng);
         }
 
         i = gamepad2.a;
@@ -92,10 +91,12 @@ public class roverTeleOp extends OpMode {
         if(!f && gamepad2.x) {
             if (!fliptog) {
                 fliptog = true;
-                robot.flipArm.setPosition(0.9);
+                robot.flipLArm.setPosition(1);
+                robot.flipRArm.setPosition(0);
             } else {
                 fliptog = false;
-                robot.flipArm.setPosition(0.1);
+                robot.flipLArm.setPosition(0);
+                robot.flipRArm.setPosition(1);
             }
         }
 
@@ -105,10 +106,10 @@ public class roverTeleOp extends OpMode {
         if(!r && gamepad2.y) {
             if(!rotatetog) {
                 rotatetog = true;
-                robot.rotateArm.setPosition(0.9);
+                robot.rotateArm.setPosition(0.75);
             } else {
                 rotatetog = false;
-                robot.rotateArm.setPosition(0.1);
+                robot.rotateArm.setPosition(0);
             }
         }
 
@@ -125,6 +126,18 @@ public class roverTeleOp extends OpMode {
         }
         ry = -Math.pow(gamepad1.right_stick_y, 3);
         lx = -Math.pow(gamepad1.left_stick_x, 3);
+
+        if(!fL && gamepad2.y) {
+            if(!flapTog) {
+                flapTog = true;
+                robot.flap.setPosition(0.9);
+            } else {
+                flapTog = false;
+                robot.flap.setPosition(0.1);
+            }
+        }
+
+        fL = gamepad2.y;
 
         if(!ninja) {
             mecanumDrive(rx, ry, lx, 0);
