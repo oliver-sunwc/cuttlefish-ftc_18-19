@@ -57,6 +57,7 @@ public class roverTeleOp extends OpMode {
     @Override
     public void loop(){
 
+        //toggle button for intake speed
         if(gamepad2.right_bumper && !iN) {
             if(!inNinja) {
                 inNinja = true;
@@ -67,6 +68,7 @@ public class roverTeleOp extends OpMode {
 
         iN = gamepad2.right_bumper;
 
+        //intake flip toggle position
         if(gamepad2.a && !i) {
             if(intakeTog == 0) {
                 intakeTog = 1; }
@@ -75,7 +77,7 @@ public class roverTeleOp extends OpMode {
             }
         }
 
-
+        //intake Toggle position - move the intake
         if(intakeTog == 0) {
             robot.inFlip.setPower(-0.5);
             robot.inFlip.setTargetPosition(-1);
@@ -86,6 +88,7 @@ public class roverTeleOp extends OpMode {
 
         i = gamepad2.a;
 
+        //flip toggle position
         if(!f && gamepad2.x) {
             if (!fliptog) {
                 fliptog = true;
@@ -98,6 +101,7 @@ public class roverTeleOp extends OpMode {
 
         f = gamepad2.x;
 
+        // rotate toggle position
         if(!r && gamepad2.y) {
             if(!rotatetog) {
                 rotatetog = true;
@@ -110,16 +114,10 @@ public class roverTeleOp extends OpMode {
 
         r = gamepad2.y;
 
-        if(!n && gamepad1.right_bumper) {
-            if(!ninja) {
-                ninja = true;
-            } else {
-                ninja = false;
-            }
-        }
+        // ninja thing
+        ninja = gamepad1.right_bumper;
 
-        n = gamepad1.right_bumper;
-
+        // drive the robot code
         if(gamepad1.right_stick_y != 0 || gamepad1.right_stick_x == 0) {
             rx = Math.pow(gamepad1.right_stick_x, 3);
         } else {
@@ -128,11 +126,13 @@ public class roverTeleOp extends OpMode {
         ry = -Math.pow(gamepad1.right_stick_y, 3);
         lx = -Math.pow(gamepad1.left_stick_x, 3);
 
-        if(gamepad1.right_bumper){
-            ry/=3;
-            lx/=3;
-            rx/=3;
+        if(!ninja) {
+            mecanumDrive(rx, ry, lx, 0);
+        } else {
+            mecanumDrive(rx/3, ry/3, lx/3, 0);
         }
+
+        // hang code
         if(gamepad2.dpad_up) {
             robot.hang.setPower(-hangPow);
         } else if (gamepad2.dpad_down) {
@@ -141,8 +141,10 @@ public class roverTeleOp extends OpMode {
             robot.hang.setPower(0);
         }
 
+        // spine code
         robot.spine.setPower(gamepad2.left_stick_y);
 
+        //run intake code
         if(inNinja) {
             robot.intake.setPower(gamepad2.right_stick_y/2);
         } else {
@@ -157,11 +159,7 @@ public class roverTeleOp extends OpMode {
         telemetry.addData("ry", ry);
         telemetry.addData("rx", rx);
         telemetry.update();
-        if(!ninja) {
-            mecanumDrive(rx, ry, lx, 0);
-        } else {
-            mecanumDrive(rx/2, ry/2, lx/2, 0);
-        }
+
     }
 
     void mecanumDrive(double lx,double ly,double rx,double k){
