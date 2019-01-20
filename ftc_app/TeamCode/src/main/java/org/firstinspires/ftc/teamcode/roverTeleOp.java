@@ -75,7 +75,7 @@ public class roverTeleOp extends OpMode {
         iN = gamepad2.right_bumper;
 
         //intake flip toggle position
-        if(gamepad2.a && !i) {
+        if((gamepad2.a || gamepad1.left_bumper) && !i) {
             if(intakeTog == 0) {
                 intakeTog = 1;
                 robot.inFlip.setPower(0.9);
@@ -86,7 +86,7 @@ public class roverTeleOp extends OpMode {
                 robot.inFlip.setTargetPosition(robot.inFlip.getCurrentPosition() - 110);            }
         }
 
-        i = gamepad2.a;
+        i = (gamepad2.a || gamepad1.left_bumper);
 
         // do based on intake position
 
@@ -126,12 +126,12 @@ public class roverTeleOp extends OpMode {
 
         // drive the robot code
         if(gamepad1.right_stick_y != 0 || gamepad1.right_stick_x == 0) {
-            rx = Math.pow(gamepad1.right_stick_x, 3);
+            rx = Math.pow(gamepad1.right_stick_x, 1);
         } else {
             rx += gamepad1.right_stick_x/250;
         }
-        ry = -Math.pow(gamepad1.right_stick_y, 3);
-        lx = -Math.pow(gamepad1.left_stick_x, 3);
+        ry = -Math.pow(gamepad1.right_stick_y, 1);
+        lx = -Math.pow(gamepad1.left_stick_x, 1);
 
         if(!fL && gamepad2.b) {
             if(!flapTog) {
@@ -152,9 +152,9 @@ public class roverTeleOp extends OpMode {
                 mecanumDrive(rx / 3, ry / 3, lx / 3, 0);
             }
         } else if(gamepad1.dpad_left) {
-            mecanumDrive(0.2,0,0,0);
+            mecanumDrive(0.0,0,-0.2,0);
         } else if(gamepad1.dpad_right) {
-            mecanumDrive(-0.2,0,0,0);
+            mecanumDrive(0.0,0,0.2,0);
         }
         // hang code
         if(gamepad2.dpad_up) {
