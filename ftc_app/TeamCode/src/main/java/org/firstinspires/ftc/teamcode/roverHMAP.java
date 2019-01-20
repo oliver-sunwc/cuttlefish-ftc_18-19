@@ -85,7 +85,7 @@ public class roverHMAP {
 
         hang = hwMap.get(DcMotor.class,"h");
         hang.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        hang.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        hang.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
         spine = hwMap.get(DcMotor.class,"s");
         spine.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
@@ -107,7 +107,7 @@ public class roverHMAP {
         intake = hwMap.get(DcMotor.class,"i");
         intake.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         inFlip = hwMap.get(DcMotor.class, "iF");
-        inFlip.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        //inFlip.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
 
         BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();

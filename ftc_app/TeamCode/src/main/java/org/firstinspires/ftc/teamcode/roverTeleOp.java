@@ -38,7 +38,7 @@ public class roverTeleOp extends OpMode {
     boolean n;
     int intakeTog = 0;
     boolean i;
-    int flipAng = 250;
+    int flipAng = 2500;
     boolean inNinja = false;
     boolean iN;
     boolean flapTog = false;
@@ -51,6 +51,8 @@ public class roverTeleOp extends OpMode {
         robot.init(hardwareMap);
         robot.inFlip.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         robot.inFlip.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        robot.hang.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        robot.hang.setMode(DcMotor.RunMode.RUN_TO_POSITION);
     }
 
     @Override
@@ -76,16 +78,18 @@ public class roverTeleOp extends OpMode {
         if(gamepad2.a && !i) {
             if(intakeTog == 0) {
                 intakeTog = 1;
-                robot.inFlip.setPower(-0.7);
-                robot.inFlip.setTargetPosition(0);
+                robot.inFlip.setPower(0.9);
+                robot.inFlip.setTargetPosition(robot.inFlip.getCurrentPosition() + 110);
             } else if(intakeTog == 1) {
                 intakeTog = 0;
-                robot.inFlip.setPower(0.7);
-                robot.inFlip.setTargetPosition(flipAng);
-            }
+                robot.inFlip.setPower(-0.9);
+                robot.inFlip.setTargetPosition(robot.inFlip.getCurrentPosition() - 110);            }
         }
 
         i = gamepad2.a;
+
+        // do based on intake position
+
 
         //flip toggle position
         if(!f && gamepad2.x) {
@@ -106,7 +110,7 @@ public class roverTeleOp extends OpMode {
         if(!r && gamepad2.y) {
             if(!rotatetog) {
                 rotatetog = true;
-                robot.rotateArm.setPosition(0.75);
+                robot.rotateArm.setPosition(0.50);
             } else {
                 rotatetog = false;
                 robot.rotateArm.setPosition(0);
@@ -114,6 +118,8 @@ public class roverTeleOp extends OpMode {
         }
 
         r = gamepad2.y;
+
+
 
         // ninja thing
         ninja = gamepad1.right_bumper;
@@ -127,7 +133,7 @@ public class roverTeleOp extends OpMode {
         ry = -Math.pow(gamepad1.right_stick_y, 3);
         lx = -Math.pow(gamepad1.left_stick_x, 3);
 
-        if(!fL && gamepad2.y) {
+        if(!fL && gamepad2.b) {
             if(!flapTog) {
                 flapTog = true;
                 robot.flap.setPosition(0.9);
@@ -137,21 +143,29 @@ public class roverTeleOp extends OpMode {
             }
         }
 
-        fL = gamepad2.y;
+        fL = gamepad2.b;
 
-        if(!ninja) {
-            mecanumDrive(rx, ry, lx, 0);
-        } else {
-            mecanumDrive(rx/3, ry/3, lx/3, 0);
+        if(!gamepad1.dpad_left && !gamepad2.dpad_right) {
+            if (!ninja) {
+                mecanumDrive(rx, ry, lx, 0);
+            } else {
+                mecanumDrive(rx / 3, ry / 3, lx / 3, 0);
+            }
+        } else if(gamepad1.dpad_left) {
+            mecanumDrive(0.2,0,0,0);
+        } else if(gamepad1.dpad_right) {
+            mecanumDrive(-0.2,0,0,0);
         }
-
         // hang code
         if(gamepad2.dpad_up) {
             robot.hang.setPower(-hangPow);
+            robot.hang.setTargetPosition(robot.hang.getCurrentPosition() - 200);
+
         } else if (gamepad2.dpad_down) {
             robot.hang.setPower(hangPow);
+            robot.hang.setTargetPosition(robot.hang.getCurrentPosition() + 200);
         } else {
-            robot.hang.setPower(0);
+            //robot.hang.setPower(0);
         }
 
         // spine code
@@ -159,9 +173,9 @@ public class roverTeleOp extends OpMode {
 
         //run intake code
         if(inNinja) {
-            robot.intake.setPower(gamepad2.right_stick_y/2);
+            robot.intake.setPower(gamepad2.right_stick_y/3.2);
         } else {
-            robot.intake.setPower(gamepad2.right_stick_y);
+            robot.intake.setPower(gamepad2.right_stick_y/1.6);
         }
 
         if(gamepad2.left_trigger != 0.1 && gamepad2.right_trigger > 0.1) {
@@ -171,6 +185,7 @@ public class roverTeleOp extends OpMode {
         telemetry.addData("lx", lx);
         telemetry.addData("ry", ry);
         telemetry.addData("rx", rx);
+        telemetry.addData("thing",robot.inFlip.getCurrentPosition());
         telemetry.update();
 
     }
