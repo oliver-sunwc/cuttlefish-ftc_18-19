@@ -83,6 +83,7 @@ public class autoCraterSide extends LinearOpMode {
         telemetry.addData("gyro",robotAuto.getHeading());
         telemetry.update();
         Thread.sleep(2000);
+
         // do vision thing
         while(robotAuto.getHeading() > -90){
             telemetry.addData("gyro",robotAuto.getHeading());
@@ -110,6 +111,12 @@ public class autoCraterSide extends LinearOpMode {
         vision.disable();
 
 
+    }
+
+    void checkStop(){
+        if(isStopRequested()){
+            vision.disable();
+        }
     }
 }
 
