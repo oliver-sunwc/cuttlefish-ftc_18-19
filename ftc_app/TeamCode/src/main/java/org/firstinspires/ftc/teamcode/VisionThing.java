@@ -61,6 +61,9 @@ public class VisionThing extends OpenCVPipeline {
         return contours;
     }
 
+    public Mat givehsv(){
+        return hsv;
+    }
     // This is called every camera frame.
     @Override
     public Mat processFrame(Mat rgba, Mat gray) {

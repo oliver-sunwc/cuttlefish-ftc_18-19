@@ -44,6 +44,7 @@ public class roverTeleOp extends OpMode {
     boolean flapTog = false;
     boolean fL;
 
+    int initialPosition;
     ElapsedTime stallTime = new ElapsedTime();
 
     @Override
@@ -51,18 +52,21 @@ public class roverTeleOp extends OpMode {
         robot.init(hardwareMap);
         robot.inFlip.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         robot.inFlip.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
         robot.hang.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        robot.hang.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        robot.hang.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        initialPosition = robot.hang.getCurrentPosition();
     }
 
     @Override
     public void start(){
-
+        //robot.hang.setTargetPosition(initialPosition - 1000);
+        robot.hang.setPower(-1);
     }
 
     @Override
     public void loop(){
-
+        telemetry.addData("hang",robot.hang.getCurrentPosition());
         //toggle button for intake speed
         if(gamepad2.right_bumper && !iN) {
             if(!inNinja) {
@@ -71,6 +75,7 @@ public class roverTeleOp extends OpMode {
                 inNinja = false;
             }
         }
+
 
         iN = gamepad2.right_bumper;
 
@@ -151,25 +156,36 @@ public class roverTeleOp extends OpMode {
             } else {
                 mecanumDrive(rx / 3, ry / 3, lx / 3, 0);
             }
-        } else if(gamepad1.dpad_left) {
-            mecanumDrive(0.0,0,-0.2,0);
-        } else if(gamepad1.dpad_right) {
-            mecanumDrive(0.0,0,0.2,0);
+        } else {
+            int hi= 0;
+            if(gamepad1.dpad_right){
+                hi += -0.05;
+            }
+            if(gamepad1.dpad_left){
+                hi += 0.05;
+            }
+            mecanumDrive(0,0,hi,0);
         }
         // hang code
-        if(gamepad2.dpad_up) {
-            robot.hang.setPower(-hangPow);
-            robot.hang.setTargetPosition(robot.hang.getCurrentPosition() - 200);
+        /*if(gamepad2.dpad_down){
+            robot.hang.setPower(1.0);
+            initialPosition += 250;
 
-        } else if (gamepad2.dpad_down) {
-            robot.hang.setPower(hangPow);
-            robot.hang.setTargetPosition(robot.hang.getCurrentPosition() + 200);
-        } else {
-            //robot.hang.setPower(0);
+        } else if(gamepad2.dpad_up){
+            robot.hang.setPower(-1.0);
+            initialPosition -= 250;
+        } else{
+            robot.hang.setTargetPosition(initialPosition);
         }
+        robot.hang.setTargetPosition(initialPosition);
+        if(robot.hang.getCurrentPosition() - 30 < initialPosition){
+            robot.hang.setPower(1.0);
+        } else if (robot.hang.getCurrentPosition() + 30 > initialPosition) {
+            robot.hang.setPower(-1.0);
+        }*/
 
         // spine code
-        robot.spine.setPower(gamepad2.left_stick_y);
+        robot.spine.setPower(Range.clip(gamepad2.left_stick_y + gamepad1.right_trigger - gamepad1.left_trigger,-1,1));
 
         //run intake code
         if(inNinja) {
@@ -191,10 +207,10 @@ public class roverTeleOp extends OpMode {
     }
 
     void mecanumDrive(double lx,double ly,double rx,double k){
-        robot.fl.setPower(Range.clip((1+k)*(ry + rx - lx),-1,1));
-        robot.bl.setPower(Range.clip((1-k)*(ry + rx + lx),-1,1));
-        robot.fr.setPower(Range.clip((1+k)*(ry - rx + lx),-1,1));
-        robot.br.setPower(Range.clip((1-k)*(ry - rx - lx),-1,1));
+        robot.fl.setPower(Range.clip((1+k)*(ly + rx - lx),-1,1));
+        robot.bl.setPower(Range.clip((1-k)*(ly + rx + lx),-1,1));
+        robot.fr.setPower(Range.clip((1+k)*(ly - rx + lx),-1,1));
+        robot.br.setPower(Range.clip((1-k)*(ly - rx - lx),-1,1));
     }
 
     void hangStall() {

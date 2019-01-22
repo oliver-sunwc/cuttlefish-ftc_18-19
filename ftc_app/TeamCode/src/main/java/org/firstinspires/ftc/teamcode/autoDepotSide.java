@@ -37,28 +37,29 @@ public class autoDepotSide extends LinearOpMode {
         vision.enable();
 
         waitForStart();
+        robot.hang.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         robot.hang.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
         robot.hang.setTargetPosition(robot.hang.getCurrentPosition() + 500);
         robot.hang.setPower(0.6);
         telemetry.addData("position:","brake disengaged");
         telemetry.update();
-        Thread.sleep(1000);
+        Thread.sleep(5000);
 
         robot.hang.setTargetPosition(robot.hang.getCurrentPosition() - 3500);
         robot.hang.setPower(-0.4);
         telemetry.addData("position:","firstDrop");
         telemetry.update();
-        Thread.sleep(3000);
+        Thread.sleep(5000);
 
 
         robot.hang.setTargetPosition(robot.hang.getCurrentPosition() - 1000);
         robot.hang.setPower(-0.7);
         telemetry.addData("position:","secondDrop");
         telemetry.update();
-        Thread.sleep(2000);
+        Thread.sleep(5000);
 
-        robotAuto.verticalDriveDistance(0.4,1);
+        /*robotAuto.verticalDriveDistance(0.4,1);
         //gyro align
 
         Thread.sleep(1000);
