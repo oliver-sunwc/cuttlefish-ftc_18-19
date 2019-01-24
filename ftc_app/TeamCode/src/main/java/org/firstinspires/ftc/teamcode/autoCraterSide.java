@@ -41,8 +41,8 @@ public class autoCraterSide extends LinearOpMode {
         vision.setShowCountours(true);
         waitForStart();
 
-        robot.flipLArm.setPosition(1);
-        robot.flipRArm.setPosition(0);
+        robot.flipLArm.setPosition(0.35);
+        robot.flipRArm.setPosition(0.65);
 
         int left=0;
         int right=0;
