@@ -41,9 +41,13 @@ public class autoCraterSide extends LinearOpMode {
         vision.setShowCountours(true);
         waitForStart();
 
+        telemetry.addData("gyro",getHeading());
+        telemetry.update();
+
         robot.flipLArm.setPosition(0.35);
         robot.flipRArm.setPosition(0.65);
 
+        sleep(2000);
         int left=0;
         int right=0;
         int middle=0;
@@ -115,7 +119,7 @@ public class autoCraterSide extends LinearOpMode {
         //robot.hang.setTargetPosition(robot.hang.getCurrentPosition() + 700);
         robot.hang.setPower(0.8);
         telemetry.addData("verdict:",verdict);
-        telemetry.addData("gyro",robotAuto.getHeading());
+        telemetry.addData("gyro",getHeading());
         telemetry.addData("position:","brake disengaged");
         telemetry.update();
         Thread.sleep(500);
@@ -163,12 +167,53 @@ public class autoCraterSide extends LinearOpMode {
 
         robotAuto.stopDriving();
         if(verdict.equals("left")){
+            if(getHeading() + 40 > 175){
 
+                double curr = normalize(getHeading());
+                while(normalize(getHeading()) < curr + 40){
+                    robot.fl.setPower(0.1);
+                    robot.bl.setPower(0.1);
+                    robot.fr.setPower(-0.1);
+                    robot.br.setPower(-0.1);
+                }
+                robotAuto.stopDriving();
+            } else {
+                double curr = getHeading();
+                while(getHeading() < curr + 40){
+                    robot.fl.setPower(0.1);
+                    robot.bl.setPower(0.1);
+                    robot.fr.setPower(-0.1);
+                    robot.br.setPower(-0.1);
+                }
+                robotAuto.stopDriving();
+            }
         } else if(verdict.equals("right")) {
+            if(getHeading() - 40 < -180) {
+                double curr = normalize(getHeading());
+                while(normalize(getHeading()) > curr - 40){
+                    robot.fl.setPower(-0.1);
+                    robot.bl.setPower(-0.1);
+                    robot.fr.setPower(0.1);
+                    robot.br.setPower(0.1);
+                }
+                robotAuto.stopDriving();
 
+            } else {
+                double curr = getHeading();
+                while(getHeading() > curr - 40){
+                    robot.fl.setPower(-0.1);
+                    robot.bl.setPower(-0.1);
+                    robot.fr.setPower(0.1);
+                    robot.br.setPower(0.1);
+                }
+                robotAuto.stopDriving();
+            }
         } else {
 
         }
+
+        telemetry.addData("gyro",getHeading());
+        telemetry.update();
 
         robot.spine.setPower(0.6);
         Thread.sleep(1000);
@@ -222,6 +267,48 @@ public class autoCraterSide extends LinearOpMode {
         if(isStopRequested()){
             vision.disable();
         }
+    }
+
+    public double getError(double targetAngle) {
+
+        double robotError;
+
+        // calculate error in -179 to +180 range  (
+        robotError = targetAngle - getHeading();
+        while (robotError > 180)  robotError -= 360;
+        while (robotError <= -180) robotError += 360;
+        return robotError;
+    }
+
+    /*
+     * returns desired steering force.  +/- 1 range.  +ve = steer left
+     * @param error   Error angle in robot relative degrees
+     * @param PCoeff  Proportional Gain Coefficient
+     * @return*/
+
+    public double getSteer(double error, double PCoeff) {
+        return Range.clip(error * PCoeff, -1, 1);
+    }
+
+    String formatAngle(AngleUnit angleUnit, double angle) {
+        return formatDegrees(AngleUnit.DEGREES.fromUnit(angleUnit, angle));
+    }
+
+    String formatDegrees(double degrees){
+        return String.format(Locale.getDefault(), "%.1f", AngleUnit.DEGREES.normalize(degrees));
+    }
+    public double getHeading() {
+        robot.angles = robot.imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
+        return Double.parseDouble(formatAngle(robot.angles.angleUnit, robot.angles.firstAngle));
+    }
+
+    public double normalize(double hi){
+        if(hi < 0){
+            hi = -hi;
+            hi = 180-hi;
+            hi += 180;
+        }
+        return hi;
     }
 }
 

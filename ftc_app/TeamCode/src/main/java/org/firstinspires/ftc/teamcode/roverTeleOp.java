@@ -7,6 +7,10 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.Range;
+
+import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
+import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
+import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
 import org.firstinspires.ftc.robotcore.internal.system.AppUtil;
 
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
@@ -18,6 +22,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.PrintWriter;
 import java.lang.*;
+import java.util.Locale;
 
 /**
  * Manual with Arcade Drive
@@ -55,13 +60,12 @@ public class roverTeleOp extends OpMode {
 
         robot.hang.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         robot.hang.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        initialPosition = robot.hang.getCurrentPosition();
+        //initialPosition = robot.hang.getCurrentPosition();
     }
 
     @Override
     public void start(){
         //robot.hang.setTargetPosition(initialPosition - 1000);
-        robot.hang.setPower(-1);
     }
 
     @Override
@@ -167,22 +171,15 @@ public class roverTeleOp extends OpMode {
             mecanumDrive(0,0,hi,0);
         }
         // hang code
-        /*if(gamepad2.dpad_down){
+        if(gamepad2.dpad_down){
             robot.hang.setPower(1.0);
-            initialPosition += 250;
 
         } else if(gamepad2.dpad_up){
             robot.hang.setPower(-1.0);
-            initialPosition -= 250;
         } else{
-            robot.hang.setTargetPosition(initialPosition);
+            robot.hang.setPower(0);
         }
-        robot.hang.setTargetPosition(initialPosition);
-        if(robot.hang.getCurrentPosition() - 30 < initialPosition){
-            robot.hang.setPower(1.0);
-        } else if (robot.hang.getCurrentPosition() + 30 > initialPosition) {
-            robot.hang.setPower(-1.0);
-        }*/
+
 
         // spine code
         robot.spine.setPower(Range.clip(gamepad2.left_stick_y + gamepad1.right_trigger - gamepad1.left_trigger,-1,1));
@@ -198,6 +195,7 @@ public class roverTeleOp extends OpMode {
             hangStall();
         }
 
+        telemetry.addData("gyro",getHeading());
         telemetry.addData("lx", lx);
         telemetry.addData("ry", ry);
         telemetry.addData("rx", rx);
@@ -242,5 +240,40 @@ public class roverTeleOp extends OpMode {
         }
 
         return dScale;
+    }
+
+
+
+    public double getError(double targetAngle) {
+
+        double robotError;
+
+        // calculate error in -179 to +180 range  (
+        robotError = targetAngle - getHeading();
+        while (robotError > 180)  robotError -= 360;
+        while (robotError <= -180) robotError += 360;
+        return robotError;
+    }
+
+    /*
+     * returns desired steering force.  +/- 1 range.  +ve = steer left
+     * @param error   Error angle in robot relative degrees
+     * @param PCoeff  Proportional Gain Coefficient
+     * @return*/
+
+    public double getSteer(double error, double PCoeff) {
+        return Range.clip(error * PCoeff, -1, 1);
+    }
+
+    String formatAngle(AngleUnit angleUnit, double angle) {
+        return formatDegrees(AngleUnit.DEGREES.fromUnit(angleUnit, angle));
+    }
+
+    String formatDegrees(double degrees){
+        return String.format(Locale.getDefault(), "%.1f", AngleUnit.DEGREES.normalize(degrees));
+    }
+    public double getHeading() {
+        robot.angles = robot.imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
+        return Double.parseDouble(formatAngle(robot.angles.angleUnit, robot.angles.firstAngle));
     }
 }
