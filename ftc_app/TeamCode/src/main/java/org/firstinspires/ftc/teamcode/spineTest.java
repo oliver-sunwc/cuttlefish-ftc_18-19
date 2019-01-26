@@ -63,7 +63,7 @@ public class spineTest extends OpMode {
     boolean fL;
 
     int initialPosition;
-    ElapsedTime stallTime = new ElapsedTime();
+    ElapsedTime flipTimer = new ElapsedTime();
 
     @Override
     public void init(){
@@ -82,22 +82,28 @@ public class spineTest extends OpMode {
             if(!fliptog) {
                 robot.flipLArm.setPosition(1);
                 robot.flipRArm.setPosition(0);
-                robot.rotateArm.setPosition(0.50);
+                flipTimer.reset();
                 fliptog = true;
             } else {
                 robot.flipLArm.setPosition(0);
                 robot.flipRArm.setPosition(1);
-                robot.rotateArm.setPosition(0);
+                flipTimer.reset();
                 fliptog = false;
             }
         }
         f = gamepad1.x;
 
+        if(fliptog && flipTimer.milliseconds() >= 300) {
+            robot.rotateArm.setPosition(0.5);
+        } else if(!fliptog && flipTimer.milliseconds() >= 300) {
+            robot.rotateArm.setPosition(0);
+        }
+
         if(!r && gamepad1.y) {
             if(!rotatetog) {
                 rotatetog = true;
-                robot.flipLArm.setPosition(0.7);
-                robot.flipRArm.setPosition(0.3);
+                robot.flipLArm.setPosition(0.1);
+                robot.flipRArm.setPosition(0.9);
             } else {
                 robot.flipLArm.setPosition(1);
                 robot.flipRArm.setPosition(0);
@@ -106,5 +112,8 @@ public class spineTest extends OpMode {
         }
 
         r = gamepad1.y;
+
+        telemetry.addData("rotate toggle", rotatetog);
+        telemetry.addData("flip toggle", fliptog);
     }
 }
