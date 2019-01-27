@@ -66,6 +66,7 @@ public class roverTeleOp extends OpMode {
 
         robot.hang.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         robot.hang.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        robot.rotateArm.setPosition(0.5);
         //initialPosition = robot.hang.getCurrentPosition();
     }
 
