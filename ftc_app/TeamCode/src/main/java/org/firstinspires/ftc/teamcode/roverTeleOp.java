@@ -43,31 +43,37 @@ public class roverTeleOp extends OpMode {
     boolean n;
     int intakeTog = 0;
     boolean i;
-    int flipAng = 430;
+    int flipAng = 340;
     boolean inNinja = false;
     boolean iN;
     boolean midTog = false;
     boolean m;
+    boolean pressed = false;
+    boolean inFlipTrigger1 = false;
+    boolean inFlipTrigger2 = false;
+
 
     int initialPosition;
     ElapsedTime stallTime = new ElapsedTime();
     ElapsedTime flipTimer = new ElapsedTime();
+    ElapsedTime inFlipTimer = new ElapsedTime();
 
     @Override
     public void init() {
-        robot.init(hardwareMap);
+        robot.init(hardwareMap,false);
         robot.inFlip.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         robot.inFlip.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
         robot.hang.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         robot.hang.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        robot.rotateArm.setPosition(0);
         //initialPosition = robot.hang.getCurrentPosition();
     }
 
     @Override
     public void start(){
         //robot.hang.setTargetPosition(initialPosition - 1000);
+        robot.rotateArm.setPosition(0.5);
+
     }
 
     @Override
@@ -88,18 +94,45 @@ public class roverTeleOp extends OpMode {
         //intake flip toggle position
         if((gamepad2.a || gamepad1.left_bumper) && !i) {
             if(intakeTog == 0) {
+                inFlipTimer.reset();
                 intakeTog = 1;
-                robot.inFlip.setPower(1);
+                robot.inFlip.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+                robot.inFlip.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+                robot.inFlip.setPower(0.4);
                 robot.inFlip.setTargetPosition(flipAng);
+                inFlipTrigger1 = true;
             } else if(intakeTog == 1) {
+                inFlipTimer.reset();
                 intakeTog = 0;
-                robot.inFlip.setPower(-1);
-                robot.inFlip.setTargetPosition(0);            }
+                robot.inFlip.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+                robot.inFlip.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+                robot.inFlip.setPower(-0.65);
+                robot.inFlip.setTargetPosition(-flipAng);
+                inFlipTrigger2 = true;
+            }
+        }
+
+
+        if(inFlipTrigger1 && inFlipTimer.seconds()>0.8){
+            inFlipTrigger1 = false;
+            robot.inFlip.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+            robot.inFlip.setPower(0);
+        }
+
+        if(inFlipTrigger2 && inFlipTimer.seconds() > 0.8){
+            inFlipTrigger2 = false;
+            robot.inFlip.setTargetPosition(robot.inFlip.getCurrentPosition() + 1);
+            robot.inFlip.setPower(0.1);
+        }
+
+        if(inFlipTimer.seconds()>1.5){
+            inFlipTrigger1=false;
+            inFlipTrigger2 = false;
         }
 
         i = (gamepad2.a || gamepad1.left_bumper);
 
-        if(!m && gamepad2.b) {
+        /*if(!m && gamepad2.b) {
             if(!midTog) {
                 midTog = true;
                 if(intakeTog == 0) {
@@ -118,13 +151,14 @@ public class roverTeleOp extends OpMode {
             }
         }
 
-        m = gamepad2.b;
+        m = gamepad2.b;*/
 
         // do based on intake position
 
 
         //flip toggle position
         if(!f && gamepad2.x) {
+            pressed = true;
             if(!fliptog) {
                 robot.flipLArm.setPosition(1);
                 robot.flipRArm.setPosition(0);
@@ -139,13 +173,14 @@ public class roverTeleOp extends OpMode {
         }
         f = gamepad2.x;
 
-        if(fliptog && flipTimer.milliseconds() >= 300) {
+        if(fliptog && flipTimer.milliseconds() >= 300 && pressed) {
             robot.rotateArm.setPosition(0.5);
-        } else if(!fliptog && flipTimer.milliseconds() >= 300) {
+        } else if(!fliptog && flipTimer.milliseconds() >= 300 && pressed) {
             robot.rotateArm.setPosition(0);
         }
 
         if(!r && gamepad2.y) {
+
             if(!rotatetog) {
                 rotatetog = true;
                 robot.flipLArm.setPosition(0.1);
@@ -179,9 +214,9 @@ public class roverTeleOp extends OpMode {
         }
 
         if(gamepad1.dpad_right){
-            mecanumDrive(0,0,-0.05,0);
+            mecanumDrive(0,0,-0.1,0);
         } else if(gamepad1.dpad_left){
-            mecanumDrive(0,0,0.05,0);
+            mecanumDrive(0,0,0.1,0);
         }
         // hang code
         if(gamepad2.dpad_down){
@@ -208,11 +243,14 @@ public class roverTeleOp extends OpMode {
             hangStall();
         }
 
-        telemetry.addData("gyro",getHeading());
+        //telemetry.addData("gyro",getHeading());
         telemetry.addData("lx", lx);
         telemetry.addData("ry", ry);
         telemetry.addData("rx", rx);
         telemetry.addData("thing",robot.inFlip.getCurrentPosition());
+        telemetry.addData("target",robot.inFlip.getTargetPosition());
+        telemetry.addData("timer",inFlipTimer.seconds());
+        telemetry.addData("mode",robot.inFlip.getMode());
         telemetry.update();
 
     }
@@ -257,7 +295,7 @@ public class roverTeleOp extends OpMode {
 
 
 
-    public double getError(double targetAngle) {
+    /*public double getError(double targetAngle) {
 
         double robotError;
 
@@ -266,7 +304,7 @@ public class roverTeleOp extends OpMode {
         while (robotError > 180)  robotError -= 360;
         while (robotError <= -180) robotError += 360;
         return robotError;
-    }
+    }*/
 
     /*
      * returns desired steering force.  +/- 1 range.  +ve = steer left
@@ -285,8 +323,8 @@ public class roverTeleOp extends OpMode {
     String formatDegrees(double degrees){
         return String.format(Locale.getDefault(), "%.1f", AngleUnit.DEGREES.normalize(degrees));
     }
-    public double getHeading() {
+    /*public double getHeading() {
         robot.angles = robot.imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
         return Double.parseDouble(formatAngle(robot.angles.angleUnit, robot.angles.firstAngle));
-    }
+    }*/
 }

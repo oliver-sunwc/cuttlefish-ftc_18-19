@@ -26,7 +26,7 @@ public class autoDepotSide extends LinearOpMode {
 
     public void runOpMode() throws InterruptedException {
         robot = new roverHMAP();
-        robot.init(hardwareMap);
+        robot.init(hardwareMap,true);
         robotAuto = new roverAuto(robot);
 
         vision = new VisionThing();

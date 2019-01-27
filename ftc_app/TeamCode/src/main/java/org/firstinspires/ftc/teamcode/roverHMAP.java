@@ -65,11 +65,13 @@ public class roverHMAP {
     public DistanceSensor dist;
 
     HardwareMap hwMap;
+    boolean imuInit;
 
     public roverHMAP() {}
 
-    public void init(HardwareMap ahwMap) {
+    public void init(HardwareMap ahwMap, boolean imuin) {
         hwMap = ahwMap;
+        imuInit = imuin;
 
         /*Motors*/
         fl = hwMap.get(DcMotor.class, "fl");
@@ -107,17 +109,18 @@ public class roverHMAP {
         intake.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         inFlip = hwMap.get(DcMotor.class, "iF");
 
+        if(imuin) {
+            BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
+            //parameters.angleUnit = HardwareType.BNO055IMU.AngleUnit.DEGREES;
+            //parameters.accelUnit = HardwareType.BNO055IMU.AccelUnit.METERS_PERSEC_PERSEC;
+            parameters.calibrationDataFile = "BNO055IMUCalibration.json"; // see the calibration sample opmode
+            parameters.loggingEnabled = true;
+            parameters.loggingTag = "IMU";
+            parameters.accelerationIntegrationAlgorithm = new JustLoggingAccelerationIntegrator();
 
-        BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
-        //parameters.angleUnit = HardwareType.BNO055IMU.AngleUnit.DEGREES;
-        //parameters.accelUnit = HardwareType.BNO055IMU.AccelUnit.METERS_PERSEC_PERSEC;
-        parameters.calibrationDataFile = "BNO055IMUCalibration.json"; // see the calibration sample opmode
-        parameters.loggingEnabled = true;
-        parameters.loggingTag = "IMU";
-        parameters.accelerationIntegrationAlgorithm = new JustLoggingAccelerationIntegrator();
-
-        imu = hwMap.get(BNO055IMU.class, "imu");
-        imu.initialize(parameters);
+            imu = hwMap.get(BNO055IMU.class, "imu");
+            imu.initialize(parameters);
+        }
     }
 
 

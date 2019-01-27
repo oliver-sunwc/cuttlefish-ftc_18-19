@@ -29,7 +29,7 @@ public class autoCraterSide extends LinearOpMode {
 
     public void runOpMode() throws InterruptedException {
         robot = new roverHMAP();
-        robot.init(hardwareMap);
+        robot.init(hardwareMap,true);
         robotAuto = new roverAuto(robot);
         robot.inFlip.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         robot.inFlip.setMode(DcMotor.RunMode.RUN_TO_POSITION);

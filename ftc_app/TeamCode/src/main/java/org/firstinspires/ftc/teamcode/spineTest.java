@@ -67,7 +67,7 @@ public class spineTest extends OpMode {
 
     @Override
     public void init(){
-        robot.init(hardwareMap);
+        robot.init(hardwareMap,true);
         robot.inFlip.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         robot.inFlip.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
