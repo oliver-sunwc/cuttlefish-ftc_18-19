@@ -59,34 +59,7 @@ public class autoDepotSide extends LinearOpMode {
         telemetry.update();
         Thread.sleep(5000);
 
-        /*robotAuto.verticalDriveDistance(0.4,1);
-        //gyro align
 
-        Thread.sleep(1000);
-        telemetry.addData("dist",robot.dist.getDistance(DistanceUnit.CM));
-        telemetry.update();
-
-        robotAuto.moveForward(0.2);
-        while(robot.dist.getDistance(DistanceUnit.CM) < 10){
-            telemetry.addData("dist",robot.dist.getDistance(DistanceUnit.CM));
-            telemetry.update();
-        }
-        robotAuto.stopDriving();
-        // drop the team marker in the depot first, load the team marker in the intake box
-
-        //align with sensor
-        /*robotAuto.verticalDrive(0.3);
-        if(robot.landerS.getVoltage()*robot.voltage_to_in > 6) {
-            robotAuto.stopDriving();
-        }*/
-
-        /*
-        extend slide and drop intake loop
-         */
-
-        /*
-        intake the cube
-        */
         vision.disable();
 
 

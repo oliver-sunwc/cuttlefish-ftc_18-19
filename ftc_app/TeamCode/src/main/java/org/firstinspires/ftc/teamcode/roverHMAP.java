@@ -71,7 +71,6 @@ public class roverHMAP {
     public void init(HardwareMap ahwMap) {
         hwMap = ahwMap;
 
-
         /*Motors*/
         fl = hwMap.get(DcMotor.class, "fl");
         fr = hwMap.get(DcMotor.class, "fr");

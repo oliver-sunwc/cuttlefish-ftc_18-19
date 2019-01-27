@@ -162,7 +162,7 @@ public class autoCraterSide extends LinearOpMode {
          // gyro align
 
         robot.inFlip.setPower(0.4);
-        robot.inFlip.setTargetPosition(robot.inFlip.getCurrentPosition() + 420);
+        robot.inFlip.setTargetPosition(robot.inFlip.getCurrentPosition() + 510);
 
         Thread.sleep(250);
 
@@ -237,6 +237,8 @@ public class autoCraterSide extends LinearOpMode {
         robot.spine.setPower(0);
         Thread.sleep(100);
 
+        robot.inFlip.setPower(-0.8);
+        robot.inFlip.setTargetPosition(robot.inFlip.getCurrentPosition() - 510);
 
         if(verdict.equals("left")) {
             if(getHeading() - 22 < -175) {
@@ -342,7 +344,8 @@ public class autoCraterSide extends LinearOpMode {
         Thread.sleep(1500);
         robot.spine.setPower(0);
 
-
+        //rotate
+        // extendo slido
 
         vision.disable();
 
