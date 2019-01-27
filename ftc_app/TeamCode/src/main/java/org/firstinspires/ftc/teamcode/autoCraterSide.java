@@ -49,11 +49,11 @@ public class autoCraterSide extends LinearOpMode {
         robot.flipLArm.setPosition(0.35);
         robot.flipRArm.setPosition(0.65);
 
-        sleep(2000);
+        sleep(250);
         int left=0;
         int right=0;
         int middle=0;
-        for(int j=0;j<20;j++) {
+        for(int j=0;j<15;j++) {
             Thread.sleep(50);
             List<MatOfPoint> contours;
             contours = vision.getContours();
@@ -124,9 +124,8 @@ public class autoCraterSide extends LinearOpMode {
         telemetry.addData("gyro",getHeading());
         telemetry.addData("position:","brake disengaged");
         telemetry.update();
-        Thread.sleep(500);
+        Thread.sleep(400);
         robot.hang.setPower(0);
-        sleep(1000);
 
         //robot.hang.setTargetPosition(robot.hang.getCurrentPosition() - 7000);
         currPos = robot.hang.getCurrentPosition();
@@ -147,17 +146,26 @@ public class autoCraterSide extends LinearOpMode {
         //robot.hang.setTargetPosition(robot.hang.getCurrentPosition());
         //robot.hang.setPower(0);
 
-        Thread.sleep(500);
+        Thread.sleep(250);
         telemetry.addData("dist",robot.dist.getDistance(DistanceUnit.CM));
         telemetry.update();
 
-        robotAuto.verticalDriveDistance(0.1,3);
+        //robotAuto.verticalDriveDistance(0.1,2);
+
+        robotAuto.moveForward(0.1);
+        while(robot.dist.getDistance(DistanceUnit.CM) < 10){
+
+        }
+        robotAuto.stopDriving();
+
 
          // gyro align
-        Thread.sleep(250);
 
         robot.inFlip.setPower(0.4);
         robot.inFlip.setTargetPosition(robot.inFlip.getCurrentPosition() + 420);
+
+        Thread.sleep(250);
+
         /*robotAuto.moveForward(0.2);
 
         while(robot.dist.getDistance(DistanceUnit.CM) < 30){
@@ -217,49 +225,125 @@ public class autoCraterSide extends LinearOpMode {
         telemetry.addData("gyro",getHeading());
         telemetry.update();
 
-        robot.spine.setPower(-0.6);
-        Thread.sleep(1000);
+        robot.spine.setPower(-1);
+        Thread.sleep(1500);
 
         robot.spine.setPower(0);
         Thread.sleep(250);
 
-        robot.spine.setPower(0.6);
-        Thread.sleep(1000);
+        robot.spine.setPower(1);
+        Thread.sleep(1250);
 
         robot.spine.setPower(0);
-        Thread.sleep(250);
-        /*telemetry.addData("gyro",robotAuto.getHeading());
-        telemetry.update();
-        Thread.sleep(2000);
+        Thread.sleep(100);
 
-        // do vision thing
-        while(robotAuto.getHeading() > -90){
-            telemetry.addData("gyro",robotAuto.getHeading());
-            telemetry.update();
-            robot.fl.setPower(0.2);
-            robot.bl.setPower(0.2);
-            robot.br.setPower(-0.2);
-            robot.fr.setPower(-0.2);
+
+        if(verdict.equals("left")) {
+            if(getHeading() - 22 < -175) {
+                double curr = normalize(getHeading());
+                while(normalize(getHeading()) > curr - 22){
+                    robot.fl.setPower(-0.2);
+                    robot.bl.setPower(-0.2);
+                    robot.fr.setPower(0.2);
+                    robot.br.setPower(0.2);
+                }
+                robotAuto.stopDriving();
+
+            } else {
+                double curr = getHeading();
+                while(getHeading() > curr - 22){
+                    robot.fl.setPower(-0.2);
+                    robot.bl.setPower(-0.2);
+                    robot.fr.setPower(0.2);
+                    robot.br.setPower(0.2);
+                }
+                robotAuto.stopDriving();
+            }
         }
-        robotAuto.stopDriving();
 
-        telemetry.addData("gyro", robotAuto.getHeading());
-        telemetry.update();
-        sleep(50000);
+        if(verdict.equals("right")){
+            if(getHeading() + 22 > 175){
 
-        //align with sensor
-        /*robotAuto.verticalDrive(0.3);
-        if(robot.landerS.getVoltage()*robot.voltage_to_in > 6) {
+                double curr = normalize(getHeading());
+                while(normalize(getHeading()) < curr + 22){
+                    robot.fl.setPower(0.2);
+                    robot.bl.setPower(0.2);
+                    robot.fr.setPower(-0.2);
+                    robot.br.setPower(-0.2);
+                }
+                robotAuto.stopDriving();
+            } else {
+                double curr = getHeading();
+                while(getHeading() < curr + 22){
+                    robot.fl.setPower(0.2);
+                    robot.bl.setPower(0.2);
+                    robot.fr.setPower(-0.2);
+                    robot.br.setPower(-0.2);
+                }
+                robotAuto.stopDriving();
+            }
+        }
+
+        Thread.sleep(250);
+        robotAuto.verticalDriveDistance(0.3,7.5);
+
+        Thread.sleep(250);
+
+        if(getHeading() + 85 > 175){
+
+            double curr = normalize(getHeading());
+            while(normalize(getHeading()) < curr + 85){
+                robot.fl.setPower(0.2);
+                robot.bl.setPower(0.2);
+                robot.fr.setPower(-0.2);
+                robot.br.setPower(-0.2);
+            }
             robotAuto.stopDriving();
-        }*/
+        } else {
+            double curr = getHeading();
+            while(getHeading() < curr + 85){
+                robot.fl.setPower(0.2);
+                robot.bl.setPower(0.2);
+                robot.fr.setPower(-0.2);
+                robot.br.setPower(-0.2);
+            }
+            robotAuto.stopDriving();
+        }
 
-        /*
-        extend slide and drop intake loop
-         */
+        robotAuto.verticalDriveDistance(0.7,18);
 
-        /*
-        intake the cube
-        */
+        if(getHeading() + 20 > 175){
+
+            double curr = normalize(getHeading());
+            while(normalize(getHeading()) < curr + 20){
+                robot.fl.setPower(0.2);
+                robot.bl.setPower(0.2);
+                robot.fr.setPower(-0.2);
+                robot.br.setPower(-0.2);
+            }
+            robotAuto.stopDriving();
+        } else {
+            double curr = getHeading();
+            while(getHeading() < curr + 20){
+                robot.fl.setPower(0.2);
+                robot.bl.setPower(0.2);
+                robot.fr.setPower(-0.2);
+                robot.br.setPower(-0.2);
+            }
+            robotAuto.stopDriving();
+        }
+
+        robotAuto.verticalDriveDistance(0.4,7);
+        robot.spine.setPower(-1);
+        Thread.sleep(1800);
+        robot.spine.setPower(0);
+        Thread.sleep(500);
+        robot.spine.setPower(1);
+        Thread.sleep(1500);
+        robot.spine.setPower(0);
+
+
+
         vision.disable();
 
 
