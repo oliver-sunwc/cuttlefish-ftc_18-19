@@ -51,7 +51,7 @@ public class roverTeleOp extends OpMode {
     boolean pressed = false;
     boolean inFlipTrigger1 = false;
     boolean inFlipTrigger2 = false;
-
+    boolean re;
 
     int initialPosition;
     ElapsedTime stallTime = new ElapsedTime();
@@ -91,6 +91,13 @@ public class roverTeleOp extends OpMode {
 
 
         iN = gamepad2.right_bumper;
+
+        if(!re && gamepad1.b) {
+            robot.inFlip.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+            robot.inFlip.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        }
+
+        re = gamepad1.b;
 
         //intake flip toggle position
         if((gamepad2.a || gamepad1.left_bumper) && !i) {

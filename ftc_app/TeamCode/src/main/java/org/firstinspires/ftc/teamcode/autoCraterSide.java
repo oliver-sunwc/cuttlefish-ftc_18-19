@@ -111,7 +111,7 @@ public class autoCraterSide extends LinearOpMode {
         }
 
 
-
+        double currAng = getHeading();
 
         robot.hang.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         robot.hang.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
@@ -143,6 +143,25 @@ public class autoCraterSide extends LinearOpMode {
 
         //gyro align
 
+        if(currAng > getHeading()) {
+            while(currAng > getHeading()) {
+                robot.fl.setPower(0.1);
+                robot.bl.setPower(0.1);
+                robot.fr.setPower(-0.1);
+                robot.br.setPower(-0.1);
+            }
+        } if(currAng < getHeading()) {
+            while(currAng < getHeading()) {
+                robot.fl.setPower(-0.1);
+                robot.bl.setPower(-0.1);
+                robot.fr.setPower(0.1);
+                robot.br.setPower(0.1);
+            }
+        } else {
+
+        }
+        robotAuto.stopDriving();
+
         //robot.hang.setTargetPosition(robot.hang.getCurrentPosition());
         //robot.hang.setPower(0);
 
@@ -153,8 +172,9 @@ public class autoCraterSide extends LinearOpMode {
         //robotAuto.verticalDriveDistance(0.1,2);
 
         robotAuto.moveForward(0.1);
-        while(robot.dist.getDistance(DistanceUnit.CM) < 10){
-
+        while(robot.dist.getDistance(DistanceUnit.CM) < 9){
+            telemetry.addData("dist",robot.dist.getDistance(DistanceUnit.CM));
+            telemetry.update();
         }
         robotAuto.stopDriving();
 
@@ -164,7 +184,7 @@ public class autoCraterSide extends LinearOpMode {
         robot.inFlip.setPower(0.4);
         robot.inFlip.setTargetPosition(robot.inFlip.getCurrentPosition() + 510);
 
-        Thread.sleep(250);
+        sleep(250);
 
         /*robotAuto.moveForward(0.2);
 
@@ -226,13 +246,13 @@ public class autoCraterSide extends LinearOpMode {
         telemetry.update();
 
         robot.spine.setPower(-1);
-        Thread.sleep(1500);
+        Thread.sleep(2000);
 
         robot.spine.setPower(0);
         Thread.sleep(250);
 
         robot.spine.setPower(1);
-        Thread.sleep(1250);
+        Thread.sleep(1750);
 
         robot.spine.setPower(0);
         Thread.sleep(100);
@@ -287,7 +307,7 @@ public class autoCraterSide extends LinearOpMode {
         }
 
         Thread.sleep(250);
-        robotAuto.verticalDriveDistance(0.3,7.5);
+        robotAuto.verticalDriveDistance(0.1,7.8);
 
         Thread.sleep(250);
 
@@ -312,7 +332,7 @@ public class autoCraterSide extends LinearOpMode {
             robotAuto.stopDriving();
         }
 
-        robotAuto.verticalDriveDistance(0.7,18);
+        robotAuto.verticalDriveDistance(0.7,21);
 
         if(getHeading() + 20 > 175){
 
@@ -335,7 +355,7 @@ public class autoCraterSide extends LinearOpMode {
             robotAuto.stopDriving();
         }
 
-        robotAuto.verticalDriveDistance(0.4,7);
+        robotAuto.verticalDriveDistance(0.4,5.8);
         robot.spine.setPower(-1);
         Thread.sleep(1800);
         robot.spine.setPower(0);
@@ -347,8 +367,37 @@ public class autoCraterSide extends LinearOpMode {
         //rotate
         // extendo slido
 
-        vision.disable();
+        robotAuto.verticalDriveDistance(-0.4, -5);
 
+        if(getHeading() + 200 > 175){
+
+            double curr = normalize(getHeading());
+            while(normalize(getHeading()) < curr + 200){
+                robot.fl.setPower(0.2);
+                robot.bl.setPower(0.2);
+                robot.fr.setPower(-0.2);
+                robot.br.setPower(-0.2);
+            }
+            robotAuto.stopDriving();
+        } else {
+            double curr = getHeading();
+            while(getHeading() < curr + 200){
+                robot.fl.setPower(0.2);
+                robot.bl.setPower(0.2);
+                robot.fr.setPower(-0.2);
+                robot.br.setPower(-0.2);
+            }
+            robotAuto.stopDriving();
+        }
+
+        robotAuto.verticalDriveDistance(0.4, 10);
+
+        robot.spine.setPower(-1);
+        Thread.sleep(2500);
+        robot.spine.setPower(0);
+        Thread.sleep(500);
+
+        vision.disable();
 
     }
 
