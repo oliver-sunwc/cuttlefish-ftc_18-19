@@ -127,7 +127,7 @@ public class roverTeleOp extends OpMode {
             robot.inFlip.setPower(0);
         }
 
-        if(inFlipTrigger2 && inFlipTimer.seconds() > 0.8){
+        if(inFlipTrigger2 && inFlipTimer.seconds() > 1.4){
             inFlipTrigger2 = false;
             robot.inFlip.setTargetPosition(robot.inFlip.getCurrentPosition() + 1);
             robot.inFlip.setPower(0.1);
