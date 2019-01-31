@@ -143,7 +143,7 @@ public class autoCraterSide extends LinearOpMode {
 
         //gyro align
 
-        if(currAng > getHeading()) {
+        /*if(currAng > getHeading()) {
             while(currAng > getHeading()) {
                 robot.fl.setPower(0.1);
                 robot.bl.setPower(0.1);
@@ -160,7 +160,7 @@ public class autoCraterSide extends LinearOpMode {
         } else {
 
         }
-        robotAuto.stopDriving();
+        robotAuto.stopDriving();*/
 
         //robot.hang.setTargetPosition(robot.hang.getCurrentPosition());
         //robot.hang.setPower(0);
@@ -168,21 +168,21 @@ public class autoCraterSide extends LinearOpMode {
         Thread.sleep(250);
         telemetry.addData("dist",robot.dist.getDistance(DistanceUnit.CM));
         telemetry.update();
+        vision.disable();
 
         //robotAuto.verticalDriveDistance(0.1,2);
 
         robotAuto.moveForward(0.1);
-        while(robot.dist.getDistance(DistanceUnit.CM) < 9){
+        while(robot.dist.getDistance(DistanceUnit.CM) < 12.5){
             telemetry.addData("dist",robot.dist.getDistance(DistanceUnit.CM));
             telemetry.update();
         }
         robotAuto.stopDriving();
 
-
+        Thread.sleep(150);
          // gyro align
 
-        robot.inFlip.setPower(0.4);
-        robot.inFlip.setTargetPosition(robot.inFlip.getCurrentPosition() + 510);
+
 
         sleep(250);
 
@@ -197,73 +197,30 @@ public class autoCraterSide extends LinearOpMode {
 
         robotAuto.stopDriving();
         if(verdict.equals("left")){
-            if(getHeading() + 25 > 175){
+            if(getHeading() + 30 > 175){
 
                 double curr = normalize(getHeading());
-                while(normalize(getHeading()) < curr + 25){
-                    robot.fl.setPower(0.1);
-                    robot.bl.setPower(0.1);
-                    robot.fr.setPower(-0.1);
-                    robot.br.setPower(-0.1);
+                while(normalize(getHeading()) < curr + 30){
+                    robot.fl.setPower(0.2);
+                    robot.bl.setPower(0.2);
+                    robot.fr.setPower(-0.2);
+                    robot.br.setPower(-0.2);
                 }
                 robotAuto.stopDriving();
             } else {
                 double curr = getHeading();
-                while(getHeading() < curr + 25){
-                    robot.fl.setPower(0.1);
-                    robot.bl.setPower(0.1);
-                    robot.fr.setPower(-0.1);
-                    robot.br.setPower(-0.1);
+                while(getHeading() < curr + 30){
+                    robot.fl.setPower(0.2);
+                    robot.bl.setPower(0.2);
+                    robot.fr.setPower(-0.2);
+                    robot.br.setPower(-0.2);
                 }
                 robotAuto.stopDriving();
             }
         } else if(verdict.equals("right")) {
-            if(getHeading() - 25 < -175) {
+            if(getHeading() - 30 < -175) {
                 double curr = normalize(getHeading());
-                while(normalize(getHeading()) > curr - 25){
-                    robot.fl.setPower(-0.1);
-                    robot.bl.setPower(-0.1);
-                    robot.fr.setPower(0.1);
-                    robot.br.setPower(0.1);
-                }
-                robotAuto.stopDriving();
-
-            } else {
-                double curr = getHeading();
-                while(getHeading() > curr - 25){
-                    robot.fl.setPower(-0.1);
-                    robot.bl.setPower(-0.1);
-                    robot.fr.setPower(0.1);
-                    robot.br.setPower(0.1);
-                }
-                robotAuto.stopDriving();
-            }
-        } else {
-
-        }
-
-        telemetry.addData("gyro",getHeading());
-        telemetry.update();
-
-        robot.spine.setPower(-1);
-        Thread.sleep(2000);
-
-        robot.spine.setPower(0);
-        Thread.sleep(250);
-
-        robot.spine.setPower(1);
-        Thread.sleep(1750);
-
-        robot.spine.setPower(0);
-        Thread.sleep(100);
-
-        robot.inFlip.setPower(-0.8);
-        robot.inFlip.setTargetPosition(robot.inFlip.getCurrentPosition() - 510);
-
-        if(verdict.equals("left")) {
-            if(getHeading() - 22 < -175) {
-                double curr = normalize(getHeading());
-                while(normalize(getHeading()) > curr - 22){
+                while(normalize(getHeading()) > curr - 30){
                     robot.fl.setPower(-0.2);
                     robot.bl.setPower(-0.2);
                     robot.fr.setPower(0.2);
@@ -273,7 +230,54 @@ public class autoCraterSide extends LinearOpMode {
 
             } else {
                 double curr = getHeading();
-                while(getHeading() > curr - 22){
+                while(getHeading() > curr - 30){
+                    robot.fl.setPower(-0.2);
+                    robot.bl.setPower(-0.2);
+                    robot.fr.setPower(0.2);
+                    robot.br.setPower(0.2);
+                }
+                robotAuto.stopDriving();
+            }
+        } else {
+
+        }
+
+        telemetry.addData("gyro",getHeading());
+        telemetry.update();
+        robot.inFlip.setPower(0.4);
+        robot.inFlip.setTargetPosition(robot.inFlip.getCurrentPosition() + 510);
+
+        Thread.sleep(500);
+
+        robot.spine.setPower(-1);
+        Thread.sleep(2200);
+
+        robot.spine.setPower(0);
+        Thread.sleep(250);
+
+        robot.spine.setPower(0.7);
+        Thread.sleep(1800);
+
+        robot.spine.setPower(0);
+        Thread.sleep(100);
+
+        robot.inFlip.setPower(-0.8);
+        robot.inFlip.setTargetPosition(robot.inFlip.getCurrentPosition() - 510);
+
+        if(verdict.equals("left")) {
+            if(getHeading() - 30 < -175) {
+                double curr = normalize(getHeading());
+                while(normalize(getHeading()) > curr - 30){
+                    robot.fl.setPower(-0.2);
+                    robot.bl.setPower(-0.2);
+                    robot.fr.setPower(0.2);
+                    robot.br.setPower(0.2);
+                }
+                robotAuto.stopDriving();
+
+            } else {
+                double curr = getHeading();
+                while(getHeading() > curr - 30){
                     robot.fl.setPower(-0.2);
                     robot.bl.setPower(-0.2);
                     robot.fr.setPower(0.2);
@@ -284,10 +288,10 @@ public class autoCraterSide extends LinearOpMode {
         }
 
         if(verdict.equals("right")){
-            if(getHeading() + 22 > 175){
+            if(getHeading() + 30 > 175){
 
                 double curr = normalize(getHeading());
-                while(normalize(getHeading()) < curr + 22){
+                while(normalize(getHeading()) < curr + 30){
                     robot.fl.setPower(0.2);
                     robot.bl.setPower(0.2);
                     robot.fr.setPower(-0.2);
@@ -296,7 +300,7 @@ public class autoCraterSide extends LinearOpMode {
                 robotAuto.stopDriving();
             } else {
                 double curr = getHeading();
-                while(getHeading() < curr + 22){
+                while(getHeading() < curr + 30){
                     robot.fl.setPower(0.2);
                     robot.bl.setPower(0.2);
                     robot.fr.setPower(-0.2);
@@ -307,14 +311,14 @@ public class autoCraterSide extends LinearOpMode {
         }
 
         Thread.sleep(250);
-        robotAuto.verticalDriveDistance(0.1,7.8);
+        robotAuto.verticalDriveDistance(0.1,6.7);
 
         Thread.sleep(250);
 
         if(getHeading() + 85 > 175){
 
             double curr = normalize(getHeading());
-            while(normalize(getHeading()) < curr + 85){
+            while(normalize(getHeading()) < curr + 80){
                 robot.fl.setPower(0.2);
                 robot.bl.setPower(0.2);
                 robot.fr.setPower(-0.2);
@@ -323,7 +327,7 @@ public class autoCraterSide extends LinearOpMode {
             robotAuto.stopDriving();
         } else {
             double curr = getHeading();
-            while(getHeading() < curr + 85){
+            while(getHeading() < curr + 80){
                 robot.fl.setPower(0.2);
                 robot.bl.setPower(0.2);
                 robot.fr.setPower(-0.2);
@@ -332,12 +336,13 @@ public class autoCraterSide extends LinearOpMode {
             robotAuto.stopDriving();
         }
 
-        robotAuto.verticalDriveDistance(0.7,21);
-
-        if(getHeading() + 20 > 175){
+        robotAuto.verticalDriveDistance(0.6,22);
+        robotAuto.stopDriving();
+        Thread.sleep(500);
+        if(getHeading() + 23 > 175){
 
             double curr = normalize(getHeading());
-            while(normalize(getHeading()) < curr + 20){
+            while(normalize(getHeading()) < curr + 23){
                 robot.fl.setPower(0.2);
                 robot.bl.setPower(0.2);
                 robot.fr.setPower(-0.2);
@@ -346,7 +351,7 @@ public class autoCraterSide extends LinearOpMode {
             robotAuto.stopDriving();
         } else {
             double curr = getHeading();
-            while(getHeading() < curr + 20){
+            while(getHeading() < curr + 23){
                 robot.fl.setPower(0.2);
                 robot.bl.setPower(0.2);
                 robot.fr.setPower(-0.2);
@@ -355,12 +360,19 @@ public class autoCraterSide extends LinearOpMode {
             robotAuto.stopDriving();
         }
 
-        robotAuto.verticalDriveDistance(0.4,5.8);
+        Thread.sleep(200);
         robot.spine.setPower(-1);
-        Thread.sleep(1800);
-        robot.spine.setPower(0);
         Thread.sleep(500);
+        robot.inFlip.setPower(0.4);
+        robot.inFlip.setTargetPosition(robot.inFlip.getCurrentPosition() + 510);
+        Thread.sleep(1500);
+        robot.spine.setPower(0);
+        robot.intake.setPower(1);
+        Thread.sleep(1500);
+        robot.intake.setPower(0);
         robot.spine.setPower(1);
+        robot.inFlip.setPower(-0.4);
+        robot.inFlip.setTargetPosition(robot.inFlip.getCurrentPosition() - 510);
         Thread.sleep(1500);
         robot.spine.setPower(0);
 
@@ -369,35 +381,33 @@ public class autoCraterSide extends LinearOpMode {
 
         robotAuto.verticalDriveDistance(-0.4, -5);
 
-        if(getHeading() + 200 > 175){
-
+        if(getHeading() - 143 < -175) {
             double curr = normalize(getHeading());
-            while(normalize(getHeading()) < curr + 200){
-                robot.fl.setPower(0.2);
-                robot.bl.setPower(0.2);
-                robot.fr.setPower(-0.2);
-                robot.br.setPower(-0.2);
+            while(normalize(getHeading()) > curr - 143){
+                robot.fl.setPower(-0.2);
+                robot.bl.setPower(-0.2);
+                robot.fr.setPower(0.2);
+                robot.br.setPower(0.2);
             }
             robotAuto.stopDriving();
+
         } else {
             double curr = getHeading();
-            while(getHeading() < curr + 200){
-                robot.fl.setPower(0.2);
-                robot.bl.setPower(0.2);
-                robot.fr.setPower(-0.2);
-                robot.br.setPower(-0.2);
+            while(getHeading() > curr - 143){
+                robot.fl.setPower(-0.2);
+                robot.bl.setPower(-0.2);
+                robot.fr.setPower(0.2);
+                robot.br.setPower(0.2);
             }
             robotAuto.stopDriving();
         }
 
-        robotAuto.verticalDriveDistance(0.4, 10);
-
         robot.spine.setPower(-1);
         Thread.sleep(2500);
         robot.spine.setPower(0);
-        Thread.sleep(500);
 
-        vision.disable();
+        robotAuto.verticalDriveDistance(0.2, 4);
+
 
     }
 

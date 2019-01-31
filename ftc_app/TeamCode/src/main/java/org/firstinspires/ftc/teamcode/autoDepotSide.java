@@ -13,6 +13,9 @@ import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
+import org.opencv.core.MatOfPoint;
+import org.opencv.core.Rect;
+import org.opencv.imgproc.Imgproc;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -28,6 +31,8 @@ public class autoDepotSide extends LinearOpMode {
         robot = new roverHMAP();
         robot.init(hardwareMap,true);
         robotAuto = new roverAuto(robot);
+        robot.inFlip.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        robot.inFlip.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
         vision = new VisionThing();
         // can replace with ActivityViewDisplay.getInstance() for fullscreen
@@ -35,34 +40,323 @@ public class autoDepotSide extends LinearOpMode {
         vision.setShowCountours(false);
         // start the vision system
         vision.enable();
-
+        vision.setShowCountours(true);
         waitForStart();
-        robot.hang.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        robot.hang.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
-        robot.hang.setTargetPosition(robot.hang.getCurrentPosition() + 500);
-        robot.hang.setPower(0.6);
+        telemetry.addData("gyro",getHeading());
+        telemetry.update();
+
+        robot.flipLArm.setPosition(0.35);
+        robot.flipRArm.setPosition(0.65);
+
+        sleep(250);
+        int left=0;
+        int right=0;
+        int middle=0;
+        for(int j=0;j<15;j++) {
+            Thread.sleep(50);
+            List<MatOfPoint> contours;
+            contours = vision.getContours();
+            int leftcounter = 0;
+            int rightcounter = 0;
+            String sees;
+            if(contours.size() > 0) {
+                for (int i = 0; i < contours.size(); i++) {
+                    Rect boundRec = Imgproc.boundingRect(contours.get(i));
+                    if (boundRec.y + boundRec.height > 3 * vision.givehsv().height() / 4) {
+                        if (boundRec.x + boundRec.width / 2 > vision.givehsv().width() / 2) {
+                            rightcounter++;
+                        } else {
+                            leftcounter++;
+                        }
+                    }
+                }
+                if (leftcounter > 0 || rightcounter > 0) {
+                    if (leftcounter > rightcounter) {
+                        sees = "left";
+                        left++;
+                    } else if (rightcounter > leftcounter) {
+                        sees = "middle";
+                        middle++;
+                    } else {
+                        sees = "right";
+                        right++;
+                    }
+                } else {
+                    sees = "right";
+                    right++;
+                }
+                telemetry.addData("sees mineral", sees);
+                telemetry.addData("width", vision.givehsv().width());
+                telemetry.addData("height", vision.givehsv().height());
+                telemetry.addData("leftcounter", leftcounter);
+                telemetry.addData("rightcounter", rightcounter);
+                telemetry.update();
+            }
+            checkStop();
+        }
+        String verdict = "";
+        if(left > right){
+            if(left > middle){
+                verdict = "left";
+            } else {
+                verdict = "middle";
+            }
+        } else {
+            if(right > middle){
+                verdict = "right";
+            } else {
+                verdict = "middle";
+            }
+        }
+
+
+        double currAng = getHeading();
+
+        robot.hang.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        robot.hang.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        int currPos = robot.hang.getCurrentPosition();
+        //robot.hang.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
+        //robot.hang.setTargetPosition(robot.hang.getCurrentPosition() + 700);
+        robot.hang.setPower(0.8);
+        telemetry.addData("verdict:",verdict);
+        telemetry.addData("gyro",getHeading());
         telemetry.addData("position:","brake disengaged");
         telemetry.update();
-        Thread.sleep(5000);
+        Thread.sleep(400);
+        robot.hang.setPower(0);
 
-        robot.hang.setTargetPosition(robot.hang.getCurrentPosition() - 3500);
-        robot.hang.setPower(-0.4);
+        //robot.hang.setTargetPosition(robot.hang.getCurrentPosition() - 7000);
+        currPos = robot.hang.getCurrentPosition();
+        robot.hang.setPower(-1);
         telemetry.addData("position:","firstDrop");
         telemetry.update();
-        Thread.sleep(5000);
+        Thread.sleep(1500);
+        robot.hang.setPower(0);
 
-
-        robot.hang.setTargetPosition(robot.hang.getCurrentPosition() - 1000);
-        robot.hang.setPower(-0.7);
+        /*robot.hang.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        robot.hang.setTargetPosition(robot.hang.getCurrentPosition() - 7000);
+        robot.hang.setPower(-0.9);*/
         telemetry.addData("position:","secondDrop");
         telemetry.update();
-        Thread.sleep(5000);
 
+        //gyro align
 
+        /*if(currAng > getHeading()) {
+            while(currAng > getHeading()) {
+                robot.fl.setPower(0.1);
+                robot.bl.setPower(0.1);
+                robot.fr.setPower(-0.1);
+                robot.br.setPower(-0.1);
+            }
+        } if(currAng < getHeading()) {
+            while(currAng < getHeading()) {
+                robot.fl.setPower(-0.1);
+                robot.bl.setPower(-0.1);
+                robot.fr.setPower(0.1);
+                robot.br.setPower(0.1);
+            }
+        } else {
+
+        }
+        robotAuto.stopDriving();*/
+
+        //robot.hang.setTargetPosition(robot.hang.getCurrentPosition());
+        //robot.hang.setPower(0);
+
+        Thread.sleep(250);
+        telemetry.addData("dist",robot.dist.getDistance(DistanceUnit.CM));
+        telemetry.update();
         vision.disable();
 
+        //robotAuto.verticalDriveDistance(0.1,2);
 
+        robotAuto.moveForward(0.1);
+        while(robot.dist.getDistance(DistanceUnit.CM) < 12.5){
+            telemetry.addData("dist",robot.dist.getDistance(DistanceUnit.CM));
+            telemetry.update();
+        }
+        robotAuto.stopDriving();
+
+        Thread.sleep(150);
+        // gyro align
+
+
+
+        sleep(250);
+
+        /*robotAuto.moveForward(0.2);
+
+        while(robot.dist.getDistance(DistanceUnit.CM) < 30){
+            telemetry.addData("thing","indicator");
+            telemetry.addData("dist",robot.dist.getDistance(D istanceUnit.CM));
+            telemetry.update();
+
+        }*/
+
+        robotAuto.stopDriving();
+        if(verdict.equals("left")){
+            if(getHeading() + 30 > 175){
+
+                double curr = normalize(getHeading());
+                while(normalize(getHeading()) < curr + 30){
+                    robot.fl.setPower(0.2);
+                    robot.bl.setPower(0.2);
+                    robot.fr.setPower(-0.2);
+                    robot.br.setPower(-0.2);
+                }
+                robotAuto.stopDriving();
+            } else {
+                double curr = getHeading();
+                while(getHeading() < curr + 30){
+                    robot.fl.setPower(0.2);
+                    robot.bl.setPower(0.2);
+                    robot.fr.setPower(-0.2);
+                    robot.br.setPower(-0.2);
+                }
+                robotAuto.stopDriving();
+            }
+        } else if(verdict.equals("right")) {
+            if(getHeading() - 30 < -175) {
+                double curr = normalize(getHeading());
+                while(normalize(getHeading()) > curr - 30){
+                    robot.fl.setPower(-0.2);
+                    robot.bl.setPower(-0.2);
+                    robot.fr.setPower(0.2);
+                    robot.br.setPower(0.2);
+                }
+                robotAuto.stopDriving();
+
+            } else {
+                double curr = getHeading();
+                while(getHeading() > curr - 30){
+                    robot.fl.setPower(-0.2);
+                    robot.bl.setPower(-0.2);
+                    robot.fr.setPower(0.2);
+                    robot.br.setPower(0.2);
+                }
+                robotAuto.stopDriving();
+            }
+        } else {
+
+        }
+
+        telemetry.addData("gyro",getHeading());
+        telemetry.update();
+        robot.inFlip.setPower(0.4);
+        robot.inFlip.setTargetPosition(robot.inFlip.getCurrentPosition() + 510);
+
+        Thread.sleep(500);
+
+        robot.spine.setPower(-1);
+        Thread.sleep(2200);
+
+        robot.spine.setPower(0);
+        Thread.sleep(250);
+
+        robot.spine.setPower(0.7);
+        Thread.sleep(1800);
+
+        robot.spine.setPower(0);
+        Thread.sleep(100);
+
+        robot.inFlip.setPower(-0.8);
+        robot.inFlip.setTargetPosition(robot.inFlip.getCurrentPosition() - 510);
+
+        if(verdict.equals("left")) {
+            if(getHeading() - 30 < -175) {
+                double curr = normalize(getHeading());
+                while(normalize(getHeading()) > curr - 30){
+                    robot.fl.setPower(-0.2);
+                    robot.bl.setPower(-0.2);
+                    robot.fr.setPower(0.2);
+                    robot.br.setPower(0.2);
+                }
+                robotAuto.stopDriving();
+
+            } else {
+                double curr = getHeading();
+                while(getHeading() > curr - 30){
+                    robot.fl.setPower(-0.2);
+                    robot.bl.setPower(-0.2);
+                    robot.fr.setPower(0.2);
+                    robot.br.setPower(0.2);
+                }
+                robotAuto.stopDriving();
+            }
+        }
+
+        if(verdict.equals("right")){
+            if(getHeading() + 30 > 175){
+
+                double curr = normalize(getHeading());
+                while(normalize(getHeading()) < curr + 30){
+                    robot.fl.setPower(0.2);
+                    robot.bl.setPower(0.2);
+                    robot.fr.setPower(-0.2);
+                    robot.br.setPower(-0.2);
+                }
+                robotAuto.stopDriving();
+            } else {
+                double curr = getHeading();
+                while(getHeading() < curr + 30){
+                    robot.fl.setPower(0.2);
+                    robot.bl.setPower(0.2);
+                    robot.fr.setPower(-0.2);
+                    robot.br.setPower(-0.2);
+                }
+                robotAuto.stopDriving();
+            }
+        }
+
+    }
+
+    void checkStop(){
+        if(isStopRequested()){
+            vision.disable();
+        }
+    }
+
+    public double getError(double targetAngle) {
+
+        double robotError;
+
+        // calculate error in -179 to +180 range  (
+        robotError = targetAngle - getHeading();
+        while (robotError > 180)  robotError -= 360;
+        while (robotError <= -180) robotError += 360;
+        return robotError;
+    }
+
+    /*
+     * returns desired steering force.  +/- 1 range.  +ve = steer left
+     * @param error   Error angle in robot relative degrees
+     * @param PCoeff  Proportional Gain Coefficient
+     * @return*/
+
+    public double getSteer(double error, double PCoeff) {
+        return Range.clip(error * PCoeff, -1, 1);
+    }
+
+    String formatAngle(AngleUnit angleUnit, double angle) {
+        return formatDegrees(AngleUnit.DEGREES.fromUnit(angleUnit, angle));
+    }
+
+    String formatDegrees(double degrees){
+        return String.format(Locale.getDefault(), "%.1f", AngleUnit.DEGREES.normalize(degrees));
+    }
+    public double getHeading() {
+        robot.angles = robot.imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
+        return Double.parseDouble(formatAngle(robot.angles.angleUnit, robot.angles.firstAngle));
+    }
+    public double normalize(double hi){
+        if(hi < 0){
+            hi = -hi;
+            hi = 180-hi;
+            hi += 180;
+        }
+        return hi;
     }
 }
 
