@@ -99,6 +99,20 @@ public class roverTeleOp extends OpMode {
 
         re = gamepad1.b;
 
+        /*if(gamepad1.y) {
+            robot.inFlip.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+            robot.inFlip.setPower(0.4);
+        } else {
+            robot.inFlip.setPower(0);
+        }
+
+        /*if(gamepad1.x) {
+            robot.inFlip.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+            robot.inFlip.setPower(-0.65);
+        } else {
+            robot.inFlip.setPower(0);
+        }*/
+
         //intake flip toggle position
         if((gamepad2.a || gamepad1.left_bumper) && !i) {
             if(intakeTog == 0) {

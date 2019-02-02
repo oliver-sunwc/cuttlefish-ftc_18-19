@@ -70,6 +70,7 @@ public class roverAuto extends LinearOpMode {
         robot.bl.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         robot.br.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         distance = (int)(distance*robot.ticksPerInch);
+
         int flDist = robot.fl.getCurrentPosition();
         int frDist = robot.fr.getCurrentPosition();
         int blDist = robot.bl.getCurrentPosition();
@@ -83,10 +84,10 @@ public class roverAuto extends LinearOpMode {
                     robot.br.getCurrentPosition() - brDist< distance) {
             }
         } else {
-            while (robot.fl.getCurrentPosition() > distance &&
-                    robot.fr.getCurrentPosition() > distance &&
-                    robot.bl.getCurrentPosition() > distance &&
-                    robot.br.getCurrentPosition() > distance) {
+            while (robot.fl.getCurrentPosition() - flDist> distance &&
+                    robot.fr.getCurrentPosition() - frDist> distance &&
+                    robot.bl.getCurrentPosition() - blDist> distance &&
+                    robot.br.getCurrentPosition() - brDist> distance) {
             }
         }
 
