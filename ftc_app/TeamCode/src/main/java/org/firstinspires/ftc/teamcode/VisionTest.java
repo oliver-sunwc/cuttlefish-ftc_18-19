@@ -74,8 +74,8 @@ public class VisionTest extends OpMode {
                     String.format(Locale.getDefault(), "(%d, %d)", (boundingRect.x + boundingRect.width) / 2, (boundingRect.y + boundingRect.height) / 2));
             telemetry.addData("contourrgb",contours.get(i).get(0,0).length);
 
-            telemetry.addData("contourrgb",contours.get(i).get(0,0)[0]);
-            telemetry.addData("contourrgb",contours.get(i).get(0,0)[1]);
+            //telemetry.addData("contourrgb",contours.get(i).get(0,0)[0]);
+            //telemetry.addData("contourrgb",contours.get(i).get(0,0)[1]);
 
         }
     }

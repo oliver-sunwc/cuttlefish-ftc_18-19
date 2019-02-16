@@ -113,6 +113,7 @@ public class roverHMAP {
             BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
             //parameters.angleUnit = HardwareType.BNO055IMU.AngleUnit.DEGREES;
             //parameters.accelUnit = HardwareType.BNO055IMU.AccelUnit.METERS_PERSEC_PERSEC;
+            parameters.mode = BNO055IMU.SensorMode.IMU;
             parameters.calibrationDataFile = "BNO055IMUCalibration.json"; // see the calibration sample opmode
             parameters.loggingEnabled = true;
             parameters.loggingTag = "IMU";
