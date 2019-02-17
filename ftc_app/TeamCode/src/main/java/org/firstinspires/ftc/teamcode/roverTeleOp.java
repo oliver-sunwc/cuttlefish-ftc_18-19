@@ -53,6 +53,9 @@ public class roverTeleOp extends OpMode {
     boolean inFlipTrigger2 = false;
     boolean re;
 
+    boolean hangModeStall = false;
+    boolean h = false;
+
     int initialPosition;
     ElapsedTime stallTime = new ElapsedTime();
     ElapsedTime flipTimer = new ElapsedTime();
@@ -177,7 +180,17 @@ public class roverTeleOp extends OpMode {
 
         // do based on intake position
 
+        if(!h && gamepad2.b){
+            hangModeStall = !hangModeStall;
+        }
 
+        h = gamepad2.b;
+
+        if(hangModeStall){
+            robot.hang.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        } else {
+            robot.hang.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        }
         //flip toggle position
         if(!f && gamepad2.x) {
             pressed = true;

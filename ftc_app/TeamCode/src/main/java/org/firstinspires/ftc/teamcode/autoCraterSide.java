@@ -408,7 +408,7 @@ public class autoCraterSide extends LinearOpMode {
         // extendo slido
         Thread.sleep(200);
 
-        robotAuto.verticalDriveDistance(-0.2, -5);
+        robotAuto.verticalDriveDistance(-0.2, -7);
 
         Thread.sleep(200);
 
@@ -432,6 +432,7 @@ public class autoCraterSide extends LinearOpMode {
             }
             robotAuto.stopDriving();
         }
+
 
         robot.spine.setPower(-1);
         Thread.sleep(2500);

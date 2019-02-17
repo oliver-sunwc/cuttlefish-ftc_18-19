@@ -22,17 +22,6 @@ public class testGyro extends OpMode {
     public Acceleration gravity;
 
     public void init(){
-        BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
-        //parameters.angleUnit = HardwareType.BNO055IMU.AngleUnit.DEGREES;
-        //parameters.accelUnit = HardwareType.BNO055IMU.AccelUnit.METERS_PERSEC_PERSEC;
-        parameters.mode = BNO055IMU.SensorMode.IMU;
-        parameters.calibrationDataFile = "BNO055IMUCalibration.json"; // see the calibration sample opmode
-        parameters.loggingEnabled = true;
-        parameters.loggingTag = "IMU";
-        parameters.accelerationIntegrationAlgorithm = new JustLoggingAccelerationIntegrator();
-        parameters.mode = BNO055IMU.SensorMode.IMU;
-        imu = hardwareMap.get(BNO055IMU.class, "imu");
-        imu.initialize(parameters);
 
     }
 
@@ -48,6 +37,7 @@ public class testGyro extends OpMode {
     String formatDegrees(double degrees){
         return String.format(Locale.getDefault(), "%.1f", AngleUnit.DEGREES.normalize(degrees));
     }
+
     public double getHeading() {
         angles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
         return Double.parseDouble(formatAngle(angles.angleUnit, angles.firstAngle));
