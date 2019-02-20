@@ -4,12 +4,15 @@ import org.corningrobotics.enderbots.endercv.OpenCVPipeline;
 import org.opencv.core.Core;
 import org.opencv.core.Mat;
 import org.opencv.core.MatOfPoint;
+import org.opencv.core.Point;
 import org.opencv.core.Scalar;
 import org.opencv.core.Size;
 import org.opencv.imgproc.Imgproc;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import static com.sun.tools.doclint.Entity.image;
 
 /**
  * Created by guinea on 10/5/17.
@@ -50,6 +53,7 @@ public class VisionThing extends OpenCVPipeline {
     // we declare the Mats up here and reuse them. This is easier on the garbage collector.
     private Mat hsv = new Mat();
     private Mat thresholded = new Mat();
+    public int pixelNum = 750;
 
     // this is just here so we can expose it later thru getContours.
     private List<MatOfPoint> contours = new ArrayList<>();
@@ -72,7 +76,7 @@ public class VisionThing extends OpenCVPipeline {
         // Then, we threshold our hsv image so that we get a black/white binary image where white
         // is the blues listed in the specified range of values
         // you can use a program like WPILib GRIP to find these values, or just play around.
-        Core.inRange(hsv, new Scalar(10, 100, 150), new Scalar(45, 255, 255), thresholded);
+        Core.inRange(hsv, new Scalar(10, 100, 150), new Scalar(45, 245, 245), thresholded);
 //0 200 100 - 50 255 255
         // we blur the thresholded image to remove noise
         // there are other types of blur like box blur or gaussian which can be explored.
@@ -91,6 +95,13 @@ public class VisionThing extends OpenCVPipeline {
             // they are highlighted in green.
             Imgproc.drawContours(rgba, contours, -1, new Scalar(0, 255, 0), 2, 8);
         }
+
+        for(int i=0;i < 400;i++){
+            Imgproc.drawMarker(rgba,new Point(i*rgba.width()/400,pixelNum),new Scalar(255,255,255),4,2,2);
+        }
+        /*for(int i=0; i< rgba.cols();i++) {
+            rgba.put(rgba.height()*4/5,i,512);
+        }*/
 
         return rgba; // display the image seen by the camera
     }
