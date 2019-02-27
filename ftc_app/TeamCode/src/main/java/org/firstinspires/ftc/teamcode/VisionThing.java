@@ -76,7 +76,7 @@ public class VisionThing extends OpenCVPipeline {
         // Then, we threshold our hsv image so that we get a black/white binary image where white
         // is the blues listed in the specified range of values
         // you can use a program like WPILib GRIP to find these values, or just play around.
-        Core.inRange(hsv, new Scalar(10, 100, 150), new Scalar(45, 245, 245), thresholded);
+        Core.inRange(hsv, new Scalar(15, 150, 150), new Scalar(45, 245, 245), thresholded);
 //0 200 100 - 50 255 255
         // we blur the thresholded image to remove noise
         // there are other types of blur like box blur or gaussian which can be explored.

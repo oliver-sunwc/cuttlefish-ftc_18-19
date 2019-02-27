@@ -93,6 +93,7 @@ public class roverHMAP {
 
         spine = hwMap.get(DcMotor.class,"s");
         spine.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        //spine.setDirection(DcMotorSimple.Direction.REVERSE);
 
         br.setDirection(DcMotor.Direction.REVERSE);
         fr.setDirection(DcMotor.Direction.REVERSE);

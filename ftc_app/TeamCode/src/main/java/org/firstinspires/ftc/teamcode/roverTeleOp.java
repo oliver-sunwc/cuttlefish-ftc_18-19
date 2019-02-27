@@ -1,5 +1,9 @@
 package org.firstinspires.ftc.teamcode;
 
+import android.media.AudioManager;
+import android.media.MediaPlayer;
+import android.media.ToneGenerator;
+
 import com.qualcomm.robotcore.util.ReadWriteFile;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
@@ -7,6 +11,7 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.Range;
+
 
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
@@ -58,6 +63,11 @@ public class roverTeleOp extends OpMode {
 
     boolean flapUp = true;
 
+    ToneGenerator tone = new ToneGenerator(AudioManager.STREAM_MUSIC,100);
+    MediaPlayer mp = new MediaPlayer();
+
+    boolean songStarted = false;
+    boolean s = false;
 
     int initialPosition;
     ElapsedTime stallTime = new ElapsedTime();
@@ -73,7 +83,9 @@ public class roverTeleOp extends OpMode {
         robot.hang.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         robot.hang.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         robot.rotateArm.setPosition(0.5);
-        //initialPosition = robot.hang.getCurrentPosition();
+
+        mp = MediaPlayer.create(this.hardwareMap.appContext,R.raw.thatway);
+        mp.seekTo(0);//initialPosition = robot.hang.getCurrentPosition();
     }
 
     @Override
@@ -85,6 +97,19 @@ public class roverTeleOp extends OpMode {
 
     @Override
     public void loop(){
+
+        if(!s && gamepad2.left_stick_button){
+            if(songStarted){
+                songStarted = false;
+                mp.pause();
+            } else {
+                songStarted = true;
+                mp.start();
+            }
+        }
+
+        s= gamepad2.left_stick_button;
+
         telemetry.addData("hang",robot.hang.getCurrentPosition());
         //toggle button for intake speed
         if(gamepad2.right_bumper && !iN) {
@@ -139,7 +164,7 @@ public class roverTeleOp extends OpMode {
                 intakeTog = 1;
                 robot.inFlip.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
                 robot.inFlip.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-                robot.inFlip.setPower(0.25);
+                robot.inFlip.setPower(0.35);
                 robot.inFlip.setTargetPosition(flipAng);
                 inFlipTrigger1 = true;
             } else if(intakeTog == 1) {
@@ -147,7 +172,7 @@ public class roverTeleOp extends OpMode {
                 intakeTog = 0;
                 robot.inFlip.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
                 robot.inFlip.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-                robot.inFlip.setPower(-0.25);
+                robot.inFlip.setPower(-0.55);
                 robot.inFlip.setTargetPosition(-flipAng);
                 inFlipTrigger2 = true;
             }
@@ -160,14 +185,14 @@ public class roverTeleOp extends OpMode {
             robot.inFlip.setPower(0);
         }
 
-        if(inFlipTrigger2 && inFlipTimer.seconds() < 0.8){
-            robot.inFlip.setPower(-0.25*((robot.inFlip.getCurrentPosition() + flipAng)/(flipAng)) -0.02);
-        }
+        /*if(inFlipTrigger2 && inFlipTimer.seconds() < 0.8){
+            robot.inFlip.setPower(-0.45*((robot.inFlip.getCurrentPosition() + flipAng)/(flipAng)) -0.02);
+        }*/
 
         if(inFlipTrigger2 && inFlipTimer.seconds() > 0.8){
             inFlipTrigger2 = false;
-            robot.inFlip.setTargetPosition(robot.inFlip.getCurrentPosition());
-            robot.inFlip.setPower(-0.01);
+            robot.inFlip.setTargetPosition(robot.inFlip.getCurrentPosition()-1);
+            robot.inFlip.setPower(-0.07);
         }
 
         if(inFlipTimer.seconds()>1.2){

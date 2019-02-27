@@ -20,6 +20,7 @@ import org.opencv.imgproc.Imgproc;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
+import java.util.Timer;
 
 @Autonomous(name="autCraterProfile")
 public class autoCraterSideProfile extends LinearOpMode {
@@ -347,21 +348,22 @@ public class autoCraterSideProfile extends LinearOpMode {
         robot.inFlip.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         robot.inFlip.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
-        robot.inFlip.setPower(0.4);
-        robot.inFlip.setTargetPosition(robot.inFlip.getCurrentPosition() + 410);
-        Thread.sleep(500);
+        robot.inFlip.setPower(0.5);
+        robot.inFlip.setTargetPosition(robot.inFlip.getCurrentPosition() + 350);
+        Thread.sleep(300);
+
+
+
+        robot.intake.setPower(-1);
+        Thread.sleep(150);
+        robot.hang.setPower(0);
+        robot.hang.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        robot.hang.setPower(-0.05);
+        Thread.sleep(100);
+        robot.hang.setPower(0);
 
         robot.inFlip.setPower(0);
         robot.inFlip.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-
-
-        robot.hang.setPower(0);
-        robot.hang.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        robot.hang.setPower(-0.1);
-        robot.intake.setPower(-1);
-        Thread.sleep(250);
-        robot.hang.setPower(0);
-
 
         Thread.sleep(250);
         robot.spine.setPower(0);
@@ -375,8 +377,8 @@ public class autoCraterSideProfile extends LinearOpMode {
 
         robot.inFlip.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         robot.inFlip.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        robot.inFlip.setPower(-0.8);
-        robot.inFlip.setTargetPosition(robot.inFlip.getCurrentPosition()-440);
+        robot.inFlip.setPower(-0.65);
+        robot.inFlip.setTargetPosition(robot.inFlip.getCurrentPosition()-350);
         Thread.sleep(500);
 
         robot.spine.setPower(0);
@@ -401,14 +403,16 @@ public class autoCraterSideProfile extends LinearOpMode {
 
         robotAuto.stopDriving();
         Thread.sleep(50);
+
+
+        robot.inFlip.setTargetPosition(robot.inFlip.getCurrentPosition() - 1);
+        robot.inFlip.setPower(-0.1);
         //endregion
 
-
-
         if(verdict.equals("left")){
-            /*
-            //region left case code
-            //region drive straight back loop with power slow down
+            // region left case code
+
+            //region drive back with power slow down
             robot.fl.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
             robot.br.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
             robot.bl.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
@@ -418,7 +422,7 @@ public class autoCraterSideProfile extends LinearOpMode {
             robot.br.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
             robot.bl.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
             robot.br.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-            distance = -2500;
+            distance = -1950;
             power = -0.6;
             flDist = robot.fl.getCurrentPosition();
             frDist = robot.fr.getCurrentPosition();
@@ -426,20 +430,26 @@ public class autoCraterSideProfile extends LinearOpMode {
             brDist = robot.br.getCurrentPosition();
             robotAuto.verticalDrive(power);
             hi2.startTime();
-
             while (robot.fl.getCurrentPosition() - flDist > distance &&
                     robot.fr.getCurrentPosition() - frDist> distance &&
                     robot.bl.getCurrentPosition() - blDist> distance &&
                     robot.br.getCurrentPosition() - brDist> distance) {
 
                 int thing1 = robot.fl.getCurrentPosition() - flDist;
-                if(thing1 > -1900){
+                if(thing1 > -1150){
 
                 }
 
-                if(thing1< -1900){
-                    int x1 = 2500 + thing1;
-                    robotAuto.verticalDrive((power+0.15)*x1/600 - 0.15);
+                if(thing1< -1150){
+                    int x1 = 1950 + thing1;
+
+                    if(x1 < 800){
+                        robotAuto.verticalDrive(-0.4);
+                    }
+
+                    if(thing1 <500 ){
+                        robotAuto.verticalDrive(-0.2);
+                    }
                 }
 
             }
@@ -450,117 +460,275 @@ public class autoCraterSideProfile extends LinearOpMode {
 
             //endregion
 
-            //region turn to angle to knock ball off
-            while(getHeading() > 55){
+            //region turn to angle to knock cube off and bring spine back a little
+            robot.spine.setPower(0.05);
+
+            robot.fl.setPower(-0.45);
+            robot.bl.setPower(-0.45);
+            robot.fr.setPower(0.15);
+            robot.br.setPower(0.15);
+
+
+            while(getHeading() > 30){
+
+                if(getHeading() < 45){
+                    robot.fl.setPower(-0.15);
+                    robot.bl.setPower(-0.15);
+                    robot.fr.setPower(0.05);
+                    robot.br.setPower(0.05);
+                }
+
                 telemetry.addData("gyro",getHeading());
                 telemetry.update();
-                robot.fl.setPower(-0.25);
-                robot.bl.setPower(-0.25);
-                robot.fr.setPower(0.25);
-                robot.br.setPower(0.25);
+
             }
             robotAuto.stopDriving();
+            robot.spine.setPower(0);
+
             //endregion
 
-            //region drop intake and extend spine
-            robot.inFlip.setPower(0.4);
-            robot.inFlip.setTargetPosition(robot.inFlip.getCurrentPosition() + 410);
-            Thread.sleep(500);
-            robot.intake.setPower(0.65);
+            //region drop intake and extend spine while moving back a little
+
             robot.spine.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+
+            robot.inFlip.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+            robot.inFlip.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            robot.inFlip.setPower(0.5);
+            robot.inFlip.setTargetPosition(robot.inFlip.getCurrentPosition() + 350);
+            Thread.sleep(300);
+
+            robot.inFlip.setPower(0);
+            robot.inFlip.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+
+            robot.intake.setPower(0.3);
+            robot.spine.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+
             robot.spine.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-            robot.spine.setPower(-1);
+            robot.spine.setPower(-0.8);
             int initPos = robot.spine.getCurrentPosition();
+
 
             ElapsedTime timer1 = new ElapsedTime();
             timer1.startTime();
-            while(robot.spine.getCurrentPosition()-initPos > -650 && timer1.seconds() < 2.0){
+            while(robot.spine.getCurrentPosition()-initPos > -250 && timer1.seconds() < 1.0){
                 telemetry.addData("thing",robot.intake.getCurrentPosition());
                 telemetry.addData("encoder",robot.spine.getCurrentPosition());
                 telemetry.update();
+
+
             }
+
+            robot.spine.setPower(0);
+            hi2.reset();
+
+
+            robotAuto.stopDriving();
+
+            robot.fl.setPower(-0.2);
+            robot.bl.setPower(-0.2);
+            robot.fr.setPower(0.2);
+            robot.br.setPower(0.2);
+            Thread.sleep(200);
+
+
+            robot.fl.setPower(0.2);
+            robot.bl.setPower(0.2);
+            robot.fr.setPower(-0.2);
+            robot.br.setPower(-0.2);
+            Thread.sleep(400);
+
+            robot.fl.setPower(-0.2);
+            robot.bl.setPower(-0.2);
+            robot.fr.setPower(0.2);
+            robot.br.setPower(0.2);
+            Thread.sleep(200);
+
+            robotAuto.stopDriving();
+
             //endregion
 
             //region bring intake up to transfer and spine back
+
             Thread.sleep(250);
-            robot.inFlip.setPower(-0.8);
-            robot.inFlip.setTargetPosition(robot.inFlip.getCurrentPosition() - 440);
+            robot.inFlip.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+            robot.inFlip.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            robot.inFlip.setPower(-0.65);
+            robot.inFlip.setTargetPosition(robot.inFlip.getCurrentPosition() - 350);
             robot.spine.setPower(1);
             Thread.sleep(300);
             robot.intake.setPower(0);
-            Thread.sleep(200);
+            Thread.sleep(300);
             robot.spine.setPower(0);
             robot.intake.setPower(0.4);
+
+            robot.inFlip.setTargetPosition(robot.inFlip.getCurrentPosition());
+            robot.inFlip.setPower(-0.05);
             //endregion
 
             //region turn to dump angle and stop transfer
-            while(getHeading() > -2){
+
+            while(getHeading() > 7){
                 telemetry.addData("gyro",getHeading());
                 telemetry.update();
-                robot.fl.setPower(-0.4);
-                robot.bl.setPower(-0.4);
-                robot.fr.setPower(0.4);
-                robot.br.setPower(0.4);
+                robot.fl.setPower(-0.15);
+                robot.bl.setPower(-0.15);
+                robot.fr.setPower(0.15);
+                robot.br.setPower(0.15);
             }
 
+            robotAuto.stopDriving();
+
+            robot.fl.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+            robot.br.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+            robot.bl.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+            robot.br.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+
+            robot.fl.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            robot.br.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            robot.bl.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            robot.br.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+
+
+
+            /*flDist = robot.fl.getCurrentPosition();
+            frDist = robot.fr.getCurrentPosition();
+            blDist = robot.bl.getCurrentPosition();
+            brDist = robot.br.getCurrentPosition();
+
+
+            distance = 250;
+
+            robot.fr.setPower(0.8);
+            robot.bl.setPower(0.8);
+            robot.fl.setPower(-0.8);
+            robot.br.setPower(-0.8);
+
+            while (robot.fl.getCurrentPosition() - flDist > -distance &&
+                    robot.fr.getCurrentPosition() - frDist < distance &&
+                    robot.bl.getCurrentPosition() - blDist < distance &&
+                    robot.br.getCurrentPosition() - brDist > -distance) {
+            }
+
+
+
+            robotAuto.stopDriving();*/
+            Thread.sleep(100);
+
+
+            robotAuto.verticalDrive(-0.4);
+            while(robot.dist.getDistance(DistanceUnit.CM) > 8){
+                if(robot.dist.getDistance(DistanceUnit.CM) > 20){
+                }
+            }
+
+            robotAuto.verticalDrive(0.05);
+            Thread.sleep(50);
+            robotAuto.stopDriving();
             robot.intake.setPower(0);
             //endregion
 
-            //region extend spine drive back and flip up to dump
+            //region extend spine and flip up to dump
             robot.spine.setPower(-1);
             robot.flipLArm.setPosition(0);
             robot.flipRArm.setPosition(1);
             robot.rotateArm.setPosition(0);
-            robotAuto.verticalDriveDistance(-0.4,-6);
+            Thread.sleep(500);
             robot.spine.setPower(0);
             Thread.sleep(500);
             //endregion
 
             //region first dump in lander loop
+
             robot.spine.setPower(-1);
-            Thread.sleep(250);
 
             robot.flipLArm.setPosition(1);
             robot.flipRArm.setPosition(0);
             robot.rotateArm.setPosition(0.5);
 
 
-            robotAuto.verticalDriveDistance(0.4,6);
+            Thread.sleep(200);
 
-            robot.inFlip.setPower(0.4);
-            robot.inFlip.setTargetPosition(robot.inFlip.getCurrentPosition() + 410);
-
-
-            robot.intake.setPower(0.7);
-            Thread.sleep(500);
-            robot.spine.setPower(1);
-            Thread.sleep(150);
+            robotAuto.verticalDrive(0.4);
+            Thread.sleep(300);
             robot.spine.setPower(0);
-            Thread.sleep(150);
+
+            boolean bull = true;
+            while(robot.dist.getDistance(DistanceUnit.CM) < 22){
+                if(bull && robot.dist.getDistance(DistanceUnit.CM) > 19){
+                    robot.inFlip.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+                    robot.inFlip.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+                    robot.inFlip.setPower(0.5);
+                    robot.inFlip.setTargetPosition(robot.inFlip.getCurrentPosition() + 350);
+                    bull = false;
+                }
+            }
+            robotAuto.stopDriving();
+
+            if(bull && robot.dist.getDistance(DistanceUnit.CM) > 20){
+                robot.inFlip.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+                robot.inFlip.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+                robot.inFlip.setPower(0.5);
+                robot.inFlip.setTargetPosition(robot.inFlip.getCurrentPosition() + 350);
+                bull = false;
+            }
+
+            Thread.sleep(300);
+
+            robot.intake.setPower(0.5);
+
+
+            robot.inFlip.setPower(0);
+            robot.inFlip.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+
+
+            robot.spine.setPower(1);
+            Thread.sleep(250);
+            robot.spine.setPower(0);
+            Thread.sleep(50);
             robot.spine.setPower(-1);
             Thread.sleep(500);
             robot.spine.setPower(0);
-            robot.intake.setPower(0.8);
-            Thread.sleep(1250);
+            robot.intake.setPower(0.75);
+            Thread.sleep(650);
             robot.intake.setPower(0);
 
+            robot.intake.setPower(-0.3);
+            Thread.sleep(500);
+
             robot.spine.setPower(1);
-            robot.inFlip.setPower(-0.8);
-            robot.inFlip.setTargetPosition(robot.inFlip.getCurrentPosition()-440);
-            robotAuto.verticalDriveDistance(-0.4,-6);
-            Thread.sleep(750);
+
+            robot.inFlip.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+            robot.inFlip.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            robot.inFlip.setPower(-0.65);
+            robot.inFlip.setTargetPosition(robot.inFlip.getCurrentPosition()-350);
+
+            robotAuto.verticalDrive(-0.4);
+            while(robot.dist.getDistance(DistanceUnit.CM) > 15){
+                if(robot.dist.getDistance(DistanceUnit.CM) > 20){
+                }
+            }
+            robotAuto.verticalDrive(-0.05);
+            Thread.sleep(50);
+            robotAuto.stopDriving();
+
+            robot.inFlip.setTargetPosition(robot.inFlip.getCurrentPosition());
+            robot.inFlip.setPower(-0.05);
+
+            Thread.sleep(50);
             robot.spine.setPower(0);
 
             robot.intake.setPower(0.5);
-            Thread.sleep(750);
+            Thread.sleep(700);
             robot.intake.setPower(0);
 
+
+
             robot.spine.setPower(-1);
-            Thread.sleep(250);
+            Thread.sleep(300);
 
             robot.flipLArm.setPosition(0);
             robot.flipRArm.setPosition(1);
-            robot.rotateArm.setPosition(0);
+            robot.rotateArm.setPosition(0.1);
             Thread.sleep(250);
             robot.spine.setPower(0);
             Thread.sleep(500);
@@ -578,50 +746,101 @@ public class autoCraterSideProfile extends LinearOpMode {
             robot.rotateArm.setPosition(0.5);
 
 
-            robotAuto.verticalDriveDistance(0.4,6);
+            robotAuto.verticalDrive(0.4);
+            while(robot.dist.getDistance(DistanceUnit.CM) < 22){
 
-            robot.inFlip.setPower(0.4);
-            robot.inFlip.setTargetPosition(robot.inFlip.getCurrentPosition() + 410);
+            }
+            robotAuto.stopDriving();
 
+            robot.inFlip.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+            robot.inFlip.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            robot.inFlip.setPower(0.35);
+            robot.inFlip.setTargetPosition(robot.inFlip.getCurrentPosition() + 350);
 
-            robot.intake.setPower(0.7);
-            Thread.sleep(500);
-            robot.spine.setPower(1);
-            Thread.sleep(150);
-            robot.spine.setPower(0);
-            Thread.sleep(150);
-            robot.spine.setPower(-1);
-            Thread.sleep(500);
-            robot.spine.setPower(0);
-            robot.intake.setPower(0.8);
-            Thread.sleep(1250);
-            robot.intake.setPower(0);
-
-
-            robot.spine.setPower(1);
-            robot.inFlip.setPower(-0.8);
-            robot.inFlip.setTargetPosition(robot.inFlip.getCurrentPosition()-440);
-            robotAuto.verticalDriveDistance(-0.4,-6);
-            Thread.sleep(750);
-            robot.spine.setPower(0);
 
             robot.intake.setPower(0.5);
-            Thread.sleep(750);
+            Thread.sleep(500);
+
+            robot.inFlip.setTargetPosition(robot.inFlip.getCurrentPosition());
+            robot.inFlip.setPower(-0.05);
+
+            robot.inFlip.setPower(0);
+            robot.inFlip.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+
+
+            robot.spine.setPower(1);
+            Thread.sleep(150);
+            robot.spine.setPower(0);
+            Thread.sleep(150);
+            robot.spine.setPower(-1);
+            Thread.sleep(500);
+            robot.spine.setPower(0);
+            robot.intake.setPower(0.7);
+
+            robot.fl.setPower(-0.25);
+            robot.bl.setPower(-0.25);
+            robot.fr.setPower(0.25);
+            robot.br.setPower(0.25);
+            Thread.sleep(325);
+
+            robot.fl.setPower(0.25);
+            robot.bl.setPower(0.25);
+            robot.fr.setPower(-0.25);
+            robot.br.setPower(-0.25);
+            Thread.sleep(375);
+
+            robotAuto.stopDriving();
+
+            robot.intake.setPower(-0.3);
+            Thread.sleep(500);
+
+            robot.intake.setPower(0);
+
+
+            robot.spine.setPower(1);
+
+            robot.inFlip.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+            robot.inFlip.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            robot.inFlip.setPower(-0.5);
+            robot.inFlip.setTargetPosition(robot.inFlip.getCurrentPosition()-350);
+
+            robotAuto.verticalDrive(-0.4);
+            while(robot.dist.getDistance(DistanceUnit.CM) > 15){
+                if(robot.dist.getDistance(DistanceUnit.CM) > 20){
+                }
+            }
+
+            robotAuto.verticalDrive(0.05);
+            Thread.sleep(50);
+            robotAuto.stopDriving();
+
+
+            Thread.sleep(50);
+            robot.spine.setPower(0);
+
+            robot.inFlip.setTargetPosition(robot.inFlip.getCurrentPosition());
+            robot.inFlip.setPower(-0.05);
+
+            robot.intake.setPower(0.5);
+            Thread.sleep(700);
             robot.intake.setPower(0);
 
             robot.spine.setPower(-1);
-            Thread.sleep(250);
+            Thread.sleep(300);
 
             robot.flipLArm.setPosition(0);
             robot.flipRArm.setPosition(1);
-            robot.rotateArm.setPosition(0);
+            robot.rotateArm.setPosition(0.1);
             Thread.sleep(250);
             robot.spine.setPower(0);
+
+            Thread.sleep(250);
+            robot.spine.setPower(-1);
             Thread.sleep(500);
             //endregion
-            //endregion
 
-           */
+
+            //endregion
         } else if(verdict.equals("middle")){
             //region middle case code
 
@@ -635,7 +854,7 @@ public class autoCraterSideProfile extends LinearOpMode {
             robot.br.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
             robot.bl.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
             robot.br.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-            distance = -2250;
+            distance = -2200;
             power = -0.6;
             flDist = robot.fl.getCurrentPosition();
             frDist = robot.fr.getCurrentPosition();
@@ -650,13 +869,20 @@ public class autoCraterSideProfile extends LinearOpMode {
                     robot.br.getCurrentPosition() - brDist> distance) {
 
                 int thing1 = robot.fl.getCurrentPosition() - flDist;
-                if(thing1 > -1450){
+                if(thing1 > -1400){
 
                 }
 
-                if(thing1< -1450){
-                    int x1 = 2250 + thing1;
-                    robotAuto.verticalDrive((power+0.15)*x1/800 - 0.15);
+                if(thing1< -1400){
+                    int x1 = 2200 + thing1;
+
+                    if(x1 < 800){
+                        robotAuto.verticalDrive(-0.4);
+                    }
+
+                    if(thing1 <400 ){
+                        robotAuto.verticalDrive(-0.2);
+                    }
                 }
 
             }
@@ -672,10 +898,10 @@ public class autoCraterSideProfile extends LinearOpMode {
             while(getHeading() > 12){
                 telemetry.addData("gyro",getHeading());
                 telemetry.update();
-                robot.fl.setPower(-0.6);
-                robot.bl.setPower(-0.6);
-                robot.fr.setPower(0.2);
-                robot.br.setPower(0.2);
+                robot.fl.setPower(-0.45);
+                robot.bl.setPower(-0.45);
+                robot.fr.setPower(0.15);
+                robot.br.setPower(0.15);
             }
             robotAuto.stopDriving();
             robot.spine.setPower(0);
@@ -690,10 +916,14 @@ public class autoCraterSideProfile extends LinearOpMode {
 
             robot.inFlip.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
             robot.inFlip.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            robot.inFlip.setPower(0.4);
-            robot.inFlip.setTargetPosition(robot.inFlip.getCurrentPosition() + 410);
+            robot.inFlip.setPower(0.5);
+            robot.inFlip.setTargetPosition(robot.inFlip.getCurrentPosition() + 350);
             Thread.sleep(250);
-            robot.intake.setPower(0.45);
+
+            robot.inFlip.setPower(0);
+            robot.inFlip.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+
+            robot.intake.setPower(0.3);
             robot.spine.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
             robot.spine.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
@@ -744,17 +974,21 @@ public class autoCraterSideProfile extends LinearOpMode {
             //endregion
 
             //region bring intake up to transfer and spine back
+
             Thread.sleep(250);
             robot.inFlip.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
             robot.inFlip.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            robot.inFlip.setPower(-0.8);
-            robot.inFlip.setTargetPosition(robot.inFlip.getCurrentPosition() - 440);
+            robot.inFlip.setPower(-0.65);
+            robot.inFlip.setTargetPosition(robot.inFlip.getCurrentPosition() - 350);
             robot.spine.setPower(1);
             Thread.sleep(300);
             robot.intake.setPower(0);
-            Thread.sleep(200);
+            Thread.sleep(300);
             robot.spine.setPower(0);
             robot.intake.setPower(0.4);
+
+            robot.inFlip.setTargetPosition(robot.inFlip.getCurrentPosition());
+            robot.inFlip.setPower(-0.05);
             //endregion
 
             //region turn to dump angle and stop transfer
@@ -771,12 +1005,12 @@ public class autoCraterSideProfile extends LinearOpMode {
             Thread.sleep(250);
 
             robotAuto.verticalDrive(-0.4);
-            while(robot.dist.getDistance(DistanceUnit.CM) > 8){
+            while(robot.dist.getDistance(DistanceUnit.CM) > 6){
                 if(robot.dist.getDistance(DistanceUnit.CM) > 20){
                 }
             }
 
-            robotAuto.verticalDrive(0.05);
+            robotAuto.verticalDrive(0.02);
             Thread.sleep(50);
             robotAuto.stopDriving();
             robot.intake.setPower(0);
@@ -800,24 +1034,34 @@ public class autoCraterSideProfile extends LinearOpMode {
             robot.flipRArm.setPosition(0);
             robot.rotateArm.setPosition(0.5);
 
+            Thread.sleep(200);
 
             robotAuto.verticalDrive(0.4);
-            Thread.sleep(200);
+            Thread.sleep(250);
             robot.spine.setPower(0);
+
 
             boolean bull = true;
             while(robot.dist.getDistance(DistanceUnit.CM) < 22){
                 if(bull && robot.dist.getDistance(DistanceUnit.CM) > 18){
                     robot.inFlip.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
                     robot.inFlip.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-                    robot.inFlip.setPower(0.4);
-                    robot.inFlip.setTargetPosition(robot.inFlip.getCurrentPosition() + 410);
+                    robot.inFlip.setPower(0.5);
+                    robot.inFlip.setTargetPosition(robot.inFlip.getCurrentPosition() + 350);
+                    bull = false;
                 }
             }
             robotAuto.stopDriving();
 
+            if(bull && robot.dist.getDistance(DistanceUnit.CM) > 20){
+                robot.inFlip.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+                robot.inFlip.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+                robot.inFlip.setPower(0.5);
+                robot.inFlip.setTargetPosition(robot.inFlip.getCurrentPosition() + 350);
+                bull = false;
+            }
 
-
+            Thread.sleep(250);
 
             robot.intake.setPower(0.5);
 
@@ -827,9 +1071,9 @@ public class autoCraterSideProfile extends LinearOpMode {
 
 
             robot.spine.setPower(1);
-            Thread.sleep(300);
-            robot.spine.setPower(0);
             Thread.sleep(250);
+            robot.spine.setPower(0);
+            Thread.sleep(50);
             robot.spine.setPower(-1);
             Thread.sleep(500);
             robot.spine.setPower(0);
@@ -838,14 +1082,14 @@ public class autoCraterSideProfile extends LinearOpMode {
             robot.intake.setPower(0);
 
             robot.intake.setPower(-0.3);
-            Thread.sleep(200);
+            Thread.sleep(500);
 
             robot.spine.setPower(1);
 
             robot.inFlip.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
             robot.inFlip.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            robot.inFlip.setPower(-0.8);
-            robot.inFlip.setTargetPosition(robot.inFlip.getCurrentPosition()-440);
+            robot.inFlip.setPower(-0.65);
+            robot.inFlip.setTargetPosition(robot.inFlip.getCurrentPosition()-350);
 
             robotAuto.verticalDrive(-0.4);
             while(robot.dist.getDistance(DistanceUnit.CM) > 15){
@@ -856,6 +1100,8 @@ public class autoCraterSideProfile extends LinearOpMode {
             Thread.sleep(50);
             robotAuto.stopDriving();
 
+            robot.inFlip.setTargetPosition(robot.inFlip.getCurrentPosition());
+            robot.inFlip.setPower(-0.05);
 
             Thread.sleep(50);
             robot.spine.setPower(0);
@@ -897,12 +1143,15 @@ public class autoCraterSideProfile extends LinearOpMode {
 
             robot.inFlip.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
             robot.inFlip.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            robot.inFlip.setPower(0.4);
-            robot.inFlip.setTargetPosition(robot.inFlip.getCurrentPosition() + 410);
+            robot.inFlip.setPower(0.35);
+            robot.inFlip.setTargetPosition(robot.inFlip.getCurrentPosition() + 350);
 
 
             robot.intake.setPower(0.5);
             Thread.sleep(500);
+
+            robot.inFlip.setTargetPosition(robot.inFlip.getCurrentPosition());
+            robot.inFlip.setPower(-0.05);
 
             robot.inFlip.setPower(0);
             robot.inFlip.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
@@ -932,7 +1181,7 @@ public class autoCraterSideProfile extends LinearOpMode {
             robotAuto.stopDriving();
 
             robot.intake.setPower(-0.3);
-            Thread.sleep(250);
+            Thread.sleep(500);
 
             robot.intake.setPower(0);
 
@@ -941,8 +1190,8 @@ public class autoCraterSideProfile extends LinearOpMode {
 
             robot.inFlip.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
             robot.inFlip.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            robot.inFlip.setPower(-0.8);
-            robot.inFlip.setTargetPosition(robot.inFlip.getCurrentPosition()-440);
+            robot.inFlip.setPower(-0.5);
+            robot.inFlip.setTargetPosition(robot.inFlip.getCurrentPosition()-350);
 
             robotAuto.verticalDrive(-0.4);
             while(robot.dist.getDistance(DistanceUnit.CM) > 15){
@@ -954,8 +1203,12 @@ public class autoCraterSideProfile extends LinearOpMode {
             Thread.sleep(50);
             robotAuto.stopDriving();
 
+
             Thread.sleep(50);
             robot.spine.setPower(0);
+
+            robot.inFlip.setTargetPosition(robot.inFlip.getCurrentPosition());
+            robot.inFlip.setPower(-0.05);
 
             robot.intake.setPower(0.5);
             Thread.sleep(700);
@@ -968,10 +1221,12 @@ public class autoCraterSideProfile extends LinearOpMode {
             robot.flipRArm.setPosition(1);
             robot.rotateArm.setPosition(0.1);
             Thread.sleep(250);
+            robot.spine.setPower(0);
+
+            Thread.sleep(250);
+            robot.spine.setPower(-1);
             Thread.sleep(500);
             //endregion
-
-
 
             //endregion
         } else{
