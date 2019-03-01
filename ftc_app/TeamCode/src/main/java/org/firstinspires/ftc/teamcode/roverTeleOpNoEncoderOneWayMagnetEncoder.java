@@ -50,7 +50,7 @@ public class roverTeleOpNoEncoderOneWayMagnetEncoder extends OpMode {
 
     boolean flapUp = true;
 
-    boolean w =false;
+    boolean w = false;
 
     int counter = 0;
 
