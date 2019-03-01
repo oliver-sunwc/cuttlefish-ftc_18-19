@@ -462,7 +462,7 @@ public class autoCraterSideProfileCopyMiddle extends LinearOpMode {
 
 
             //region turn to angle to knock cube off and bring spine back a little
-            robot.spine.setPower(0.05);
+            robot.spine.setPower(0.15);
 
             robot.fl.setPower(-0.45);
             robot.bl.setPower(-0.45);
@@ -636,8 +636,8 @@ public class autoCraterSideProfileCopyMiddle extends LinearOpMode {
 
 
             //region turn to angle to knock cube off and bring spine back a little
-            robot.spine.setPower(0.05);
-            while(getHeading() > 12){
+            robot.spine.setPower(0.15);
+            while(getHeading() > 10){
                 telemetry.addData("gyro",getHeading());
                 telemetry.update();
                 robot.fl.setPower(-0.45);
@@ -873,7 +873,7 @@ public class autoCraterSideProfileCopyMiddle extends LinearOpMode {
             robotAuto.stopDriving();
             Thread.sleep(50);
 
-            robot.fl.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+            /*robot.fl.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
             robot.br.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
             robot.bl.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
             robot.br.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
@@ -907,7 +907,7 @@ public class autoCraterSideProfileCopyMiddle extends LinearOpMode {
 
 
             robotAuto.stopDriving();
-            Thread.sleep(50);
+            Thread.sleep(50);*/
 
             robotAuto.verticalDrive(-0.4);
             while(robot.dist.getDistance(DistanceUnit.CM) > 6){
@@ -1112,7 +1112,7 @@ public class autoCraterSideProfileCopyMiddle extends LinearOpMode {
         robot.bl.setPower(-0.25);
         robot.fr.setPower(0.25);
         robot.br.setPower(0.25);
-        Thread.sleep(275);
+        Thread.sleep(235);
 
         robot.fl.setPower(0.25);
         robot.bl.setPower(0.25);
@@ -1134,6 +1134,7 @@ public class autoCraterSideProfileCopyMiddle extends LinearOpMode {
         robot.inFlip.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         robot.inFlip.setPower(-0.85);
         robot.inFlip.setTargetPosition(robot.inFlip.getCurrentPosition()-350);
+
 
         robotAuto.verticalDrive(-0.4);
         while(robot.dist.getDistance(DistanceUnit.CM) > 15){
@@ -1160,16 +1161,17 @@ public class autoCraterSideProfileCopyMiddle extends LinearOpMode {
         robot.spine.setPower(-1);
         Thread.sleep(200);
 
-        robot.flipLArm.setPosition(0);
-        robot.flipRArm.setPosition(1);
-        robot.rotateArm.setPosition(0.35);
-        robot.hang.setPower(-0.05);
-        Thread.sleep(200);
-        robot.hang.setPower(0);
-        Thread.sleep(100);
+        if(!verdict.equals("right")) {
+            robot.flipLArm.setPosition(0);
+            robot.flipRArm.setPosition(1);
+            robot.rotateArm.setPosition(0.35);
+            robot.hang.setPower(-0.05);
+            Thread.sleep(200);
+            robot.hang.setPower(0);
+        }
+        Thread.sleep(350);
 
 
-        Thread.sleep(250);
 
         robot.spine.setPower(-1);
 
