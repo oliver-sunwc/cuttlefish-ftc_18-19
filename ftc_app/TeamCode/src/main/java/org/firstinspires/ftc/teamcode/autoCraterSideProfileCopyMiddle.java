@@ -580,7 +580,7 @@ public class autoCraterSideProfileCopyMiddle extends LinearOpMode {
             Thread.sleep(50);
 
 
-            robot.fl.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+            /*robot.fl.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
             robot.br.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
             robot.bl.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
             robot.br.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
@@ -614,7 +614,7 @@ public class autoCraterSideProfileCopyMiddle extends LinearOpMode {
 
 
             robotAuto.stopDriving();
-            Thread.sleep(50);
+            Thread.sleep(50);*/
 
 
             robotAuto.verticalDrive(-0.4);
@@ -758,7 +758,7 @@ public class autoCraterSideProfileCopyMiddle extends LinearOpMode {
 
             //region turn to angle to knock cube off and bring spine back a little
 
-            robot.spine.setPower(0.05);
+            robot.spine.setPower(0.15);
             robot.fl.setPower(-0.35);
             robot.bl.setPower(-0.35);
             robot.fr.setPower(0.15);
