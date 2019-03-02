@@ -16,7 +16,7 @@ import java.util.Locale;
 /**
  * Manual with Arcade Drive
  */
-@TeleOp(name = "TankFinalClusterMagnetFuckDifferentFunctionCrapEncoderMagnetSuckMyDickIfThisWorksNeodymiumMyAss", group = "Rover")
+@TeleOp(name = "TankFinalRealWereGoingToWorldsTankFinalRealWereGoingToWorldsTankFinalRealWereGoingToWorldsTankFinalRealWereGoingToWorldsTankFinalRealWereGoingToWorldsTankFinalRealWereGoingToWorldsTankFinalRealWereGoingToWorldsTankFinalRealWereGoingToWorldsTankFinalRealWereGoingToWorldsTankFinalRealWereGoingToWorldsTankFinalRealWereGoingToWorldsTankFinalRealWereGoingToWorlds", group = "Rover")
 public class roverTeleOpNoEncoderOneWayMagnetEncoder extends OpMode {
 
     roverHMAP robot = new roverHMAP();

@@ -17,7 +17,7 @@ import java.util.Locale;
 /**
  * Manual with Arcade Drive
  */
-@TeleOp(name = "TankFinalClusterMagnetFuck", group = "Rover")
+@TeleOp(name = "TankFinalCluster", group = "Rover")
 public class roverTeleOpNoEncoder extends OpMode {
 
     roverHMAP robot = new roverHMAP();

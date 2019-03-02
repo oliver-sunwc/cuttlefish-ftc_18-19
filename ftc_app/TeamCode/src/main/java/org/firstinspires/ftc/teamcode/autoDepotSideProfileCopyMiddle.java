@@ -102,28 +102,30 @@ public class autoDepotSideProfileCopyMiddle extends LinearOpMode {
                         }
                     }
                 }
-                if (leftcounter > 0 || rightcounter > 0) {
-                    if (leftcounter > rightcounter) {
-                        sees = "left";
-                        left++;
-                    } else if (rightcounter > leftcounter) {
-                        sees = "middle";
-                        middle++;
-                    } else {
-                        sees = "right";
-                        right++;
-                    }
+
+            }
+
+            if (leftcounter > 0 || rightcounter > 0) {
+                if (leftcounter > rightcounter) {
+                    sees = "left";
+                    left++;
+                } else if (rightcounter > leftcounter) {
+                    sees = "middle";
+                    middle++;
                 } else {
                     sees = "right";
                     right++;
                 }
-                telemetry.addData("sees mineral", sees);
-                telemetry.addData("width", vision.givehsv().width());
-                telemetry.addData("height", vision.givehsv().height());
-                telemetry.addData("leftcounter", leftcounter);
-                telemetry.addData("rightcounter", rightcounter);
-                telemetry.update();
+            } else {
+                sees = "right";
+                right++;
             }
+            telemetry.addData("sees mineral", sees);
+            telemetry.addData("width", vision.givehsv().width());
+            telemetry.addData("height", vision.givehsv().height());
+            telemetry.addData("leftcounter", leftcounter);
+            telemetry.addData("rightcounter", rightcounter);
+            telemetry.update();
             checkStop();
         }
         String verdict = "";
@@ -153,13 +155,16 @@ public class autoDepotSideProfileCopyMiddle extends LinearOpMode {
         telemetry.addData("verdict:",verdict);
         telemetry.addData("gyro",getHeading());
         telemetry.addData("position:","brake disengaged");
+        telemetry.addData("left",left);
+        telemetry.addData("middle",middle);
+        telemetry.addData("right",right);
         telemetry.update();
         Thread.sleep(650);
         robot.hang.setPower(0);
 
         robot.hang.setPower(-1);
-        telemetry.addData("position:","firstDrop");
-        telemetry.update();
+        //telemetry.addData("position:","firstDrop");
+        //telemetry.update();
         Thread.sleep(1550);
         robot.hang.setPower(0);
 
@@ -361,13 +366,13 @@ public class autoDepotSideProfileCopyMiddle extends LinearOpMode {
 
         ElapsedTime timer1 = new ElapsedTime();
         timer1.startTime();
-        while(robot.spine.getCurrentPosition()-initPos > -650 && timer1.seconds() < 2.0){
+        while(robot.spine.getCurrentPosition()-initPos > -690 && timer1.seconds() < 2.0){
             telemetry.addData("thing",robot.intake.getCurrentPosition());
             telemetry.addData("encoder",robot.spine.getCurrentPosition());
             telemetry.update();
 
 
-        } 
+        }
 
         robot.spine.setPower(0);
         hi2.reset();
@@ -474,8 +479,8 @@ public class autoDepotSideProfileCopyMiddle extends LinearOpMode {
         //region extend spine and flip up to dump
         robot.hang.setPower(-0.05);
         robot.spine.setPower(-1);
-        robot.flipLArm.setPosition(0.1);
-        robot.flipRArm.setPosition(0.9);
+        robot.flipLArm.setPosition(0.15);
+        robot.flipRArm.setPosition(0.85);
         robot.rotateArm.setPosition(0.75);
         Thread.sleep(300);
         robot.hang.setPower(0);
@@ -533,7 +538,7 @@ public class autoDepotSideProfileCopyMiddle extends LinearOpMode {
         //endregion
 
         //region turn to angle and move forward
-        while(getHeading() < 85){
+        while(getHeading() < 81){
             robot.fl.setPower(0.15);
             robot.bl.setPower(0.15);
             robot.fr.setPower(-0.15);

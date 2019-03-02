@@ -102,28 +102,30 @@ public class autoCraterSideProfileCopyMiddle extends LinearOpMode {
                         }
                     }
                 }
-                if (leftcounter > 0 || rightcounter > 0) {
-                    if (leftcounter > rightcounter) {
-                        sees = "left";
-                        left++;
-                    } else if (rightcounter > leftcounter) {
-                        sees = "middle";
-                        middle++;
-                    } else {
-                        sees = "right";
-                        right++;
-                    }
+
+            }
+
+            if (leftcounter > 0 || rightcounter > 0) {
+                if (leftcounter > rightcounter) {
+                    sees = "left";
+                    left++;
+                } else if (rightcounter > leftcounter) {
+                    sees = "middle";
+                    middle++;
                 } else {
                     sees = "right";
                     right++;
                 }
-                telemetry.addData("sees mineral", sees);
-                telemetry.addData("width", vision.givehsv().width());
-                telemetry.addData("height", vision.givehsv().height());
-                telemetry.addData("leftcounter", leftcounter);
-                telemetry.addData("rightcounter", rightcounter);
-                telemetry.update();
+            } else {
+                sees = "right";
+                right++;
             }
+            telemetry.addData("sees mineral", sees);
+            telemetry.addData("width", vision.givehsv().width());
+            telemetry.addData("height", vision.givehsv().height());
+            telemetry.addData("leftcounter", leftcounter);
+            telemetry.addData("rightcounter", rightcounter);
+            telemetry.update();
             checkStop();
         }
         String verdict = "";
@@ -153,13 +155,15 @@ public class autoCraterSideProfileCopyMiddle extends LinearOpMode {
         telemetry.addData("verdict:",verdict);
         telemetry.addData("gyro",getHeading());
         telemetry.addData("position:","brake disengaged");
+        telemetry.addData("left",left);
+        telemetry.addData("right",right);
         telemetry.update();
-        Thread.sleep(325);
+        Thread.sleep(375);
         robot.hang.setPower(0);
 
         robot.hang.setPower(-1);
-        telemetry.addData("position:","firstDrop");
-        telemetry.update();
+        //telemetry.addData("position:","firstDrop");
+        //telemetry.update();
         Thread.sleep(1550);
         robot.hang.setPower(0);
 
@@ -251,7 +255,7 @@ public class autoCraterSideProfileCopyMiddle extends LinearOpMode {
         robot.hang.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
         robotAuto.verticalDrive(0.07);
-        while(robot.dist.getDistance(DistanceUnit.CM)< 0.7){
+        while(robot.dist.getDistance(DistanceUnit.CM)< 1.2){
             telemetry.addData("dist",robot.dist.getDistance(DistanceUnit.CM));
             telemetry.update();
         }
@@ -340,7 +344,7 @@ public class autoCraterSideProfileCopyMiddle extends LinearOpMode {
         robot.rotateArm.setPosition(0.75);
 
         robot.hang.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        robot.hang.setPower(1);
+        robot.hang.setPower(0.75);
         //endregion
 
         //region set intake flip down, stop hang and spine, start intake
@@ -501,7 +505,7 @@ public class autoCraterSideProfileCopyMiddle extends LinearOpMode {
             robot.inFlip.setPower(0);
             robot.inFlip.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
-            robot.intake.setPower(0.3);
+            robot.intake.setPower(0.2);
             robot.spine.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
             robot.spine.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
@@ -580,7 +584,7 @@ public class autoCraterSideProfileCopyMiddle extends LinearOpMode {
             Thread.sleep(50);
 
 
-            /*robot.fl.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+            robot.fl.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
             robot.br.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
             robot.bl.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
             robot.br.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
@@ -597,7 +601,7 @@ public class autoCraterSideProfileCopyMiddle extends LinearOpMode {
             robot.bl.setPower(-0.8);
 
 
-            distance = 140;
+            distance = 100;
 
             flDist = robot.fl.getCurrentPosition();
             frDist = robot.fr.getCurrentPosition();
@@ -614,7 +618,7 @@ public class autoCraterSideProfileCopyMiddle extends LinearOpMode {
 
 
             robotAuto.stopDriving();
-            Thread.sleep(50);*/
+            Thread.sleep(50);
 
 
             robotAuto.verticalDrive(-0.4);
@@ -640,8 +644,8 @@ public class autoCraterSideProfileCopyMiddle extends LinearOpMode {
             while(getHeading() > 10){
                 telemetry.addData("gyro",getHeading());
                 telemetry.update();
-                robot.fl.setPower(-0.45);
-                robot.bl.setPower(-0.45);
+                robot.fl.setPower(-0.5);
+                robot.bl.setPower(-0.5);
                 robot.fr.setPower(0.15);
                 robot.br.setPower(0.15);
             }
@@ -663,7 +667,7 @@ public class autoCraterSideProfileCopyMiddle extends LinearOpMode {
             robot.inFlip.setPower(0);
             robot.inFlip.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
-            robot.intake.setPower(0.3);
+            robot.intake.setPower(0.2);
             robot.spine.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
             robot.spine.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
@@ -806,7 +810,7 @@ public class autoCraterSideProfileCopyMiddle extends LinearOpMode {
 
             ElapsedTime timer1 = new ElapsedTime();
             timer1.startTime();
-            while(robot.spine.getCurrentPosition()-initPos > -900 && timer1.seconds() < 2.0){
+            while(robot.spine.getCurrentPosition()-initPos > -850 && timer1.seconds() < 2.0){
                 telemetry.addData("thing",robot.intake.getCurrentPosition());
                 telemetry.addData("encoder",robot.spine.getCurrentPosition());
                 telemetry.update();
