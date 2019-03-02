@@ -154,7 +154,7 @@ public class autoDepotSideProfileCopyMiddle extends LinearOpMode {
         telemetry.addData("gyro",getHeading());
         telemetry.addData("position:","brake disengaged");
         telemetry.update();
-        Thread.sleep(500);
+        Thread.sleep(650);
         robot.hang.setPower(0);
 
         robot.hang.setPower(-1);
@@ -178,8 +178,51 @@ public class autoDepotSideProfileCopyMiddle extends LinearOpMode {
         //endregion
         vision.disable();
 
+        //region move forward 5 cm
 
-        // region move forward 35 cm
+        robot.fl.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        robot.br.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        robot.bl.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        robot.br.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+
+        robot.fl.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        robot.br.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        robot.bl.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        robot.br.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+
+        robotAuto.verticalDrive(0.1);
+        while(robot.dist.getDistance(DistanceUnit.CM)< 2.5){
+            telemetry.addData("dist",robot.dist.getDistance(DistanceUnit.CM));
+            telemetry.update();
+        }
+
+
+        //endregion
+
+        //region gyro align
+        if(getHeading() > 1){
+            while(getHeading()> 0.5) {
+                robot.fr.setPower(0.05);
+                robot.br.setPower(0.05);
+                robot.fl.setPower(-0.05);
+                robot.bl.setPower(-0.05);
+            }
+
+        } else if(getHeading() < -1){
+            while(getHeading()< -0.5) {
+                robot.fr.setPower(-0.05);
+                robot.br.setPower(-0.05);
+                robot.fl.setPower(0.05);
+                robot.bl.setPower(0.05);
+            }
+
+        }
+
+        robotAuto.stopDriving();
+        //endregion
+
+
+        // region move forward  to 15 cm
         robot.fl.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         robot.br.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         robot.bl.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
@@ -190,26 +233,26 @@ public class autoDepotSideProfileCopyMiddle extends LinearOpMode {
         robot.bl.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         robot.br.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         double distance = 10;
-        double power = 0.1;
         int flDist = robot.fl.getCurrentPosition();
         int frDist = robot.fr.getCurrentPosition();
         int blDist = robot.bl.getCurrentPosition();
         int brDist = robot.br.getCurrentPosition();
-        robotAuto.verticalDrive(power);
         ElapsedTime hi2 = new ElapsedTime();
         hi2.startTime();
 
 
         robot.hang.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
-        robotAuto.verticalDrive(0.1);
-        while(robot.dist.getDistance(DistanceUnit.CM)< 25){
+        robotAuto.verticalDrive(0.2);
+        while(robot.dist.getDistance(DistanceUnit.CM)< 22){
             telemetry.addData("dist",robot.dist.getDistance(DistanceUnit.CM));
             telemetry.update();
-            if(robot.dist.getDistance(DistanceUnit.CM) > 20){
+            if(robot.dist.getDistance(DistanceUnit.CM) > 15){
                 robot.spine.setPower(-1);
             }
         }
+
+        robotAuto.stopDriving();
         //endregion
 
         //region set dump arm and hang down and rotateArm flat
@@ -217,8 +260,9 @@ public class autoDepotSideProfileCopyMiddle extends LinearOpMode {
         robot.flipRArm.setPosition(0);
         robot.rotateArm.setPosition(0.75);
 
+        Thread.sleep(50);
         robot.hang.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        robot.hang.setPower(1);
+        robot.hang.setPower(0.75);
         //endregion
 
         //region set intake flip down, stop hang and spine, start intake
@@ -246,32 +290,34 @@ public class autoDepotSideProfileCopyMiddle extends LinearOpMode {
 
         //region bring spine back and intake up
         robot.spine.setPower(1);
-        Thread.sleep(250);
         robot.intake.setPower(0);
 
         robot.inFlip.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         robot.inFlip.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         robot.inFlip.setPower(-0.85);
         robot.inFlip.setTargetPosition(robot.inFlip.getCurrentPosition()-350);
-        Thread.sleep(500);
+        Thread.sleep(750);
 
         //endregion
 
         // region move back to 10 cm away
 
-        robotAuto.verticalDrive(-0.1);
+        robotAuto.verticalDrive(-0.15);
         while(robot.dist.getDistance(DistanceUnit.CM)> 15){
             telemetry.addData("dist",robot.dist.getDistance(DistanceUnit.CM));
             telemetry.update();
         }
 
+        robotAuto.stopDriving();
+
         robot.inFlip.setTargetPosition(robot.inFlip.getCurrentPosition() - 1);
         robot.inFlip.setPower(-0.1);
+        robot.spine.setPower(0);
         //endregion
 
 
         if(verdict.equals("left")){
-            while(getHeading() < 35){
+            while(getHeading() < 25){
                     robot.fl.setPower(0.1);
                     robot.bl.setPower(0.1);
                     robot.fr.setPower(-0.1);
@@ -280,7 +326,7 @@ public class autoDepotSideProfileCopyMiddle extends LinearOpMode {
 
             robotAuto.stopDriving();
         } else if(verdict.equals("right")){
-            while(getHeading() > -35){
+            while(getHeading() > -25){
                 robot.fl.setPower(-0.1);
                 robot.bl.setPower(-0.1);
                 robot.fr.setPower(0.1);
@@ -299,13 +345,13 @@ public class autoDepotSideProfileCopyMiddle extends LinearOpMode {
         robot.inFlip.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         robot.inFlip.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         robot.inFlip.setPower(0.65);
-        robot.inFlip.setTargetPosition(robot.inFlip.getCurrentPosition() + 350);
+        robot.inFlip.setTargetPosition(robot.inFlip.getCurrentPosition() + 400);
         Thread.sleep(250);
 
         robot.inFlip.setPower(0);
         robot.inFlip.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
-        robot.intake.setPower(0.3);
+        robot.intake.setPower(0.2);
         robot.spine.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
         robot.spine.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
@@ -315,13 +361,13 @@ public class autoDepotSideProfileCopyMiddle extends LinearOpMode {
 
         ElapsedTime timer1 = new ElapsedTime();
         timer1.startTime();
-        while(robot.spine.getCurrentPosition()-initPos > -500 && timer1.seconds() < 2.0){
+        while(robot.spine.getCurrentPosition()-initPos > -650 && timer1.seconds() < 2.0){
             telemetry.addData("thing",robot.intake.getCurrentPosition());
             telemetry.addData("encoder",robot.spine.getCurrentPosition());
             telemetry.update();
 
 
-        }
+        } 
 
         robot.spine.setPower(0);
         hi2.reset();
@@ -353,7 +399,7 @@ public class autoDepotSideProfileCopyMiddle extends LinearOpMode {
 
         //region bring intake up to transfer and spine back
 
-        Thread.sleep(250);
+        Thread.sleep(750);
         robot.inFlip.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         robot.inFlip.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         robot.inFlip.setPower(-0.85);
@@ -370,7 +416,7 @@ public class autoDepotSideProfileCopyMiddle extends LinearOpMode {
         //endregion
 
         if(verdict.equals("right")){
-            while(getHeading() < -0.5){
+            while(getHeading() < -1){
                 robot.fl.setPower(0.1);
                 robot.bl.setPower(0.1);
                 robot.fr.setPower(-0.1);
@@ -379,7 +425,7 @@ public class autoDepotSideProfileCopyMiddle extends LinearOpMode {
 
             robotAuto.stopDriving();
         } else if(verdict.equals("left")){
-            while(getHeading() > 0.5){
+            while(getHeading() > 1){
                 robot.fl.setPower(-0.1);
                 robot.bl.setPower(-0.1);
                 robot.fr.setPower(0.1);
@@ -391,11 +437,32 @@ public class autoDepotSideProfileCopyMiddle extends LinearOpMode {
 
         }
 
-        //region move back
-        robotAuto.verticalDrive(-0.4);
-        while(robot.dist.getDistance(DistanceUnit.CM) > 6){
-            if(robot.dist.getDistance(DistanceUnit.CM) > 20){
+        //region gyro align
+        if(getHeading() > 1){
+            while(getHeading()> 0.5) {
+                robot.fr.setPower(0.05);
+                robot.br.setPower(0.05);
+                robot.fl.setPower(-0.05);
+                robot.bl.setPower(-0.05);
             }
+
+        } else if(getHeading() < -1){
+            while(getHeading()< -0.5) {
+                robot.fr.setPower(-0.05);
+                robot.br.setPower(-0.05);
+                robot.fl.setPower(0.05);
+                robot.bl.setPower(0.05);
+            }
+
+        }
+
+        robotAuto.stopDriving();
+        //endregion
+
+        //region move back
+        robotAuto.verticalDrive(-0.15);
+        while(robot.dist.getDistance(DistanceUnit.CM) > 6){
+
         }
 
         robotAuto.verticalDrive(0.02);
@@ -407,33 +474,91 @@ public class autoDepotSideProfileCopyMiddle extends LinearOpMode {
         //region extend spine and flip up to dump
         robot.hang.setPower(-0.05);
         robot.spine.setPower(-1);
-        robot.flipLArm.setPosition(0);
-        robot.flipRArm.setPosition(1);
-        robot.rotateArm.setPosition(0.35);
+        robot.flipLArm.setPosition(0.1);
+        robot.flipRArm.setPosition(0.9);
+        robot.rotateArm.setPosition(0.75);
         Thread.sleep(300);
         robot.hang.setPower(0);
-        Thread.sleep(200);
         robot.spine.setPower(0);
-        Thread.sleep(500);
+        Thread.sleep(1000);
+        //endregion
+
+        //region bring stuff back and go forward
+        robot.flipLArm.setPosition(1);
+        robot.flipRArm.setPosition(0);
+        robot.rotateArm.setPosition(0.75);
+
+        Thread.sleep(200);
+
+        robot.spine.setPower(0.5);
+        robotAuto.verticalDrive(0.2);
+
+        while(robot.dist.getDistance(DistanceUnit.CM) < 10){
+
+        }
+
+        robotAuto.stopDriving();
+
+        //region gyro align
+        if(getHeading() > 1){
+            while(getHeading()> 0.5) {
+                robot.fr.setPower(0.05);
+                robot.br.setPower(0.05);
+                robot.fl.setPower(-0.05);
+                robot.bl.setPower(-0.05);
+            }
+
+        } else if(getHeading() < -1){
+            while(getHeading()< -0.5) {
+                robot.fr.setPower(-0.05);
+                robot.br.setPower(-0.05);
+                robot.fl.setPower(0.05);
+                robot.bl.setPower(0.05);
+            }
+
+        }
+
+        robotAuto.stopDriving();
         //endregion
 
 
-        /*
-        //region extend spine and flip up to dump
-        robot.hang.setPower(-0.05);
-        robot.spine.setPower(-1);
-        robot.flipLArm.setPosition(0);
-        robot.flipRArm.setPosition(1);
-        robot.rotateArm.setPosition(0.35);
-        Thread.sleep(300);
-        robot.hang.setPower(0);
-        Thread.sleep(200);
+        robotAuto.verticalDrive(0.15);
+
+        while(robot.dist.getDistance(DistanceUnit.CM) < 32){
+
+        }
+
+        robotAuto.stopDriving();
         robot.spine.setPower(0);
-        Thread.sleep(500);
-        //endregion*/
+        //endregion
 
+        //region turn to angle and move forward
+        while(getHeading() < 85){
+            robot.fl.setPower(0.15);
+            robot.bl.setPower(0.15);
+            robot.fr.setPower(-0.15);
+            robot.br.setPower(-0.15);
+        }
 
+        robotAuto.stopDriving();
 
+        Thread.sleep(100);
+
+        robotAuto.verticalDriveDistance(0.3,25);
+
+        while(getHeading() < 105){
+            robot.fl.setPower(0.15);
+            robot.bl.setPower(0.15);
+            robot.fr.setPower(-0.15);
+            robot.br.setPower(-0.15);
+        }
+
+        robotAuto.stopDriving();
+
+        robot.spine.setPower(-1);
+        Thread.sleep(1000);
+        robot.spine.setPower(0);
+        //endregion
 
     }
 
