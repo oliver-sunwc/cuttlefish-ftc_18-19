@@ -154,7 +154,7 @@ public class autoCraterSideProfileCopyMiddle extends LinearOpMode {
         telemetry.addData("gyro",getHeading());
         telemetry.addData("position:","brake disengaged");
         telemetry.update();
-        Thread.sleep(300);
+        Thread.sleep(325);
         robot.hang.setPower(0);
 
         robot.hang.setPower(-1);
