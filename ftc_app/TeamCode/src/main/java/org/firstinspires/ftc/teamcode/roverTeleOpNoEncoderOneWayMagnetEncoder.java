@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode;
 
 import android.media.MediaPlayer;
+import android.provider.MediaStore;
 
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
@@ -41,6 +42,8 @@ public class roverTeleOpNoEncoderOneWayMagnetEncoder extends OpMode {
     boolean inFlipTrigger2 = false;
     boolean re;
 
+    String song = "TTFAF";
+
     boolean u = false;
 
     ElapsedTime timerBitch = new ElapsedTime();
@@ -56,6 +59,9 @@ public class roverTeleOpNoEncoderOneWayMagnetEncoder extends OpMode {
 
     int pos = 0; // 0 is down 1 is x 2 is y;
 
+    MediaPlayer mp6 = new MediaPlayer();
+    MediaPlayer mp5 = new MediaPlayer();
+    MediaPlayer mp4 = new MediaPlayer();
     MediaPlayer mp3 = new MediaPlayer();
     MediaPlayer mp1 = new MediaPlayer();
     MediaPlayer mp2 = new MediaPlayer();
@@ -65,6 +71,7 @@ public class roverTeleOpNoEncoderOneWayMagnetEncoder extends OpMode {
 
     boolean songStarted = false;
     boolean s = false;
+    boolean ni = false;
 
     int initialPosition;
     ElapsedTime stallTime = new ElapsedTime();
@@ -95,11 +102,17 @@ public class roverTeleOpNoEncoderOneWayMagnetEncoder extends OpMode {
 
         robot.rotateArm.setPosition(0.5);
 
+        mp6 = MediaPlayer.create(this.hardwareMap.appContext,R.raw.renaicirculation);
+        mp5 = MediaPlayer.create(this.hardwareMap.appContext,R.raw.iwantitthatwayBOI);
+        mp4 = MediaPlayer.create(this.hardwareMap.appContext,R.raw.TTFAF);
         mp3 = MediaPlayer.create(this.hardwareMap.appContext,R.raw.ocean_man);
         mp1 = MediaPlayer.create(this.hardwareMap.appContext,R.raw.gold);
         mp2 = MediaPlayer.create(this.hardwareMap.appContext,R.raw.silver);
 
-        mp3.seekTo(0);//initialPosition = robot.hang.getCurrentPosition();
+        mp3.seekTo(0);
+        mp4.seekTo(0);
+        mp5.seekTo(0);
+        mp6.seekTo(0);
     }
 
     @Override
@@ -115,15 +128,58 @@ public class roverTeleOpNoEncoderOneWayMagnetEncoder extends OpMode {
 
         if(!s && gamepad2.left_stick_button){
             if(songStarted){
+                if (song == "TTFAF") {
+                    mp4.stop();
+                } else if (song == "iwity") {
+                    mp5.stop();
+                } else if (song == "ocean man") {
+                    mp3.stop();
+                } else if (song == "SE NO") {
+                    mp6.stop();
+                }
                 songStarted = false;
-                mp3.pause();
             } else {
+                if (song == "TTFAF") {
+                    mp4.start();
+                } else if (song == "iwity") {
+                    mp5.start();
+                } else if (song == "ocean man") {
+                    mp3.start();
+                } else if (song == "SE NO") {
+                    mp6.start();
+                }
                 songStarted = true;
-                mp3.start();
             }
         }
 
-        s= gamepad2.left_stick_button;
+        s = gamepad2.left_stick_button;
+
+        if(!ni && gamepad2.right_stick_button) {
+            if (song == "TTFAF") {
+                mp4.stop();
+                mp4.seekTo(0);
+                song = "iwity";
+                mp5.start();
+            } else if (song == "iwity") {
+                mp5.stop();
+                mp5.seekTo(0);
+                song = "ocean man";
+                mp3.start();
+            } else if (song == "ocean man") {
+                mp3.stop();
+                mp3.seekTo(0);
+                song = "SE NO";
+                mp6.start();
+            } else if (song == "SE NO") {
+                mp6.stop();
+                mp6.seekTo(0);
+                song = "TTFAF";
+                mp4.start();
+            }
+            songStarted = true;
+        }
+
+        ni = gamepad2.right_stick_button;
 
         telemetry.addData("hang",robot.hang.getCurrentPosition());
         //toggle button for intake speed
