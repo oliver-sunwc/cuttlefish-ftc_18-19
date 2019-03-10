@@ -9,6 +9,8 @@ import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.AnalogInput;
 import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorEx;
+import com.qualcomm.robotcore.hardware.DcMotorImplEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.DistanceSensor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
@@ -48,10 +50,10 @@ public class roverHMAP {
     public final double ticksPerInch = 90.3;
     public final double voltage_to_in = 72.2891566265;
     /*Motors*/
-    public DcMotor fl;
-    public DcMotor fr;
-    public DcMotor bl;
-    public DcMotor br;
+    public DcMotorImplEx fl;
+    public DcMotorImplEx fr;
+    public DcMotorImplEx bl;
+    public DcMotorImplEx br;
 
     public DcMotor hang;
     public DcMotor spine;
@@ -77,10 +79,10 @@ public class roverHMAP {
         imuInit = imuin;
 
         /*Motors*/
-        fl = hwMap.get(DcMotor.class, "fl");
-        fr = hwMap.get(DcMotor.class, "fr");
-        bl = hwMap.get(DcMotor.class, "bl");
-        br = hwMap.get(DcMotor.class, "br");
+        fl = (DcMotorImplEx) hwMap.get(DcMotor.class, "fl");
+        fr = (DcMotorImplEx) hwMap.get(DcMotor.class, "fr");
+        bl = (DcMotorImplEx) hwMap.get(DcMotor.class, "bl");
+        br = (DcMotorImplEx) hwMap.get(DcMotor.class, "br");
 
         fl.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         fr.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
