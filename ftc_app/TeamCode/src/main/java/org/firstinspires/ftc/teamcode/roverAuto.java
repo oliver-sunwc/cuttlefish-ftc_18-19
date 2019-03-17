@@ -58,6 +58,26 @@ public class roverAuto extends LinearOpMode {
     //------------------------------------------------------------------------------------------------------------------------------
     //Encoder Functions
 
+    void stopAndReset() {
+        robot.fl.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        robot.br.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        robot.bl.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        robot.fr.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+    }
+
+    void runUsing(){
+        robot.fl.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        robot.br.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        robot.bl.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        robot.fr.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+    }
+
+    void runToPosition(){
+        robot.fl.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        robot.br.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        robot.bl.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        robot.fr.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+    }
 
     void verticalDriveDistance(double power, double distance) throws InterruptedException {
         robot.fl.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
