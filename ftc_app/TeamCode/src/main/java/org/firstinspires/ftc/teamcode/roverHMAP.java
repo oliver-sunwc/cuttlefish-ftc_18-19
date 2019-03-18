@@ -66,7 +66,6 @@ public class roverHMAP {
     public DcMotor intake;
 
     /*Servos*/
-    public Servo flap;
     public Servo flipLArm;
     public Servo flipRArm;
     public Servo rotateArm;
@@ -116,7 +115,6 @@ public class roverHMAP {
         //landerS = hwMap.get(AnalogInput.class, "lS");
 
         /*Servos*/
-        flap = hwMap.get(Servo.class, "f");
         flipLArm = hwMap.get(Servo.class, "fLA");
         flipRArm = hwMap.get(Servo.class, "fRA");
         rotateArm = hwMap.get(Servo.class, "rA");
