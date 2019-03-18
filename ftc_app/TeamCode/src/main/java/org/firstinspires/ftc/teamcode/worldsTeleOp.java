@@ -16,15 +16,14 @@ import java.util.Locale;
 /**
  * Manual with Arcade Drive
  */
-@TeleOp(name = "NewOpMode", group = "Rover")
-public class roverTeleOpNoEncoderOneWayMagnetEncoder extends OpMode {
+@TeleOp(name = "worldsTeleOp", group = "Rover")
+public class worldsTeleOp extends OpMode {
 
     roverHMAP robot = new roverHMAP();
     double rx,ry,lx;
     double hang;
     double hangPow = 1;
 
-    boolean fliptog = false;
     boolean f;
     boolean rotatetog = false;
     boolean r;
@@ -42,11 +41,9 @@ public class roverTeleOpNoEncoderOneWayMagnetEncoder extends OpMode {
     boolean inFlipTrigger2 = false;
     boolean re;
 
-    String song = "TTFAF";
 
     boolean u = false;
 
-    ElapsedTime timerBitch = new ElapsedTime();
 
     boolean hangModeStall = false;
     boolean h = false;
@@ -55,16 +52,9 @@ public class roverTeleOpNoEncoderOneWayMagnetEncoder extends OpMode {
 
     boolean w = false;
 
-    int counter = 0;
 
     int pos = 0; // 0 is down 1 is x 2 is y;
 
-    MediaPlayer mp6 = new MediaPlayer();
-    MediaPlayer mp5 = new MediaPlayer();
-    MediaPlayer mp4 = new MediaPlayer();
-    MediaPlayer mp3 = new MediaPlayer();
-    MediaPlayer mp1 = new MediaPlayer();
-    MediaPlayer mp2 = new MediaPlayer();
 
     boolean triggerModeSwitch = false;
     boolean triggerModeSwitch2 = false;
@@ -102,17 +92,6 @@ public class roverTeleOpNoEncoderOneWayMagnetEncoder extends OpMode {
 
         robot.rotateArm.setPosition(0.5);
 
-        mp6 = MediaPlayer.create(this.hardwareMap.appContext,R.raw.bakemonogatari);
-        mp5 = MediaPlayer.create(this.hardwareMap.appContext,R.raw.newthatway);
-        mp4 = MediaPlayer.create(this.hardwareMap.appContext,R.raw.ttfaf);
-        mp3 = MediaPlayer.create(this.hardwareMap.appContext,R.raw.ocean_man);
-        mp1 = MediaPlayer.create(this.hardwareMap.appContext,R.raw.gold);
-        mp2 = MediaPlayer.create(this.hardwareMap.appContext,R.raw.silver);
-
-        mp3.seekTo(0);
-        mp4.seekTo(0);
-        mp5.seekTo(0);
-        mp6.seekTo(0);
     }
 
     @Override
@@ -126,63 +105,11 @@ public class roverTeleOpNoEncoderOneWayMagnetEncoder extends OpMode {
     @Override
     public void loop(){
 
-        if(!s && gamepad2.left_stick_button){
-            if(songStarted){
-                if (song == "TTFAF") {
-                    mp4.stop();
-                } else if (song == "iwity") {
-                    mp5.stop();
-                } else if (song == "ocean man") {
-                    mp3.stop();
-                } else if (song == "SE NO") {
-                    mp6.stop();
-                }
-                songStarted = false;
-            } else {
-                if (song == "TTFAF") {
-                    mp4.start();
-                } else if (song == "iwity") {
-                    mp5.start();
-                } else if (song == "ocean man") {
-                    mp3.start();
-                } else if (song == "SE NO") {
-                    mp6.start();
-                }
-                songStarted = true;
-            }
-        }
-
-        s = gamepad2.left_stick_button;
-
-        if(!ni && gamepad2.right_stick_button) {
-            if (song == "TTFAF") {
-                mp4.stop();
-                mp4.seekTo(0);
-                song = "iwity";
-                mp5.start();
-            } else if (song == "iwity") {
-                mp5.stop();
-                mp5.seekTo(0);
-                song = "ocean man";
-                mp3.start();
-            } else if (song == "ocean man") {
-                mp3.stop();
-                mp3.seekTo(0);
-                song = "SE NO";
-                mp6.start();
-            } else if (song == "SE NO") {
-                mp6.stop();
-                mp6.seekTo(0);
-                song = "TTFAF";
-                mp4.start();
-            }
-            songStarted = true;
-        }
-
-        ni = gamepad2.right_stick_button;
 
         telemetry.addData("hang",robot.hang.getCurrentPosition());
-        //toggle button for intake speed
+
+
+        // region toggle button for intake speed
         if(gamepad2.right_bumper && !iN) {
             if(!inNinja) {
                 inNinja = true;
@@ -191,8 +118,8 @@ public class roverTeleOpNoEncoderOneWayMagnetEncoder extends OpMode {
             }
         }
 
-
         iN = gamepad2.right_bumper;
+        //endregion
 
         if(gamepad2.left_trigger > 0.5){
             flapUp = false;
@@ -358,8 +285,7 @@ public class roverTeleOpNoEncoderOneWayMagnetEncoder extends OpMode {
                 flipTimer.reset();
                 pos = 0;
             } else if(pos == 0) {
-                mp1.start();
-                robot.flipLArm.setPosition(0);
+               robot.flipLArm.setPosition(0);
                 robot.flipRArm.setPosition(1);
                 flipTimer.reset();
                 pos = 1;
@@ -387,7 +313,6 @@ public class roverTeleOpNoEncoderOneWayMagnetEncoder extends OpMode {
                 robot.flipLArm.setPosition(0.1);
                 robot.flipRArm.setPosition(0.9);
                 robot.rotateArm.setPosition(0.75);
-                mp2.start();
                 pos = 2;
                 /*robot.flap.setPosition(0.7);
                 timerBitch.reset();*/

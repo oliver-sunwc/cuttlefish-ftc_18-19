@@ -193,7 +193,9 @@ public class autoTesting extends LinearOpMode {
         telemetry.update();
 
         robotAuto.stopAndReset();
+        Thread.sleep(10);
         robotAuto.runToPosition();
+        Thread.sleep(10);
 
         telemetry.addData("fl",robot.fl.getCurrentPosition());
         telemetry.addData("bl",robot.bl.getCurrentPosition());
@@ -202,15 +204,15 @@ public class autoTesting extends LinearOpMode {
         telemetry.addData("fl",robot.fl.getPIDFCoefficients(DcMotorEx.RunMode.RUN_TO_POSITION));
         telemetry.update();
 
-        robot.fl.setTargetPosition(3000);
-        robot.bl.setTargetPosition(3000);
-        robot.fr.setTargetPosition(1000);
-        robot.br.setTargetPosition(1000);
+        robot.fl.setTargetPosition(2700);
+        robot.bl.setTargetPosition(2700);
+        robot.fr.setTargetPosition(1333);
+        robot.br.setTargetPosition(1333);
 
         robot.fl.setPower(0.9);
         robot.bl.setPower(0.9);
-        robot.br.setPower(0.3);
-        robot.fr.setPower(0.3);
+        robot.br.setPower(0.5);
+        robot.fr.setPower(0.5);
 
         while(robot.fl.isBusy() || robot.fr.isBusy() || robot.bl.isBusy() || robot.br.isBusy()){
             if(robot.fl.getCurrentPosition() > 150){

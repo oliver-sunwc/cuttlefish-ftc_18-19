@@ -63,7 +63,6 @@ public class roverHMAP {
     public DcMotor hang;
     public DcMotor spine;
 
-    public DcMotor inFlip;
     public DcMotor intake;
 
     /*Servos*/
@@ -124,8 +123,7 @@ public class roverHMAP {
 
         intake = hwMap.get(DcMotor.class,"i");
         intake.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        inFlip = hwMap.get(DcMotor.class, "iF");
-        inFlip.setDirection(DcMotorSimple.Direction.REVERSE);
+
         if(imuin) {
             BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
             parameters.angleUnit = BNO055IMU.AngleUnit.DEGREES;
