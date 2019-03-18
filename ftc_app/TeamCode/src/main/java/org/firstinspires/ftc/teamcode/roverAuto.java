@@ -15,14 +15,14 @@ import java.util.Locale;
 
 public class roverAuto extends LinearOpMode {
 
-    /*roverHMAP robot;
+    roverHMAP robot;
     public String telVar;
     public roverAuto(roverHMAP hwmap){
         robot = hwmap;
-    } */
+    }
     public void runOpMode() throws InterruptedException{
 
-    } /*
+    }
     //------------------------------------------------------------------------------------------------------------------------------
     //Driving Power Functions
     void stopDriving() {
@@ -42,24 +42,6 @@ public class roverAuto extends LinearOpMode {
         robot.br.setPower(power);
     }
 
-    void verticalDrive2(double power, double angle){
-        if(getHeading() - angle > 4){
-            robot.fl.setPower(0.8*power);
-            robot.fr.setPower(0.8*power);
-            robot.bl.setPower(1.2*power);
-            robot.br.setPower(1.2*power);
-        } else if (angle - getHeading() > 4){
-            robot.fl.setPower(1.2*power);
-            robot.fr.setPower(1.2*power);
-            robot.bl.setPower(0.8*power);
-            robot.br.setPower(0.8*power);
-        }else if(angle - getHeading() < 2 && angle - getHeading() > -2){
-            robot.fl.setPower(power);
-            robot.fr.setPower(power);
-            robot.bl.setPower(power);
-            robot.br.setPower(power);
-        }
-    }
 
     void rotateRight(double power) {
         robot.fl.setPower(-power);
@@ -76,6 +58,26 @@ public class roverAuto extends LinearOpMode {
     //------------------------------------------------------------------------------------------------------------------------------
     //Encoder Functions
 
+    void stopAndReset() {
+        robot.fl.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        robot.br.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        robot.bl.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        robot.fr.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+    }
+
+    void runUsing(){
+        robot.fl.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        robot.br.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        robot.bl.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        robot.fr.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+    }
+
+    void runToPosition(){
+        robot.fl.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        robot.br.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        robot.bl.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        robot.fr.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+    }
 
     void verticalDriveDistance(double power, double distance) throws InterruptedException {
         robot.fl.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
@@ -88,6 +90,7 @@ public class roverAuto extends LinearOpMode {
         robot.bl.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         robot.br.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         distance = (int)(distance*robot.ticksPerInch);
+
         int flDist = robot.fl.getCurrentPosition();
         int frDist = robot.fr.getCurrentPosition();
         int blDist = robot.bl.getCurrentPosition();
@@ -101,10 +104,10 @@ public class roverAuto extends LinearOpMode {
                     robot.br.getCurrentPosition() - brDist< distance) {
             }
         } else {
-            while (robot.fl.getCurrentPosition() > distance &&
-                    robot.fr.getCurrentPosition() > distance &&
-                    robot.bl.getCurrentPosition() > distance &&
-                    robot.br.getCurrentPosition() > distance) {
+            while (robot.fl.getCurrentPosition() - flDist> distance &&
+                    robot.fr.getCurrentPosition() - frDist> distance &&
+                    robot.bl.getCurrentPosition() - blDist> distance &&
+                    robot.br.getCurrentPosition() - brDist> distance) {
             }
         }
 
@@ -154,6 +157,14 @@ public class roverAuto extends LinearOpMode {
          }
          robot.fl.setPower(0);
          robot.bl.setPower(0);
+
+         if(getHeading() < -1){
+             while(getHeading() <= -0.5) {
+                 robot.fr.setPower(0.15);
+                 robot.br.setPower(0.15);
+             }
+         robot.fr.setPower(0);
+         robot.br.setPower(0);         }
      }
 
      void gyroAlign1() throws InterruptedException{
@@ -286,11 +297,11 @@ public class roverAuto extends LinearOpMode {
         return robotError;
     }
 
-    /**
+    /*
      * returns desired steering force.  +/- 1 range.  +ve = steer left
      * @param error   Error angle in robot relative degrees
      * @param PCoeff  Proportional Gain Coefficient
-     * @return
+     * @return*/
 
     public double getSteer(double error, double PCoeff) {
         return Range.clip(error * PCoeff, -1, 1);
@@ -425,11 +436,6 @@ public class roverAuto extends LinearOpMode {
             robot.fl.setPower(0);
         }
     }
-
-    void extendSlide(double power){
-        robot.flipL.setPower(power);
-        robot.flipR.setPower(-power);
-    }*/
 
 
     //insert methods
