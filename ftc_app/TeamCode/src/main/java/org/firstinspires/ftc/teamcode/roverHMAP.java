@@ -69,6 +69,10 @@ public class roverHMAP {
     public Servo flipLArm;
     public Servo flipRArm;
     public Servo rotateArm;
+    public Servo dumpFlip;
+
+    public Servo inFlip;
+    public Servo trapDoor;
 
     public DistanceSensor dist;
 
@@ -115,6 +119,9 @@ public class roverHMAP {
         //landerS = hwMap.get(AnalogInput.class, "lS");
 
         /*Servos*/
+        trapDoor = hwMap.get(Servo.class,"if");
+        inFlip = hwMap.get(Servo.class,"td");
+        dumpFlip = hwMap.get(Servo.class, "flip");
         flipLArm = hwMap.get(Servo.class, "fLA");
         flipRArm = hwMap.get(Servo.class, "fRA");
         rotateArm = hwMap.get(Servo.class, "rA");

@@ -30,7 +30,7 @@ public class autoTesting extends LinearOpMode {
 
     public void runOpMode() throws InterruptedException {
         robot = new roverHMAP();
-        robot.init(hardwareMap,false);
+        robot.init(hardwareMap,true);
         robotAuto = new roverAuto(robot);
 
 
@@ -116,49 +116,6 @@ public class autoTesting extends LinearOpMode {
 
 
 
-
-
-        /*
-        robotAuto.stopAndReset();
-        robotAuto.runToPosition();
-        Thread.sleep(50);
-
-
-        robot.fl.setTargetPosition(1500);
-        robot.bl.setTargetPosition(1500);
-        robot.fr.setTargetPosition(1500);
-        robot.br.setTargetPosition(1500);
-
-        robot.fl.setPower(0.9);
-        robot.bl.setPower(0.9);
-        robot.br.setPower(0.9);
-        robot.fr.setPower(0.9);
-
-        while(robot.fl.isBusy() || robot.fr.isBusy() || robot.bl.isBusy() || robot.br.isBusy()){
-            if(robot.fl.getCurrentPosition() > 150){
-
-            }
-
-        }
-
-        robotAuto.verticalDrive(0);
-        Thread.sleep(50);
-        */
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
         robot.fl.setTargetPosition(3000);
         robot.fr.setTargetPosition(95);
         robot.bl.setTargetPosition(3000);
@@ -224,6 +181,46 @@ public class autoTesting extends LinearOpMode {
         robotAuto.verticalDrive(0);
         Thread.sleep(50);
 
+        robotAuto.runUsing();
+
+        robot.fl.setPower(-0.5);
+        robot.bl.setPower(-0.5);
+        robot.fr.setPower(0.1);
+        robot.br.setPower(0.1);
+        while(robotAuto.getHeading() > 98){
+
+        }
+
+        robotAuto.stopDriving();
+        Thread.sleep(50);
+
+        robotAuto.stopAndReset();
+        Thread.sleep(10);
+        robotAuto.runToPosition();
+        Thread.sleep(10);
+
+        robot.fl.setTargetPosition(-2200);
+        robot.bl.setTargetPosition(-2200);
+        robot.fr.setTargetPosition(-2200);
+        robot.br.setTargetPosition(-2200);
+
+        robot.fl.setPower(-0.3);
+        robot.bl.setPower(-0.3);
+        robot.br.setPower(-0.3);
+        robot.fr.setPower(-0.3);
+
+        while(robot.fl.isBusy() || robot.fr.isBusy() || robot.bl.isBusy() || robot.br.isBusy()){
+            if(robot.fl.getCurrentPosition() < -100){
+                robot.fl.setPower(-0.9);
+                robot.bl.setPower(-0.9);
+                robot.fr.setPower(-0.9);
+                robot.br.setPower(-0.9);
+            }
+
+        }
+
+        robotAuto.stopDriving();
+        Thread.sleep(50);
     }
 
     void checkStop(){

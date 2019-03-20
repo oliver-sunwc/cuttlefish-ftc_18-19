@@ -37,7 +37,11 @@ public class worldsTeleOp extends OpMode {
 
     boolean flipDown = true;
 
+    boolean inFlipUp = false;
+    boolean i;
 
+    boolean trapDoorUp = true;
+    boolean t;
     int pos = 0; // 0 is down 1 is x 2 is y;
 
 
@@ -48,9 +52,10 @@ public class worldsTeleOp extends OpMode {
 
         robot.hang.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         robot.hang.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        robot.rotateArm.setPosition(1);
+        robot.rotateArm.setPosition(0.5);
         robot.flipLArm.setPosition(1);
         robot.flipRArm.setPosition(0);
+        robot.dumpFlip.setPosition(0.43);
 
     }
 
@@ -88,16 +93,46 @@ public class worldsTeleOp extends OpMode {
 
         //endregion
 
-        //region dump flip toggle
+        //region intake flip toggle
+        if(!i && gamepad2.a){
+            inFlipUp = !inFlipUp;
+        }
+
+        i = gamepad2.a;
+
+        if(inFlipUp){
+            robot.inFlip.setPosition(0.7);
+        } else {
+            robot.inFlip.setPosition(0);
+        }
+        //endregion
+
+        // region trapDoor toggle
+        if(!t && gamepad2.y){
+            trapDoorUp = !trapDoorUp;
+        }
+
+        t = gamepad2.y;
+
+        if(trapDoorUp){
+            robot.trapDoor.setPosition(0.75);
+        } else {
+            robot.trapDoor.setPosition(0.1);
+        }
+        //endregion
+
+        //region dump toggle
         if(!f && gamepad2.x){
             if(flipDown){
                 flipDown = false;
-                robot.flipLArm.setPosition(0.2);
-                robot.flipRArm.setPosition(0.8);
+                robot.flipLArm.setPosition(0.15);
+                robot.flipRArm.setPosition(0.85);
+                robot.dumpFlip.setPosition(0.2);
             } else {
                 flipDown = true;
                 robot.flipLArm.setPosition(1);
                 robot.flipRArm.setPosition(0);
+                robot.dumpFlip.setPosition(0.43);
             }
         }
 
