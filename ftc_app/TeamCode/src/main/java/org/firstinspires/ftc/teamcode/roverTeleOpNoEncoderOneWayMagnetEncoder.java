@@ -104,7 +104,6 @@ public class roverTeleOpNoEncoderOneWayMagnetEncoder extends OpMode {
 
         mp6 = MediaPlayer.create(this.hardwareMap.appContext,R.raw.bakemonogatari);
         mp5 = MediaPlayer.create(this.hardwareMap.appContext,R.raw.newthatway);
-        mp4 = MediaPlayer.create(this.hardwareMap.appContext,R.raw.ttfaf);
         mp3 = MediaPlayer.create(this.hardwareMap.appContext,R.raw.ocean_man);
         mp1 = MediaPlayer.create(this.hardwareMap.appContext,R.raw.gold);
         mp2 = MediaPlayer.create(this.hardwareMap.appContext,R.raw.silver);
