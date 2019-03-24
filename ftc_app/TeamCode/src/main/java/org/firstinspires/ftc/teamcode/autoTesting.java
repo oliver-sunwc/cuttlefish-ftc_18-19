@@ -30,7 +30,7 @@ public class autoTesting extends LinearOpMode {
 
     public void runOpMode() throws InterruptedException {
         robot = new roverHMAP();
-        robot.init(hardwareMap,true);
+        robot.init(hardwareMap,false);
         robotAuto = new roverAuto(robot);
 
 
@@ -40,7 +40,7 @@ public class autoTesting extends LinearOpMode {
         robot.br.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
 
-        double p = 7.5;
+        double p = 12;
         double i = 0;
         double d = 0;
         boolean testa = false;
@@ -63,24 +63,24 @@ public class autoTesting extends LinearOpMode {
 
 
             if(gamepad1.y && !testc){
-                d += 0.01;
+                d += 0.1;
             }
             testc = gamepad1.y;
 
             if(gamepad1.a && !testd){
-                d -= 0.01;
+                d -= 0.1;
             }
-            testd = gamepad1.y;
+            testd = gamepad1.a;
 
 
 
             if(gamepad1.b && !teste){
-                i += 0.01;
+                i += 0.1;
             }
             teste = gamepad1.b;
 
             if(gamepad1.x && !testf){
-                i -= 0.01;
+                i -= 0.1;
             }
             testf = gamepad1.x;
 
@@ -107,38 +107,80 @@ public class autoTesting extends LinearOpMode {
         robot.bl.setPIDCoefficients(DcMotor.RunMode.RUN_TO_POSITION, hi);
         robot.br.setPIDCoefficients(DcMotor.RunMode.RUN_TO_POSITION, hi);
 
-        robot.fl.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        robot.bl.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        robot.br.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        robot.fr.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        robotAuto.stopAndReset();
 
-        robot.fl.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        robot.bl.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        robot.fr.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        robot.br.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-
-        Thread.sleep(250);
-
-        robot.fl.setTargetPosition(1400);
-        robot.fr.setTargetPosition(1400);
-        robot.bl.setTargetPosition(1400);
-        robot.br.setTargetPosition(1400);
-        robotAuto.verticalDrive(0.9);
+        robotAuto.runToPosition();
 
 
+
+
+
+
+
+
+        /*
+        robotAuto.stopAndReset();
+        robotAuto.runToPosition();
+        Thread.sleep(50);
+
+
+        robot.fl.setTargetPosition(1500);
+        robot.bl.setTargetPosition(1500);
+        robot.fr.setTargetPosition(1500);
+        robot.br.setTargetPosition(1500);
+
+        robot.fl.setPower(0.9);
+        robot.bl.setPower(0.9);
+        robot.br.setPower(0.9);
+        robot.fr.setPower(0.9);
 
         while(robot.fl.isBusy() || robot.fr.isBusy() || robot.bl.isBusy() || robot.br.isBusy()){
+            if(robot.fl.getCurrentPosition() > 150){
 
+            }
 
         }
 
         robotAuto.verticalDrive(0);
-        telemetry.addData("done","done");
-        telemetry.update();
-        Thread.sleep(1000);
+        Thread.sleep(50);
+        */
 
 
-        telemetry.addData("target",1400);
+
+
+
+
+
+
+
+
+
+
+
+
+
+        robot.fl.setTargetPosition(3000);
+        robot.fr.setTargetPosition(95);
+        robot.bl.setTargetPosition(3000);
+        robot.br.setTargetPosition(95);
+
+        robot.fl.setPower(0.95);
+        robot.bl.setPower(0.95);
+        robot.fr.setPower(0.03);
+        robot.br.setPower(0.03);
+
+        robot.fl.setTargetPositionTolerance(10);
+        robot.bl.setTargetPositionTolerance(10);
+        robot.fr.setTargetPositionTolerance(10);
+        robot.br.setTargetPositionTolerance(10);
+
+//12 0.2 1
+        //12 2 2
+        //12 0.5 1.5
+        while(robot.fl.isBusy() || robot.fr.isBusy() || robot.bl.isBusy() || robot.br.isBusy()){
+
+
+        }
         telemetry.addData("fl",robot.fl.getCurrentPosition());
         telemetry.addData("bl",robot.bl.getCurrentPosition());
         telemetry.addData("br",robot.br.getCurrentPosition());
@@ -146,8 +188,41 @@ public class autoTesting extends LinearOpMode {
         telemetry.addData("fl",robot.fl.getPIDFCoefficients(DcMotorEx.RunMode.RUN_TO_POSITION));
         telemetry.update();
 
-        Thread.sleep(20000);
+        robotAuto.verticalDrive(0);
+        telemetry.addData("done","done");
+        telemetry.update();
 
+        robotAuto.stopAndReset();
+        Thread.sleep(10);
+        robotAuto.runToPosition();
+        Thread.sleep(10);
+
+        telemetry.addData("fl",robot.fl.getCurrentPosition());
+        telemetry.addData("bl",robot.bl.getCurrentPosition());
+        telemetry.addData("br",robot.br.getCurrentPosition());
+        telemetry.addData("fr",robot.fr.getCurrentPosition());
+        telemetry.addData("fl",robot.fl.getPIDFCoefficients(DcMotorEx.RunMode.RUN_TO_POSITION));
+        telemetry.update();
+
+        robot.fl.setTargetPosition(2700);
+        robot.bl.setTargetPosition(2700);
+        robot.fr.setTargetPosition(1333);
+        robot.br.setTargetPosition(1333);
+
+        robot.fl.setPower(0.9);
+        robot.bl.setPower(0.9);
+        robot.br.setPower(0.5);
+        robot.fr.setPower(0.5);
+
+        while(robot.fl.isBusy() || robot.fr.isBusy() || robot.bl.isBusy() || robot.br.isBusy()){
+            if(robot.fl.getCurrentPosition() > 150){
+
+            }
+
+        }
+
+        robotAuto.verticalDrive(0);
+        Thread.sleep(50);
 
     }
 

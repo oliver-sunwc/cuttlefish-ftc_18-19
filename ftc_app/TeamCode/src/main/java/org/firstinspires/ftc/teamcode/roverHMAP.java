@@ -4,6 +4,7 @@ import android.graphics.Color;
 
 import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.hardware.bosch.JustLoggingAccelerationIntegrator;
+import com.qualcomm.hardware.rev.RevBlinkinLedDriver;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.AnalogInput;
@@ -19,6 +20,7 @@ import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.Range;
 
+import org.firstinspires.ftc.robotcontroller.external.samples.SampleRevBlinkinLedDriver;
 import org.firstinspires.ftc.robotcore.external.navigation.Acceleration;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
@@ -37,6 +39,9 @@ public class roverHMAP {
 
     //Gyro
 
+    public RevBlinkinLedDriver blinkin;
+    public RevBlinkinLedDriver.BlinkinPattern pattern;
+
     // The IMU sensor object
     public BNO055IMU imu;
 
@@ -46,7 +51,7 @@ public class roverHMAP {
     //public AnalogInput landerS;
 
 
-    double P_DRIVE_COEFF = 0.02;     // Larger is more responsive, but also less stable
+    double P_DRIVE_COEFF = 0.02;     // Larger is more responsive, but also less stable 
     public final double ticksPerInch = 90.3;
     public final double voltage_to_in = 72.2891566265;
     /*Motors*/
@@ -58,7 +63,6 @@ public class roverHMAP {
     public DcMotor hang;
     public DcMotor spine;
 
-    public DcMotor inFlip;
     public DcMotor intake;
 
     /*Servos*/
@@ -77,6 +81,12 @@ public class roverHMAP {
     public void init(HardwareMap ahwMap, boolean imuin) {
         hwMap = ahwMap;
         imuInit = imuin;
+
+
+        //Blinkin
+        //blinkin = hwMap.get(RevBlinkinLedDriver.class,"b");
+
+
 
         /*Motors*/
         fl = (DcMotorImplEx) hwMap.get(DcMotor.class, "fl");
@@ -113,8 +123,7 @@ public class roverHMAP {
 
         intake = hwMap.get(DcMotor.class,"i");
         intake.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        inFlip = hwMap.get(DcMotor.class, "iF");
-        inFlip.setDirection(DcMotorSimple.Direction.REVERSE);
+
         if(imuin) {
             BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
             parameters.angleUnit = BNO055IMU.AngleUnit.DEGREES;
