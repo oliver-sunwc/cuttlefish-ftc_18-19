@@ -67,6 +67,8 @@ public class roverHMAP {
     public Servo flipLArm;
     public Servo flipRArm;
     public Servo rotateArm;
+    public Servo wrist;
+    public Servo elbow;
     public Servo dumpFlip;
 
     public Servo inFlip;
