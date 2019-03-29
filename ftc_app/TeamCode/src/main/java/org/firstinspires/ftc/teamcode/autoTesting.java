@@ -131,9 +131,11 @@ public class autoTesting extends LinearOpMode {
         robot.fr.setTargetPositionTolerance(10);
         robot.br.setTargetPositionTolerance(10);
 
-//12 0.2 1
+
+        //12 0.2 1
         //12 2 2
         //12 0.5 1.5
+
         while(robot.fl.isBusy() || robot.fr.isBusy() || robot.bl.isBusy() || robot.br.isBusy()){
 
 

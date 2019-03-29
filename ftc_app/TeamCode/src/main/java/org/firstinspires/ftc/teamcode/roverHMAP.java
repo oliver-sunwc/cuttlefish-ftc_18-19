@@ -36,9 +36,6 @@ import static java.lang.Thread.sleep;
  */
 
 public class roverHMAP {
-
-    //Gyro
-
     public RevBlinkinLedDriver blinkin;
     public RevBlinkinLedDriver.BlinkinPattern pattern;
 
@@ -48,13 +45,13 @@ public class roverHMAP {
     // State used for updating telemetry
     public Orientation angles;
     public Acceleration gravity;
-    //public AnalogInput landerS;
 
 
     double P_DRIVE_COEFF = 0.02;     // Larger is more responsive, but also less stable 
     public final double ticksPerInch = 90.3;
     public final double voltage_to_in = 72.2891566265;
-    /*Motors*/
+
+    //region Motors
     public DcMotorImplEx fl;
     public DcMotorImplEx fr;
     public DcMotorImplEx bl;
@@ -64,8 +61,9 @@ public class roverHMAP {
     public DcMotor spine;
 
     public DcMotor intake;
+    //endregion
 
-    /*Servos*/
+    //region Servos
     public Servo flipLArm;
     public Servo flipRArm;
     public Servo rotateArm;
@@ -73,8 +71,11 @@ public class roverHMAP {
 
     public Servo inFlip;
     public Servo trapDoor;
+    //endregion
 
+    //region Sensors
     public DistanceSensor dist;
+    //endregion
 
     HardwareMap hwMap;
     boolean imuInit;
@@ -85,13 +86,7 @@ public class roverHMAP {
         hwMap = ahwMap;
         imuInit = imuin;
 
-
-        //Blinkin
-        //blinkin = hwMap.get(RevBlinkinLedDriver.class,"b");
-
-
-
-        /*Motors*/
+        //region Motors
         fl = (DcMotorImplEx) hwMap.get(DcMotor.class, "fl");
         fr = (DcMotorImplEx) hwMap.get(DcMotor.class, "fr");
         bl = (DcMotorImplEx) hwMap.get(DcMotor.class, "bl");
@@ -113,22 +108,24 @@ public class roverHMAP {
         br.setDirection(DcMotor.Direction.REVERSE);
         fr.setDirection(DcMotor.Direction.REVERSE);
 
+        intake = hwMap.get(DcMotor.class,"i");
+        intake.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        //endregion
+
+        //region Sensors
         dist = hwMap.get(DistanceSensor.class,"d");
+        //endregion
 
-        /*Sensors*/
-        //landerS = hwMap.get(AnalogInput.class, "lS");
-
-        /*Servos*/
+        //region Servos
         trapDoor = hwMap.get(Servo.class,"if");
         inFlip = hwMap.get(Servo.class,"td");
         dumpFlip = hwMap.get(Servo.class, "flip");
         flipLArm = hwMap.get(Servo.class, "fLA");
         flipRArm = hwMap.get(Servo.class, "fRA");
         rotateArm = hwMap.get(Servo.class, "rA");
+        //endregion
 
-        intake = hwMap.get(DcMotor.class,"i");
-        intake.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-
+        //region Gyro set-up
         if(imuin) {
             BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
             parameters.angleUnit = BNO055IMU.AngleUnit.DEGREES;
@@ -145,7 +142,7 @@ public class roverHMAP {
 
             byte AXIS_MAP_SIGN_BYTE = 0x1; //This is what to write to the AXIS_MAP_SIGN register to negate the z axis
 
-//Need to be in CONFIG mode to write to registers
+            //Need to be in CONFIG mode to write to registers
             imu.write8(BNO055IMU.Register.OPR_MODE,BNO055IMU.SensorMode.CONFIG.bVal & 0x0F);
 
             ElapsedTime timer = new ElapsedTime();
@@ -153,18 +150,19 @@ public class roverHMAP {
             while(timer.seconds()<0.1){
 
             }
-//Write to the AXIS_MAP_CONFIG register
+            //Write to the AXIS_MAP_CONFIG register
 
-//Write to the AXIS_MAP_SIGN register
+            //Write to the AXIS_MAP_SIGN register
             imu.write8(BNO055IMU.Register.AXIS_MAP_SIGN,AXIS_MAP_SIGN_BYTE & 0x0F);
 
-//Need to change back into the IMU mode to use the gyro
+            //Need to change back into the IMU mode to use the gyro
             imu.write8(BNO055IMU.Register.OPR_MODE,BNO055IMU.SensorMode.IMU.bVal & 0x0F);
             timer.reset();
             while(timer.seconds()<0.1){
 
             }
         }
+        //endregion
     }
 
 
