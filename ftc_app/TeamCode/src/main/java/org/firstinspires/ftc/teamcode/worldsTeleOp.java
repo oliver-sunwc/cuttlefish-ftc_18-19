@@ -46,8 +46,10 @@ public class worldsTeleOp extends OpMode {
 
     ElapsedTime timer1 = new ElapsedTime();
     ElapsedTime timer2 = new ElapsedTime();
+    ElapsedTime timer3 = new ElapsedTime();
     boolean dumpTrigger = false;
     boolean dumpTrigger2 = false;
+    boolean downStall = false;
 
     @Override
     public void init() {
@@ -135,9 +137,11 @@ public class worldsTeleOp extends OpMode {
                 timer1.reset();
             } else {
                 flipDown = true;
-                robot.flipLArm.setPosition(1);
-                robot.flipRArm.setPosition(0);
+                robot.flipLArm.setPosition(0.5);
+                robot.flipRArm.setPosition(0.5);
                 robot.dumpFlip.setPosition(0.43);
+                downStall = true;
+                timer3.reset();
             }
         }
 
@@ -152,6 +156,12 @@ public class worldsTeleOp extends OpMode {
         if(dumpTrigger2 && timer1.seconds() > 1.5){
             dumpTrigger2 = false;
             robot.dumpFlip.setPosition(0.1);
+        }
+
+        if(downStall && timer3.seconds() > 0.4) {
+            downStall = false;
+            robot.flipLArm.setPosition(1);
+            robot.flipRArm.setPosition(0);
         }
         //endregion
 
