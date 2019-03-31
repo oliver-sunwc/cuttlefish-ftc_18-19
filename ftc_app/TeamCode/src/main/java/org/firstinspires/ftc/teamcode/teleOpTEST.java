@@ -20,28 +20,35 @@ import java.util.Locale;
 public class teleOpTEST extends OpMode {
 
     roverHMAP robot = new roverHMAP();
-    boolean x;
-    boolean y;
-    boolean a;
-    boolean b;
-    double servoPos = 0.9;
-    double dumpPos = 0.2;
-    double downDump = 0.2;
-    double upDump = 0.075;
-    double midDump = 0.08;
-    double downArm = 0.9;
-    double upArm = 0.10;
-
+    boolean x1;
+    boolean y1;
+    boolean a1;
+    boolean b1;
+    boolean x2;
+    boolean y2;
+    boolean a2;
+    boolean b2;
+    boolean flipDown = true;
+    ElapsedTime timer1 = new ElapsedTime();
+    ElapsedTime timer2 = new ElapsedTime();
+    boolean dumpTrigger = false;
+    boolean dumpTrigger2 = false;
+    double servoPos = 0.5;
+    double dumpPos = 0.5;
+    double rotatePos = 0.5;
+    double upDump = 0.43;
 
     @Override
     public void init() {
         robot.init(hardwareMap,false);
-
         robot.hang.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         robot.hang.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-
-
-
+        robot.rotateArm.setPosition(0.5);
+        robot.flipLArm.setPosition(1);
+        robot.flipRArm.setPosition(0);
+        robot.dumpFlip.setPosition(0.43);
+        timer1.startTime();
+        timer2.startTime();
     }
 
     @Override
@@ -51,31 +58,71 @@ public class teleOpTEST extends OpMode {
 
     @Override
     public void loop(){
-        robot.flipLArm.setPosition(servoPos);
-        robot.flipRArm.setPosition(1-servoPos);
-        robot.dumpFlip.setPosition(dumpPos);
         telemetry.addData("servoPos", robot.flipLArm.getPosition());
         telemetry.addData("dumpPos", robot.dumpFlip.getPosition());
+        telemetry.addData("rotatePos", robot.rotateArm.getPosition());
+        telemetry.update();
 
-        if(!a && gamepad2.a) {
+        robot.rotateArm.setPosition(rotatePos);
+
+        if(!a1 && gamepad1.a) {
+            upDump = servoPos;
+        }
+        a1 = gamepad1.a;
+
+        if(!b1 && gamepad1.b) {
+            rotatePos -= 0.05;
+        }
+        b1 = gamepad1.b;
+
+        if(!x1 && gamepad1.x) {
+            if(flipDown){
+                flipDown = false;
+                robot.flipLArm.setPosition(0.5);
+                robot.flipRArm.setPosition(0.5);
+                robot.dumpFlip.setPosition(0.7);
+                dumpTrigger = true;
+                timer1.reset();
+            } else {
+                flipDown = true;
+                robot.flipLArm.setPosition(1);
+                robot.flipRArm.setPosition(0);
+                robot.dumpFlip.setPosition(0.43);
+            }
+        }
+        x1 = gamepad1.x;
+
+        if(dumpTrigger && timer1.seconds() > 0.7){
+            robot.flipLArm.setPosition(0.1);
+            robot.flipRArm.setPosition(0.9);
+            robot.dumpFlip.setPosition(0.1);
+            dumpTrigger = false;
+        }
+
+        if(!y1 && gamepad1.y) {
+            rotatePos += 0.05;
+        }
+        y1 = gamepad1.y;
+
+        if(!a2 && gamepad2.a) {
             servoPos += 0.05;
         }
-        a = gamepad2.a;
+        a2 = gamepad2.a;
 
-        if(!b && gamepad2.b) {
+        if(!b2 && gamepad2.b) {
             servoPos -= 0.05;
         }
-        b = gamepad2.b;
+        b2 = gamepad2.b;
 
-        if(!x && gamepad2.x) {
+        if(!x2 && gamepad2.x) {
             dumpPos += 0.05;
         }
-        x = gamepad2.x;
+        x2 = gamepad2.x;
 
-        if(!y && gamepad2.y) {
+        if(!y2 && gamepad2.y) {
             dumpPos -= 0.05;
         }
-        y = gamepad2.y;
+        y2 = gamepad2.y;
     }
 
 
