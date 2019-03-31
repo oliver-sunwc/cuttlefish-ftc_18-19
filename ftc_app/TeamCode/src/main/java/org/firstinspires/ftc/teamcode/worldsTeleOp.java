@@ -44,7 +44,10 @@ public class worldsTeleOp extends OpMode {
     boolean t;
     int pos = 0; // 0 is down 1 is x 2 is y;
 
-
+    ElapsedTime timer1 = new ElapsedTime();
+    ElapsedTime timer2 = new ElapsedTime();
+    boolean dumpTrigger = false;
+    boolean dumpTrigger2 = false;
 
     @Override
     public void init() {
@@ -56,7 +59,8 @@ public class worldsTeleOp extends OpMode {
         robot.flipLArm.setPosition(1);
         robot.flipRArm.setPosition(0);
         robot.dumpFlip.setPosition(0.43);
-
+        timer1.startTime();
+        timer2.startTime();
     }
 
     @Override
@@ -125,9 +129,10 @@ public class worldsTeleOp extends OpMode {
         if(!f && gamepad2.x){
             if(flipDown){
                 flipDown = false;
-                robot.flipLArm.setPosition(0.15);
-                robot.flipRArm.setPosition(0.85);
-                robot.dumpFlip.setPosition(0.2);
+                robot.flipLArm.setPosition(0.1);
+                robot.flipRArm.setPosition(0.9);
+                dumpTrigger = true;
+                timer1.reset();
             } else {
                 flipDown = true;
                 robot.flipLArm.setPosition(1);
@@ -137,6 +142,17 @@ public class worldsTeleOp extends OpMode {
         }
 
         f = gamepad2.x;
+
+        if(dumpTrigger && timer1.seconds() > 0.5){
+            robot.dumpFlip.setPosition(0);
+            dumpTrigger = false;
+            dumpTrigger2 = true;
+        }
+
+        if(dumpTrigger2 && timer1.seconds() > 1.5){
+            dumpTrigger2 = false;
+            robot.dumpFlip.setPosition(0.1);
+        }
         //endregion
 
         // region drive the robot code
