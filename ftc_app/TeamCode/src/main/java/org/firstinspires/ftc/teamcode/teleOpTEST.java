@@ -46,9 +46,13 @@ public class teleOpTEST extends OpMode {
         robot.rotateArm.setPosition(0.5);
         robot.flipLArm.setPosition(1);
         robot.flipRArm.setPosition(0);
-        robot.dumpFlip.setPosition(0.43);
+        robot.dumpFlip.setPosition(0);
         timer1.startTime();
         timer2.startTime();
+
+        robot.dump.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        robot.dump.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+
     }
 
     @Override
@@ -58,71 +62,17 @@ public class teleOpTEST extends OpMode {
 
     @Override
     public void loop(){
-        telemetry.addData("servoPos", robot.flipLArm.getPosition());
-        telemetry.addData("dumpPos", robot.dumpFlip.getPosition());
-        telemetry.addData("rotatePos", robot.rotateArm.getPosition());
-        telemetry.update();
-
-        robot.rotateArm.setPosition(rotatePos);
-
-        if(!a1 && gamepad1.a) {
-            upDump = servoPos;
+        if(gamepad2.a){
+            robot.dumpFlip.setPosition(0);
         }
-        a1 = gamepad1.a;
-
-        if(!b1 && gamepad1.b) {
-            rotatePos -= 0.05;
+        if(gamepad2.b){
+            robot.dumpFlip.setPosition(0.5);
         }
-        b1 = gamepad1.b;
-
-        if(!x1 && gamepad1.x) {
-            if(flipDown){
-                flipDown = false;
-                robot.flipLArm.setPosition(0.5);
-                robot.flipRArm.setPosition(0.5);
-                robot.dumpFlip.setPosition(0.7);
-                dumpTrigger = true;
-                timer1.reset();
-            } else {
-                flipDown = true;
-                robot.flipLArm.setPosition(1);
-                robot.flipRArm.setPosition(0);
-                robot.dumpFlip.setPosition(0.43);
-            }
-        }
-        x1 = gamepad1.x;
-
-        if(dumpTrigger && timer1.seconds() > 0.7){
-            robot.flipLArm.setPosition(0.1);
-            robot.flipRArm.setPosition(0.9);
-            robot.dumpFlip.setPosition(0.1);
-            dumpTrigger = false;
+        if(gamepad2.y){
+            robot.dumpFlip.setPosition(1);
         }
 
-        if(!y1 && gamepad1.y) {
-            rotatePos += 0.05;
-        }
-        y1 = gamepad1.y;
-
-        if(!a2 && gamepad2.a) {
-            servoPos += 0.05;
-        }
-        a2 = gamepad2.a;
-
-        if(!b2 && gamepad2.b) {
-            servoPos -= 0.05;
-        }
-        b2 = gamepad2.b;
-
-        if(!x2 && gamepad2.x) {
-            dumpPos += 0.05;
-        }
-        x2 = gamepad2.x;
-
-        if(!y2 && gamepad2.y) {
-            dumpPos -= 0.05;
-        }
-        y2 = gamepad2.y;
+        telemetry.addData("ticks",robot.dump.getCurrentPosition());
     }
 
 

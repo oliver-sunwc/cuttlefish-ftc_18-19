@@ -6,6 +6,7 @@ import android.provider.MediaStore;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.PIDCoefficients;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.Range;
 
@@ -51,6 +52,7 @@ public class worldsTeleOp extends OpMode {
     boolean dumpTrigger2 = false;
     boolean downStall = false;
 
+    boolean dumpUp = false;
     @Override
     public void init() {
         robot.init(hardwareMap,false);
@@ -60,9 +62,17 @@ public class worldsTeleOp extends OpMode {
         robot.rotateArm.setPosition(0.5);
         robot.flipLArm.setPosition(1);
         robot.flipRArm.setPosition(0);
-        robot.dumpFlip.setPosition(0.43);
+        robot.dumpFlip.setPosition(0.35);
         timer1.startTime();
         timer2.startTime();
+        timer3.startTime();
+
+        robot.dump.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        robot.dump.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        robot.dump.setTargetPosition(0);
+
+        robot.dump.setPIDCoefficients(DcMotor.RunMode.RUN_TO_POSITION,new PIDCoefficients(3,0,0));
+
     }
 
     @Override
@@ -107,9 +117,9 @@ public class worldsTeleOp extends OpMode {
         i = gamepad2.a;
 
         if(inFlipUp){
-            robot.inFlip.setPosition(0.7);
-        } else {
             robot.inFlip.setPosition(0);
+        } else {
+            robot.inFlip.setPosition(0.6);
         }
         //endregion
 
@@ -121,47 +131,40 @@ public class worldsTeleOp extends OpMode {
         t = gamepad2.y;
 
         if(trapDoorUp){
-            robot.trapDoor.setPosition(0.75);
+            robot.trapDoor.setPosition(1);
         } else {
-            robot.trapDoor.setPosition(0.1);
+            robot.trapDoor.setPosition(0.3);
         }
         //endregion
 
         //region dump toggle
+
         if(!f && gamepad2.x){
-            if(flipDown){
-                flipDown = false;
-                robot.flipLArm.setPosition(0.1);
-                robot.flipRArm.setPosition(0.9);
-                dumpTrigger = true;
-                timer1.reset();
+            if(dumpUp){
+                dumpUp = false;
+                robot.dump.setTargetPosition(0);
+                robot.dumpFlip.setPosition(0.35);
+                robot.dump.setPower(0.15);
             } else {
-                flipDown = true;
-                robot.flipLArm.setPosition(0.5);
-                robot.flipRArm.setPosition(0.5);
-                robot.dumpFlip.setPosition(0.43);
-                downStall = true;
-                timer3.reset();
+                dumpUp = true;
+                robot.dump.setTargetPosition(-1090);
+                dumpTrigger = true;
+                dumpTrigger2 = true;
+                timer1.reset();
+                robot.dumpFlip.setPosition(0.1);
+                robot.dump.setPower(-0.7);
             }
         }
 
         f = gamepad2.x;
-
-        if(dumpTrigger && timer1.seconds() > 0.5){
-            robot.dumpFlip.setPosition(0);
+        if(timer1.seconds() > 0.25 && dumpTrigger){
             dumpTrigger = false;
-            dumpTrigger2 = true;
+            robot.dumpFlip.setPosition(0.95);
         }
 
-        if(dumpTrigger2 && timer1.seconds() > 1.5){
+        if(dumpTrigger2 && robot.dump.getCurrentPosition() < -800){
+            robot.dump.setPower(-0.3);
             dumpTrigger2 = false;
-            robot.dumpFlip.setPosition(0.1);
-        }
-
-        if(downStall && timer3.seconds() > 0.4) {
-            downStall = false;
-            robot.flipLArm.setPosition(1);
-            robot.flipRArm.setPosition(0);
         }
         //endregion
 
@@ -208,7 +211,7 @@ public class worldsTeleOp extends OpMode {
         iN = gamepad2.right_bumper;
         //endregion
 
-        double intakePow = gamepad2.right_stick_y;
+        double intakePow = -gamepad2.right_stick_y;
 
         if(inNinja) {
             intakePow/=2.4;
@@ -216,12 +219,8 @@ public class worldsTeleOp extends OpMode {
             intakePow/=1;
         }
 
-        if(intakePow > 0){
-            intakePow/= 1.6;
-        }
 
 
-        intakePow = intakePow/0.9;
         robot.intake.setPower(intakePow);
         //endregion
 

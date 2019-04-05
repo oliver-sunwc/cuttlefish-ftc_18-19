@@ -11,6 +11,7 @@ import com.qualcomm.robotcore.hardware.AnalogInput;
 import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
+import com.qualcomm.robotcore.hardware.DcMotorImpl;
 import com.qualcomm.robotcore.hardware.DcMotorImplEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.DistanceSensor;
@@ -51,7 +52,10 @@ public class roverHMAP {
     public final double ticksPerInch = 90.3;
     public final double voltage_to_in = 72.2891566265;
 
+
     //region Motors
+    public DcMotorImplEx dump;
+
     public DcMotorImplEx fl;
     public DcMotorImplEx fr;
     public DcMotorImplEx bl;
@@ -94,6 +98,8 @@ public class roverHMAP {
         bl = (DcMotorImplEx) hwMap.get(DcMotor.class, "bl");
         br = (DcMotorImplEx) hwMap.get(DcMotor.class, "br");
 
+        dump = (DcMotorImplEx) hwMap.get(DcMotor.class, "du");
+
         fl.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         fr.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         bl.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
@@ -119,8 +125,9 @@ public class roverHMAP {
         //endregion
 
         //region Servos
-        trapDoor = hwMap.get(Servo.class,"if");
-        inFlip = hwMap.get(Servo.class,"td");
+
+        trapDoor = hwMap.get(Servo.class,"td");
+        inFlip = hwMap.get(Servo.class,"if");
         dumpFlip = hwMap.get(Servo.class, "flip");
         flipLArm = hwMap.get(Servo.class, "fLA");
         flipRArm = hwMap.get(Servo.class, "fRA");
