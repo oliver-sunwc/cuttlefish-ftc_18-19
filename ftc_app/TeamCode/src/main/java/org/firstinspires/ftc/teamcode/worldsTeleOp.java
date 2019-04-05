@@ -110,11 +110,11 @@ public class worldsTeleOp extends OpMode {
         //endregion
 
         //region intake flip toggle
-        if(!i && gamepad2.a){
+        if(!i && (gamepad2.right_trigger > 0.1 || gamepad1.left_bumper)){
             inFlipUp = !inFlipUp;
         }
 
-        i = gamepad2.a;
+        i = (gamepad2.right_trigger > 0.1 || gamepad1.left_bumper);
 
         if(inFlipUp){
             robot.inFlip.setPosition(0);
@@ -124,11 +124,11 @@ public class worldsTeleOp extends OpMode {
         //endregion
 
         // region trapDoor toggle
-        if(!t && gamepad2.y){
+        if(!t && gamepad2.left_trigger > 0.1){
             trapDoorUp = !trapDoorUp;
         }
 
-        t = gamepad2.y;
+        t = gamepad2.left_trigger > 0.1;
 
         if(trapDoorUp){
             robot.trapDoor.setPosition(1);
@@ -147,7 +147,7 @@ public class worldsTeleOp extends OpMode {
                 robot.dump.setPower(0.15);
             } else {
                 dumpUp = true;
-                robot.dump.setTargetPosition(-1090);
+                robot.dump.setTargetPosition(-1120);
                 dumpTrigger = true;
                 dumpTrigger2 = true;
                 timer1.reset();
@@ -165,6 +165,10 @@ public class worldsTeleOp extends OpMode {
         if(dumpTrigger2 && robot.dump.getCurrentPosition() < -800){
             robot.dump.setPower(-0.3);
             dumpTrigger2 = false;
+        }
+
+        if(gamepad2.y){
+            robot.dump.setTargetPosition(-1220);
         }
         //endregion
 
@@ -225,6 +229,7 @@ public class worldsTeleOp extends OpMode {
         //endregion
 
         //region telemetry
+        telemetry.addData("spine",robot.spine.getCurrentPosition());
         telemetry.addData("pos",pos);
         telemetry.addData("lx", lx);
         telemetry.addData("ry", ry);
