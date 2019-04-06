@@ -62,14 +62,16 @@ public class teleOpTEST extends OpMode {
 
     @Override
     public void loop(){
+        telemetry.addData("rotatePos", rotatePos);
+        robot.rotateArm.setPosition(rotatePos);
         if(gamepad2.a){
-            robot.dumpFlip.setPosition(0);
+            rotatePos += 0.05;
         }
         if(gamepad2.b){
-            robot.dumpFlip.setPosition(0.5);
+            rotatePos -= 0.05;
         }
         if(gamepad2.y){
-            robot.dumpFlip.setPosition(1);
+            rotatePos = 0.5;
         }
 
         telemetry.addData("ticks",robot.dump.getCurrentPosition());
