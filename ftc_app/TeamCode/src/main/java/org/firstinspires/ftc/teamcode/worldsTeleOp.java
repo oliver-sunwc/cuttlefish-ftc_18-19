@@ -50,7 +50,7 @@ public class worldsTeleOp extends OpMode {
     ElapsedTime timer3 = new ElapsedTime();
     boolean dumpTrigger = false;
     boolean dumpTrigger2 = false;
-    boolean downStall = false;
+    boolean dumpTrigger3 = false;
 
     boolean dumpUp = false;
     @Override
@@ -117,9 +117,9 @@ public class worldsTeleOp extends OpMode {
         i = (gamepad2.right_trigger > 0.1 || gamepad1.left_bumper);
 
         if(inFlipUp){
-            robot.inFlip.setPosition(0);
+            robot.inFlip.setPosition(0.15 );
         } else {
-            robot.inFlip.setPosition(0.6);
+            robot.inFlip.setPosition(0.85);
         }
         //endregion
 
@@ -133,7 +133,7 @@ public class worldsTeleOp extends OpMode {
         if(trapDoorUp){
             robot.trapDoor.setPosition(1);
         } else {
-            robot.trapDoor.setPosition(0.3);
+            robot.trapDoor.setPosition(0.13);
         }
         //endregion
 
@@ -142,8 +142,13 @@ public class worldsTeleOp extends OpMode {
         if(!f && gamepad2.x){
             if(dumpUp){
                 dumpUp = false;
+                robot.dumpFlip.setPosition(1);
                 robot.dump.setTargetPosition(0);
-                robot.dumpFlip.setPosition(0.35);
+                timer2.reset();
+                dumpTrigger3 = true;
+
+                robot.rotateArm.setPosition(0.5);
+
                 robot.dump.setPower(0.15);
             } else {
                 dumpUp = true;
@@ -152,8 +157,13 @@ public class worldsTeleOp extends OpMode {
                 dumpTrigger2 = true;
                 timer1.reset();
                 robot.dumpFlip.setPosition(0.1);
-                robot.dump.setPower(-0.7);
+                robot.dump.setPower(-0.8);
             }
+        }
+
+        if(timer2.seconds() > 0.75 && dumpTrigger3){
+            dumpTrigger3 = false;
+            robot.dumpFlip.setPosition(0.35);
         }
 
         f = gamepad2.x;
@@ -163,12 +173,13 @@ public class worldsTeleOp extends OpMode {
         }
 
         if(dumpTrigger2 && robot.dump.getCurrentPosition() < -800){
-            robot.dump.setPower(-0.3);
+            robot.dump.setPower(-0.4);
+            robot.rotateArm.setPosition(0.4);
             dumpTrigger2 = false;
         }
 
         if(gamepad2.y){
-            robot.dump.setTargetPosition(-1220);
+            robot.dump.setTargetPosition(-1250);
         }
         //endregion
 
