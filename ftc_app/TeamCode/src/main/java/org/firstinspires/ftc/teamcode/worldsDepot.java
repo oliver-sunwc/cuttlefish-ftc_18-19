@@ -33,7 +33,13 @@ public class worldsDepot extends LinearOpMode {
         robot.init(hardwareMap,true);
         robotAuto = new roverAuto(robot);
 
-        //region Vision setup
+        robot.fl.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        robot.bl.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        robot.fr.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        robot.br.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+
+        //region setUp vision
+
         vision = new VisionThing();
         // can replace with ActivityViewDisplay.getInstance() for fullscreen
         vision.init(hardwareMap.appContext, CameraViewDisplay.getInstance());
@@ -42,9 +48,9 @@ public class worldsDepot extends LinearOpMode {
         vision.enable();
         vision.setShowCountours(true);
 
-        //endregion
+        //endregion setUp vision
 
-        //region Init move line loop
+        //region init move line loop
         boolean testa = false;
         boolean testb = false;
         while(true){
@@ -95,6 +101,7 @@ public class worldsDepot extends LinearOpMode {
                         }
                     }
                 }
+
             }
 
             if (leftcounter > 0 || rightcounter > 0) {
@@ -135,8 +142,10 @@ public class worldsDepot extends LinearOpMode {
             }
         }
 
+
         //endregion
 
+        //region hang drop
         robot.hang.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         robot.hang.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         int currPos = robot.hang.getCurrentPosition();

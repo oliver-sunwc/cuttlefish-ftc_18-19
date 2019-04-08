@@ -242,6 +242,8 @@ public class worldsTeleOp extends OpMode {
         //region telemetry
         telemetry.addData("spine",robot.spine.getCurrentPosition());
         telemetry.addData("pos",pos);
+        telemetry.addData("flip",robot.dump.getCurrentPosition());
+        telemetry.addData("hangPos", robot.hang.getCurrentPosition());
         telemetry.addData("lx", lx);
         telemetry.addData("ry", ry);
         telemetry.addData("rx", rx);
