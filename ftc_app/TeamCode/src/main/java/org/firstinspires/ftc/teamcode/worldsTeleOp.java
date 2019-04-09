@@ -53,6 +53,7 @@ public class worldsTeleOp extends OpMode {
     boolean dumpTrigger3 = false;
 
     boolean dumpUp = false;
+    boolean override = false;
     @Override
     public void init() {
         robot.init(hardwareMap,false);
@@ -71,7 +72,7 @@ public class worldsTeleOp extends OpMode {
         robot.dump.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         robot.dump.setTargetPosition(0);
 
-        robot.dump.setPIDCoefficients(DcMotor.RunMode.RUN_TO_POSITION,new PIDCoefficients(3,0,0));
+        robot.dump.setPIDCoefficients(DcMotor.RunMode.RUN_TO_POSITION,new PIDCoefficients(5,0,0));
 
     }
 
@@ -112,6 +113,7 @@ public class worldsTeleOp extends OpMode {
         //region intake flip toggle
         if(!i && (gamepad2.right_trigger > 0.1 || gamepad1.left_bumper)){
             inFlipUp = !inFlipUp;
+            trapDoorUp = true;
         }
 
         i = (gamepad2.right_trigger > 0.1 || gamepad1.left_bumper);
@@ -119,7 +121,7 @@ public class worldsTeleOp extends OpMode {
         if(inFlipUp){
             robot.inFlip.setPosition(0.15 );
         } else {
-            robot.inFlip.setPosition(0.85);
+            robot.inFlip.setPosition(0.67);
         }
         //endregion
 
@@ -157,24 +159,27 @@ public class worldsTeleOp extends OpMode {
                 dumpTrigger2 = true;
                 timer1.reset();
                 robot.dumpFlip.setPosition(0.1);
-                robot.dump.setPower(-0.8);
+                robot.dump.setPower(-0.75);
             }
         }
 
-        if(timer2.seconds() > 0.75 && dumpTrigger3){
+        if(timer2.seconds() > 0.5 && dumpTrigger3){
             dumpTrigger3 = false;
             robot.dumpFlip.setPosition(0.35);
         }
 
         f = gamepad2.x;
-        if(timer1.seconds() > 0.25 && dumpTrigger){
-            dumpTrigger = false;
+        if(timer1.seconds() > 0.2 && dumpTrigger){
             robot.dumpFlip.setPosition(0.95);
+            dumpTrigger = false;
         }
 
-        if(dumpTrigger2 && robot.dump.getCurrentPosition() < -800){
-            robot.dump.setPower(-0.4);
-            robot.rotateArm.setPosition(0.4);
+        if(dumpTrigger2 && timer1.seconds() > 0.35){
+            robot.rotateArm.setPosition(0.37);
+        }
+
+        if(dumpTrigger2 && robot.dump.getCurrentPosition() < -700){
+            robot.dump.setPower(-0.5);
             dumpTrigger2 = false;
         }
 
