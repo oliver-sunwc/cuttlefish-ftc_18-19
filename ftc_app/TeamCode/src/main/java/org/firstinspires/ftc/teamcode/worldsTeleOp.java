@@ -54,6 +54,9 @@ public class worldsTeleOp extends OpMode {
 
     boolean dumpUp = false;
     boolean override = false;
+
+    boolean transferActive = false;
+    boolean k = false;
     @Override
     public void init() {
         robot.init(hardwareMap,false);
@@ -83,6 +86,27 @@ public class worldsTeleOp extends OpMode {
 
     @Override
     public void loop(){
+
+        //region autoTransfer
+        if(!k && gamepad2.left_bumper){
+            transferActive = true;
+        }
+
+        k = gamepad2.left_bumper;
+        if(transferActive){
+            override = true;
+            robot.spine.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            robot.spine.setTargetPosition(0);
+            robot.spine.setPower(1);
+            if(robot.spine.getCurrentPosition() < 200){
+                trapDoorUp = false;
+                robot.intake.setPower(-1);
+            }
+
+        }
+
+
+        //endregion
 
         //region hang stall and power code
         telemetry.addData("hang",robot.hang.getCurrentPosition());
@@ -151,7 +175,7 @@ public class worldsTeleOp extends OpMode {
 
                 robot.rotateArm.setPosition(0.5);
 
-                robot.dump.setPower(0.15);
+                robot.dump.setPower(0.2);
             } else {
                 dumpUp = true;
                 robot.dump.setTargetPosition(-1120);
@@ -214,7 +238,9 @@ public class worldsTeleOp extends OpMode {
         //endregion
 
         // region spine code
-        robot.spine.setPower(Range.clip(gamepad2.left_stick_y + gamepad1.left_trigger - gamepad1.right_trigger,-1,1));
+        if(!override) {
+            robot.spine.setPower(Range.clip(gamepad2.left_stick_y + gamepad1.left_trigger - gamepad1.right_trigger, -1, 1));
+        }
         //endregion
 
         //region run intake code
@@ -241,7 +267,9 @@ public class worldsTeleOp extends OpMode {
 
 
 
-        robot.intake.setPower(intakePow);
+        if(!override) {
+            robot.intake.setPower(intakePow);
+        }
         //endregion
 
         //region telemetry
