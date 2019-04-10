@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode;
 
 import android.media.MediaPlayer;
 import android.provider.MediaStore;
+import android.text.ParcelableSpan;
 
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
@@ -53,14 +54,25 @@ public class worldsTeleOp extends OpMode {
     boolean dumpTrigger3 = false;
 
     boolean dumpUp = false;
-    boolean override = false;
 
     boolean transferActive = false;
+    boolean dumpOneActive = false;
+    boolean dumpTwoActive = false;
     boolean k = false;
+
+    boolean firstStarted = false;
+    boolean secondStarted = false;
+    boolean thirdStarted = false;
+    boolean lastloop = false;
+
+    ElapsedTime loopTimer1 = new ElapsedTime();
+    ElapsedTime loopTimer2 = new ElapsedTime();
     @Override
     public void init() {
         robot.init(hardwareMap,false);
 
+        robot.spine.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        robot.spine.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         robot.hang.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         robot.hang.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         robot.rotateArm.setPosition(0.5);
@@ -70,6 +82,8 @@ public class worldsTeleOp extends OpMode {
         timer1.startTime();
         timer2.startTime();
         timer3.startTime();
+        loopTimer1.startTime();
+        loopTimer2.startTime();
 
         robot.dump.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         robot.dump.setMode(DcMotor.RunMode.RUN_TO_POSITION);
@@ -89,20 +103,88 @@ public class worldsTeleOp extends OpMode {
 
         //region autoTransfer
         if(!k && gamepad2.left_bumper){
-            transferActive = true;
+            if(firstStarted && secondStarted && thirdStarted){
+                dumpTwoActive = false;
+                dumpOneActive = false;
+                transferActive = false;
+                firstStarted = false;
+                secondStarted = false;
+                thirdStarted = false;
+                robot.spine.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+                robot.rotateArm.setPosition(0.5);
+                robot.dumpFlip.setPosition(1);
+                robot.dump.setTargetPosition(0);
+                robot.dump.setPower(0.2);
+                loopTimer2.reset();
+                lastloop = true;
+                dumpUp = false;
+            }
+
+            if(firstStarted && secondStarted && !thirdStarted && !lastloop){
+                dumpOneActive = false;
+                dumpTwoActive = true;
+                thirdStarted = true;
+            }
+
+            if(firstStarted && !secondStarted && !lastloop){
+                dumpOneActive = true;
+                transferActive = false;
+                secondStarted = true;
+                loopTimer1.reset();
+            }
+
+            if(!firstStarted && !lastloop) {
+                transferActive = true;
+                firstStarted = true;
+            }
+
+
+
+        }
+        if(loopTimer2.seconds() > 0.3 && lastloop){
+            robot.dumpFlip.setPosition(0.35);
+            lastloop = false;
         }
 
         k = gamepad2.left_bumper;
+
         if(transferActive){
-            override = true;
+            inFlipUp = true;
             robot.spine.setMode(DcMotor.RunMode.RUN_TO_POSITION);
             robot.spine.setTargetPosition(0);
             robot.spine.setPower(1);
-            if(robot.spine.getCurrentPosition() < 200){
+            if(robot.spine.getCurrentPosition() > -800){
                 trapDoorUp = false;
                 robot.intake.setPower(-1);
             }
+        }
 
+        if(dumpOneActive){
+            robot.spine.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            robot.spine.setTargetPosition(-550);
+            robot.spine.setPower(-1);
+
+            dumpUp = true;
+
+            if(loopTimer1.seconds() > 0.35 && loopTimer1.seconds() < 0.6){
+                robot.dump.setPower(-0.75);
+                robot.dump.setTargetPosition(-1000);
+                robot.dumpFlip.setPosition(0.1);
+                robot.rotateArm.setPosition(0.35);
+            }
+
+            if(loopTimer1.seconds() > 0.6){
+                robot.dumpFlip.setPosition(1);
+            }
+
+            if(robot.dump.getCurrentPosition() < -700){
+                robot.dump.setPower(-0.4);
+            }
+        }
+
+        if(dumpTwoActive){
+            robot.dumpFlip.setPosition(0.95);
+            robot.dump.setTargetPosition(-1150);
         }
 
 
@@ -187,7 +269,7 @@ public class worldsTeleOp extends OpMode {
             }
         }
 
-        if(timer2.seconds() > 0.5 && dumpTrigger3){
+        if(timer2.seconds() > 0.3 && dumpTrigger3){
             dumpTrigger3 = false;
             robot.dumpFlip.setPosition(0.35);
         }
@@ -238,7 +320,7 @@ public class worldsTeleOp extends OpMode {
         //endregion
 
         // region spine code
-        if(!override) {
+        if(!transferActive && !dumpOneActive) {
             robot.spine.setPower(Range.clip(gamepad2.left_stick_y + gamepad1.left_trigger - gamepad1.right_trigger, -1, 1));
         }
         //endregion
@@ -267,8 +349,10 @@ public class worldsTeleOp extends OpMode {
 
 
 
-        if(!override) {
+        if(!transferActive && !gamepad1.a) {
             robot.intake.setPower(intakePow);
+        } else if(gamepad1.a){
+            robot.intake.setPower(-1);
         }
         //endregion
 
