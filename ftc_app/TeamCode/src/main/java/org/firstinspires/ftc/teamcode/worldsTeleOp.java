@@ -36,6 +36,8 @@ public class worldsTeleOp extends OpMode {
     boolean hangModeStall = false;
     boolean h = false;
 
+    double dumpFastPow = 0.7;
+    double dumpSlowPow = 0.4;
 
     boolean flipDown = true;
 
@@ -75,7 +77,7 @@ public class worldsTeleOp extends OpMode {
         robot.spine.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         robot.hang.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         robot.hang.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        robot.rotateArm.setPosition(0.5);
+        robot.rotateArm.setPosition(0.6);
         robot.flipLArm.setPosition(1);
         robot.flipRArm.setPosition(0);
         robot.dumpFlip.setPosition(0.35);
@@ -89,7 +91,7 @@ public class worldsTeleOp extends OpMode {
         robot.dump.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         robot.dump.setTargetPosition(0);
 
-        robot.dump.setPIDCoefficients(DcMotor.RunMode.RUN_TO_POSITION,new PIDCoefficients(5,0,0));
+        robot.dump.setPIDCoefficients(DcMotor.RunMode.RUN_TO_POSITION,new PIDCoefficients(4,0,0));
 
     }
 
@@ -111,7 +113,7 @@ public class worldsTeleOp extends OpMode {
                 secondStarted = false;
                 thirdStarted = false;
                 robot.spine.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-                robot.rotateArm.setPosition(0.5);
+                robot.rotateArm.setPosition(0.6);
                 robot.dumpFlip.setPosition(1);
                 robot.dump.setTargetPosition(0);
                 robot.dump.setPower(0.2);
@@ -167,10 +169,10 @@ public class worldsTeleOp extends OpMode {
             dumpUp = true;
 
             if(loopTimer1.seconds() > 0.35 && loopTimer1.seconds() < 0.6){
-                robot.dump.setPower(-0.75);
+                robot.dump.setPower(-0.85);
                 robot.dump.setTargetPosition(-1000);
                 robot.dumpFlip.setPosition(0.1);
-                robot.rotateArm.setPosition(0.35);
+                robot.rotateArm.setPosition(0.45);
             }
 
             if(loopTimer1.seconds() > 0.6){
@@ -178,7 +180,7 @@ public class worldsTeleOp extends OpMode {
             }
 
             if(robot.dump.getCurrentPosition() < -700){
-                robot.dump.setPower(-0.4);
+                robot.dump.setPower(-0.45);
             }
         }
 
@@ -255,17 +257,17 @@ public class worldsTeleOp extends OpMode {
                 timer2.reset();
                 dumpTrigger3 = true;
 
-                robot.rotateArm.setPosition(0.5);
+                robot.rotateArm.setPosition(0.6);
 
                 robot.dump.setPower(0.2);
             } else {
                 dumpUp = true;
-                robot.dump.setTargetPosition(-1120);
+                robot.dump.setTargetPosition(-1150);
                 dumpTrigger = true;
                 dumpTrigger2 = true;
                 timer1.reset();
                 robot.dumpFlip.setPosition(0.1);
-                robot.dump.setPower(-0.75);
+                robot.dump.setPower(-dumpFastPow);
             }
         }
 
@@ -281,11 +283,11 @@ public class worldsTeleOp extends OpMode {
         }
 
         if(dumpTrigger2 && timer1.seconds() > 0.35){
-            robot.rotateArm.setPosition(0.37);
+            robot.rotateArm.setPosition(0.45);
         }
 
         if(dumpTrigger2 && robot.dump.getCurrentPosition() < -700){
-            robot.dump.setPower(-0.5);
+            robot.dump.setPower(-dumpSlowPow);
             dumpTrigger2 = false;
         }
 
@@ -302,26 +304,30 @@ public class worldsTeleOp extends OpMode {
 
         //region ninja turn
         ninja = gamepad1.right_bumper;
-        if(!gamepad1.dpad_left && !gamepad2.dpad_right) {
+        if(!gamepad1.dpad_left && !gamepad1.dpad_right && !gamepad1.x && !gamepad1.b) {
             if (!ninja) {
                 mecanumDrive(rx, ry, lx, 0);
             } else {
-                mecanumDrive(rx / 3, ry / 3, lx / 3, 0);
+                mecanumDrive(rx / 5, ry / 5, lx / 5, 0);
             }
         }
         //endregion
 
         //region gamepad turn
         if(gamepad1.dpad_right){
-            mecanumDrive(0,0,-0.1,0);
+            mecanumDrive(0,0,-0.15,0);
         } else if(gamepad1.dpad_left){
-            mecanumDrive(0,0,0.1,0);
+            mecanumDrive(0,0,0.15,0);
+        } else if(gamepad1.x){
+            mecanumDrive(-0.3 ,0,0,0);
+        } else if(gamepad1.b){
+            mecanumDrive(0.3,0,0,0);
         }
         //endregion
 
         // region spine code
         if(!transferActive && !dumpOneActive) {
-            robot.spine.setPower(Range.clip(gamepad2.left_stick_y + gamepad1.left_trigger - gamepad1.right_trigger, -1, 1));
+            robot.spine.setPower(Range.clip(gamepad2.left_stick_y + gamepad1.left_trigger - gamepad1.right_trigger - (double)(gamepad1.dpad_up ? 1 : 0)/5 + (double)(gamepad1.dpad_down  ? 1 : 0)/5, -1, 1));
         }
         //endregion
 

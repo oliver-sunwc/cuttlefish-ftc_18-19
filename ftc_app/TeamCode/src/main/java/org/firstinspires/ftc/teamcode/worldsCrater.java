@@ -28,7 +28,9 @@ public class worldsCrater extends LinearOpMode {
     private VisionThing vision;
 
 
-    public void runOpMode() throws InterruptedException {
+    public void runOpMode() throws InterruptedException    {
+        ElapsedTime timer1 = new ElapsedTime();
+        timer1.startTime();
         robot = new roverHMAP();
         robot.init(hardwareMap,true);
         robotAuto = new roverAuto(robot);
@@ -183,7 +185,7 @@ public class worldsCrater extends LinearOpMode {
         //region pid coefficients
         double p = 12;
         double i = 0.2;
-        double d = 1;
+        double d = 0.8;
 
         PIDCoefficients hi = new PIDCoefficients(p,i,d);
 
@@ -219,7 +221,7 @@ public class worldsCrater extends LinearOpMode {
         //12 2 2
         //12 0.5 1.5
 
-        robot.rotateArm.setPosition(0.5);
+        robot.rotateArm.setPosition(0.6);
         robot.dumpFlip.setPosition(0.35);
         while(robot.fl.isBusy() || robot.fr.isBusy() || robot.bl.isBusy() || robot.br.isBusy()){
 
@@ -244,7 +246,7 @@ public class worldsCrater extends LinearOpMode {
         robotAuto.runToPosition();
 
         robot.hang.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        robot.hang.setTargetPosition(-2300);
+        robot.hang.setTargetPosition(-2400);
         robot.hang.setPower(0.5);
 
         telemetry.addData("fl",robot.fl.getCurrentPosition());
@@ -272,7 +274,7 @@ public class worldsCrater extends LinearOpMode {
         while(robot.fl.isBusy() || robot.fr.isBusy() || robot.bl.isBusy() || robot.br.isBusy()){
             if(robot.fl.getCurrentPosition() > 1500 || robot.bl.getCurrentPosition() > 1500){
                 robot.spine.setPower(-1);
-                robot.spine.setTargetPosition(-1275);
+                robot.spine.setTargetPosition(-1400);
                 robot.dump.setTargetPosition(500);
                 robot.dump.setPower(0.2);
                 robot.inFlip.setPosition(0.3);
@@ -384,7 +386,7 @@ public class worldsCrater extends LinearOpMode {
 
             robot.intake.setPower(-1);
             robot.spine.setPower(-1);
-            robot.spine.setTargetPosition(-700);
+            robot.spine.setTargetPosition(-900);
             while(robot.spine.isBusy()){
 
             }
@@ -395,12 +397,161 @@ public class worldsCrater extends LinearOpMode {
             while(robot.spine.isBusy()){
 
             }
+
+            robot.fl.setPower(-0.4);
+            robot.bl.setPower(-0.4);
+            robot.fr.setPower(0.4);
+            robot.br.setPower(0.4);
+
+            while(getHeading() > 0){
+                if(getHeading() > 15){
+                    robot.fl.setPower(-0.15);
+                    robot.bl.setPower(-0.15);
+                    robot.fr.setPower(0.15);
+                    robot.br.setPower(0.15);
+                }
+            }
+            robotAuto.stopDriving();
+            robot.trapDoor.setPosition(1);
+            robot.spine.setPower(-1);
+            robot.spine.setTargetPosition(-1200);
+
+            robotAuto.stopAndReset();
+            robotAuto.runToPosition();
+
+            robot.fl.setTargetPosition(-800);
+            robot.bl.setTargetPosition(-800);
+            robot.fr.setTargetPosition(-800);
+            robot.br.setTargetPosition(-800);
+
+            robot.fl.setPower(-0.7);
+            robot.bl.setPower(-0.7);
+            robot.br.setPower(-0.7);
+            robot.fr.setPower(-0.7);
+
+            robot.dumpFlip.setPosition(0.1);
+            boolean hi2 = true;
+
+            while((robot.fl.isBusy() || robot.fr.isBusy() || robot.bl.isBusy() || robot.br.isBusy()) && (timer1.seconds() < 1.5 || timer1.seconds() > 10)){
+                if(robot.fl.getCurrentPosition() < -300){
+                    if(hi2) {
+                        timer1.reset();
+                        hi2 =false;
+                    }
+                    robot.dump.setTargetPosition(-850);
+                    robot.dump.setPower(-0.8);
+                }
+
+                if(timer1.seconds() > 0.3){
+                    robot.dumpFlip.setPosition(0.95);
+                    robot.rotateArm.setPosition(0.4);
+                }
+
+                if(timer1.seconds() > 0.35){
+                    robot.dump.setPower(-0.5);
+                }
+            }
+
+            robotAuto.stopDriving();
+
+            robot.dumpFlip.setPosition(0.95);
             Thread.sleep(1000);
             //endregion
         } else if(verdict.equals("middle")){
+            //region middle case code
 
+            //endregion
         } else if(verdict.equals("right")){
+            //region right case code
+            robotAuto.stopAndReset();
+            robotAuto.runUsing();
+            robot.inFlip.setPosition(0.65);
 
+            robot.fl.setPower(-0.6);
+            robot.bl.setPower(-0.6);
+            robot.fr.setPower(0.6);
+            robot.br.setPower(0.6);
+            while(getHeading() > -35){
+                if(getHeading() < -15){
+                    robot.fl.setPower(-0.15);
+                    robot.bl.setPower(-0.15);
+                    robot.fr.setPower(0.15);
+                    robot.br.setPower(0.15);
+                }
+            }
+
+            robotAuto.stopDriving();
+
+            robot.intake.setPower(-1);
+            robot.spine.setPower(-1);
+            robot.spine.setTargetPosition(-1100);
+            while(robot.spine.isBusy()){
+
+            }
+            robot.spine.setPower(1);
+            robot.spine.setTargetPosition(-325);
+            robot.inFlip.setPosition(0.15);
+            robot.trapDoor.setPosition(0.13);
+            while(robot.spine.isBusy()){
+
+            }
+
+            robot.fl.setPower(0.4);
+            robot.bl.setPower(0.4);
+            robot.fr.setPower(-0.4);
+            robot.br.setPower(-0.4);
+
+            while(getHeading() < 0){
+                if(getHeading() > -15){
+                    robot.fl.setPower(0.15);
+                    robot.bl.setPower(0.15);
+                    robot.fr.setPower(-0.15);
+                    robot.br.setPower(-0.15);
+                }
+            }
+            robotAuto.stopDriving();
+            robot.trapDoor.setPosition(1);
+            robot.spine.setPower(-1);
+            robot.spine.setTargetPosition(-1200);
+
+            robotAuto.stopAndReset();
+            robotAuto.runToPosition();
+
+            robot.fl.setTargetPosition(-800);
+            robot.bl.setTargetPosition(-800);
+            robot.fr.setTargetPosition(-800);
+            robot.br.setTargetPosition(-800);
+
+            robot.fl.setPower(-0.7);
+            robot.bl.setPower(-0.7);
+            robot.br.setPower(-0.7);
+            robot.fr.setPower(-0.7);
+
+            robot.dumpFlip.setPosition(0.1);
+            boolean hi2 = true;
+
+            while((robot.fl.isBusy() || robot.fr.isBusy() || robot.bl.isBusy() || robot.br.isBusy()) && (timer1.seconds() < 1.5 || timer1.seconds() > 10)){
+                if(robot.fl.getCurrentPosition() < -300){
+                    if(hi2) {
+                        timer1.reset();
+                        hi2 =false;
+                    }
+                    robot.dump.setTargetPosition(-850);
+                    robot.dump.setPower(-0.8);
+                }
+
+                if(timer1.seconds() > 0.3){
+                    robot.dumpFlip.setPosition(0.95);
+                    robot.rotateArm.setPosition(0.4);
+                }
+
+            }
+
+            robotAuto.stopDriving();
+
+            robot.dumpFlip.setPosition(0.95);
+            Thread.sleep(1000);
+            //endregion
         }
         //endregion
     }
