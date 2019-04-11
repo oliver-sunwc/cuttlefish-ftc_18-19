@@ -185,7 +185,7 @@ public class worldsCrater extends LinearOpMode {
         //region pid coefficients
         double p = 12;
         double i = 0.2;
-        double d = 0.8;
+        double d = 0.3;
 
         PIDCoefficients hi = new PIDCoefficients(p,i,d);
 
@@ -246,7 +246,7 @@ public class worldsCrater extends LinearOpMode {
         robotAuto.runToPosition();
 
         robot.hang.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        robot.hang.setTargetPosition(-2400);
+        robot.hang.setTargetPosition(-2500);
         robot.hang.setPower(0.5);
 
         telemetry.addData("fl",robot.fl.getCurrentPosition());
@@ -424,10 +424,10 @@ public class worldsCrater extends LinearOpMode {
             robotAuto.stopAndReset();
             robotAuto.runToPosition();
 
-            robot.fl.setTargetPosition(-800);
-            robot.bl.setTargetPosition(-800);
-            robot.fr.setTargetPosition(-800);
-            robot.br.setTargetPosition(-800);
+            robot.fl.setTargetPosition(-950);
+            robot.bl.setTargetPosition(-950);
+            robot.fr.setTargetPosition(-950);
+            robot.br.setTargetPosition(-950);
 
             robot.fl.setPower(-0.7);
             robot.bl.setPower(-0.7);
@@ -443,11 +443,11 @@ public class worldsCrater extends LinearOpMode {
                         timer1.reset();
                         hi2 =false;
                     }
-                    robot.dump.setTargetPosition(-750);
+                    robot.dump.setTargetPosition(-700);
                     robot.dump.setPower(-0.7);
                 }
 
-                if(timer1.seconds() > 0.35){
+                if(timer1.seconds() > 0.4){
                     robot.dumpFlip.setPosition(0.95);
                 }
 
@@ -501,16 +501,31 @@ public class worldsCrater extends LinearOpMode {
         }
         robot.inFlip.setPosition(0.65);
         robot.intake.setPower(-1);
-        robot.spine.setTargetPosition(-1400);
+        robot.spine.setTargetPosition(-1450);
         robot.spine.setPower(-1);
         while(robot.spine.isBusy()){
 
         }
-        robot.spine.setTargetPosition(-900);
+        Thread.sleep(150);
+
+        robot.spine.setTargetPosition(-1100);
         robot.spine.setPower(1);
         while(robot.spine.isBusy()){
 
         }
+
+        robotAuto.stopAndReset();
+        robotAuto.runUsing();
+
+        robot.fl.setPower(-0.3);
+        robot.bl.setPower(-0.3);
+        robot.br.setPower(0.3);
+        robot.fr.setPower(0.3);
+
+        while(getHeading() > -15 ){
+
+        }
+        robotAuto.stopDriving();
 
         robot.spine.setTargetPosition(-1400);
         robot.spine.setPower(-1);
@@ -518,6 +533,17 @@ public class worldsCrater extends LinearOpMode {
 
         }
         robot.inFlip.setPosition(0.15);
+
+        robot.fl.setPower(0.15);
+        robot.bl.setPower(0.15);
+        robot.br.setPower(-0.15);
+        robot.fr.setPower(-0.15);
+
+        while(getHeading() < -15){
+
+        }
+        robotAuto.stopDriving();
+
         robot.spine.setTargetPosition(-325);
         robot.spine.setPower(1);
 
@@ -535,9 +561,30 @@ public class worldsCrater extends LinearOpMode {
         robot.fr.setPower(-0.7);
 
         while((robot.fl.isBusy() || robot.fr.isBusy() || robot.bl.isBusy() || robot.br.isBusy())) {
-
+            if(robot.fl.getCurrentPosition() < -300){
+                robot.trapDoor.setPosition(0.13);
+            }
         }
-            //endregion
+        Thread.sleep(50);
+        robot.trapDoor.setPosition(1);
+        robot.spine.setTargetPosition(-1000);
+        robot.spine.setPower(-1);
+        Thread.sleep(200);
+
+        robot.dump.setTargetPosition(-700);
+        robot.dump.setPower(-0.7);
+        robot.dumpFlip.setPosition(0.1);
+        Thread.sleep(200);
+        robot.dumpFlip.setPosition(0.95);
+        Thread.sleep(150);
+        robot.rotateArm.setPosition(0.4);
+        while(robot.dump.isBusy()){
+            if(robot.dump.getCurrentPosition() < -300){
+                robot.dump.setPower(-0.4);
+            }
+        }
+        Thread.sleep(750);
+        //endregion
     }
 
     void checkStop(){

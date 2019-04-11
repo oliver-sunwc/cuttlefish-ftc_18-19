@@ -67,6 +67,9 @@ public class worldsTeleOp extends OpMode {
     boolean thirdStarted = false;
     boolean lastloop = false;
 
+    boolean higherPower = false;
+    boolean p = false;
+
     ElapsedTime loopTimer1 = new ElapsedTime();
     ElapsedTime loopTimer2 = new ElapsedTime();
     @Override
@@ -194,6 +197,22 @@ public class worldsTeleOp extends OpMode {
 
         //region hang stall and power code
         telemetry.addData("hang",robot.hang.getCurrentPosition());
+
+        if(!p && gamepad1.right_stick_button){
+            higherPower = !higherPower;
+        }
+
+        p = gamepad1.right_stick_button;
+
+        if(higherPower){
+            dumpFastPow = 0.8;
+            dumpSlowPow = 0.5;
+            robot.dump.setPIDCoefficients(DcMotor.RunMode.RUN_TO_POSITION,new PIDCoefficients(4.5,0,0));
+        } else {
+            dumpFastPow = 0.7;
+            dumpSlowPow = 0.4;
+            robot.dump.setPIDCoefficients(DcMotor.RunMode.RUN_TO_POSITION,new PIDCoefficients(4,0,0));
+        }
 
         if(!h && gamepad2.b){
             hangModeStall = !hangModeStall;
@@ -363,6 +382,11 @@ public class worldsTeleOp extends OpMode {
         //endregion
 
         //region telemetry
+        if(higherPower){
+            telemetry.addData("higherPower","high");
+        } else {
+            telemetry.addData("lowerPower","low");
+        }
         telemetry.addData("spine",robot.spine.getCurrentPosition());
         telemetry.addData("pos",pos);
         telemetry.addData("flip",robot.dump.getCurrentPosition());
