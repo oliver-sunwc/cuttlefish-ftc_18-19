@@ -36,7 +36,7 @@ public class worldsTeleOp extends OpMode {
     boolean hangModeStall = false;
     boolean h = false;
 
-    double dumpFastPow = 0.7;
+    double dumpFastPow = 0.9;
     double dumpSlowPow = 0.4;
 
     boolean flipDown = true;
@@ -80,10 +80,10 @@ public class worldsTeleOp extends OpMode {
         robot.spine.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         robot.hang.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         robot.hang.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        robot.rotateArm.setPosition(0.6);
+        robot.rotateArm.setPosition(0.65);
         robot.flipLArm.setPosition(1);
         robot.flipRArm.setPosition(0);
-        robot.dumpFlip.setPosition(0.35);
+        robot.dumpFlip.setPosition(0.3);
         timer1.startTime();
         timer2.startTime();
         timer3.startTime();
@@ -116,7 +116,7 @@ public class worldsTeleOp extends OpMode {
                 secondStarted = false;
                 thirdStarted = false;
                 robot.spine.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-                robot.rotateArm.setPosition(0.6);
+                robot.rotateArm.setPosition(0.65);
                 robot.dumpFlip.setPosition(1);
                 robot.dump.setTargetPosition(0);
                 robot.dump.setPower(0.2);
@@ -205,13 +205,13 @@ public class worldsTeleOp extends OpMode {
         p = gamepad1.right_stick_button;
 
         if(higherPower){
-            dumpFastPow = 0.8;
-            dumpSlowPow = 0.5;
-            robot.dump.setPIDCoefficients(DcMotor.RunMode.RUN_TO_POSITION,new PIDCoefficients(4.5,0,0));
+            dumpFastPow = 0.9; //0.8
+            dumpSlowPow = 0.4; //0.5
+            robot.dump.setPIDCoefficients(DcMotor.RunMode.RUN_TO_POSITION,new PIDCoefficients(7.5,0,0)); // p = 5, i=d=0
         } else {
-            dumpFastPow = 0.7;
-            dumpSlowPow = 0.4;
-            robot.dump.setPIDCoefficients(DcMotor.RunMode.RUN_TO_POSITION,new PIDCoefficients(4,0,0));
+            dumpFastPow = 0.8; //0.7
+            dumpSlowPow = 0.35;
+            robot.dump.setPIDCoefficients(DcMotor.RunMode.RUN_TO_POSITION,new PIDCoefficients(7.5,0,0));   // p = 4.5, i=d=0
         }
 
         if(!h && gamepad2.b){
@@ -271,44 +271,47 @@ public class worldsTeleOp extends OpMode {
         if(!f && gamepad2.x){
             if(dumpUp){
                 dumpUp = false;
-                robot.dumpFlip.setPosition(1);
+                robot.dumpFlip.setPosition(0.9);
                 robot.dump.setTargetPosition(0);
                 timer2.reset();
                 dumpTrigger3 = true;
 
-                robot.rotateArm.setPosition(0.6);
+                robot.rotateArm.setPosition(0.65);
 
-                robot.dump.setPower(0.2);
+                robot.dump.setPower(0.12);
             } else {
                 dumpUp = true;
-                robot.dump.setTargetPosition(-1150);
+                robot.dump.setTargetPosition(-1150); //-1100
                 dumpTrigger = true;
                 dumpTrigger2 = true;
                 timer1.reset();
-                robot.dumpFlip.setPosition(0.1);
+                robot.dumpFlip.setPosition(0.4);
                 robot.dump.setPower(-dumpFastPow);
             }
         }
 
         if(timer2.seconds() > 0.3 && dumpTrigger3){
             dumpTrigger3 = false;
-            robot.dumpFlip.setPosition(0.35);
+            robot.dumpFlip.setPosition(0.3);
         }
 
         f = gamepad2.x;
-        if(timer1.seconds() > 0.2 && dumpTrigger){
-            robot.dumpFlip.setPosition(0.95);
+        if(timer1.seconds() > 0.35 && dumpTrigger){
+            robot.dumpFlip.setPosition(0.9); // 0.9
             dumpTrigger = false;
         }
 
-        if(dumpTrigger2 && timer1.seconds() > 0.35){
-            robot.rotateArm.setPosition(0.45);
-        }
-
-        if(dumpTrigger2 && robot.dump.getCurrentPosition() < -700){
+        if(dumpTrigger2 && timer1.seconds() > 0.5){
             robot.dump.setPower(-dumpSlowPow);
+            robot.rotateArm.setPosition(0.45);
             dumpTrigger2 = false;
         }
+
+        /*if(dumpTrigger2 && timer1.seconds() > 0.75){
+            robot.dump.setPower(-0.1);
+            dumpTrigger2 = false;
+        }*/
+
 
         if(gamepad2.y){
             robot.dump.setTargetPosition(-1250);
