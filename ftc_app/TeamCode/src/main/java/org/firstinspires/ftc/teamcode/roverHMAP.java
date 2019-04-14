@@ -63,7 +63,7 @@ public class roverHMAP {
     public DcMotorImplEx br;
 
     public DcMotor hang;
-    public DcMotor spine;
+    public DcMotorImplEx spine;
 
     public DcMotor intake;
     //endregion
@@ -112,7 +112,7 @@ public class roverHMAP {
         hang.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         hang.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
-        spine = hwMap.get(DcMotor.class,"s");
+        spine = (DcMotorImplEx)hwMap.get(DcMotor.class,"s");
         spine.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         //spine.setDirection(DcMotorSimple.Direction.REVERSE);
 

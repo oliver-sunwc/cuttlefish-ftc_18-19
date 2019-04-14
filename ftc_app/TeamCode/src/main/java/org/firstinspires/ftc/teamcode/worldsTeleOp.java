@@ -67,8 +67,11 @@ public class worldsTeleOp extends OpMode {
     boolean thirdStarted = false;
     boolean lastloop = false;
 
-    boolean higherPower = false;
+    boolean lowBattery = false;
     boolean p = false;
+
+    boolean turnDump = true;
+    boolean x = false;
 
     ElapsedTime loopTimer1 = new ElapsedTime();
     ElapsedTime loopTimer2 = new ElapsedTime();
@@ -94,7 +97,7 @@ public class worldsTeleOp extends OpMode {
         robot.dump.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         robot.dump.setTargetPosition(0);
 
-        robot.dump.setPIDCoefficients(DcMotor.RunMode.RUN_TO_POSITION,new PIDCoefficients(4,0,0));
+        //robot.dump.setPIDCoefficients(DcMotor.RunMode.RUN_TO_POSITION,new PIDCoefficients(4,0,0));
 
     }
 
@@ -105,6 +108,7 @@ public class worldsTeleOp extends OpMode {
 
     @Override
     public void loop(){
+
 
         //region autoTransfer
         if(!k && gamepad2.left_bumper){
@@ -199,19 +203,19 @@ public class worldsTeleOp extends OpMode {
         telemetry.addData("hang",robot.hang.getCurrentPosition());
 
         if(!p && gamepad1.right_stick_button){
-            higherPower = !higherPower;
+            lowBattery = !lowBattery;
         }
 
         p = gamepad1.right_stick_button;
 
-        if(higherPower){
+        if(lowBattery){
             dumpFastPow = 0.9; //0.8
-            dumpSlowPow = 0.4; //0.5
-            robot.dump.setPIDCoefficients(DcMotor.RunMode.RUN_TO_POSITION,new PIDCoefficients(7.5,0,0)); // p = 5, i=d=0
+            dumpSlowPow = 0.35; //0.5
+            robot.dump.setPIDCoefficients(DcMotor.RunMode.RUN_TO_POSITION,new PIDCoefficients(6,0,0)); // p = 5, i=d=0
         } else {
-            dumpFastPow = 0.8; //0.7
-            dumpSlowPow = 0.35;
-            robot.dump.setPIDCoefficients(DcMotor.RunMode.RUN_TO_POSITION,new PIDCoefficients(7.5,0,0));   // p = 4.5, i=d=0
+            dumpFastPow = 0.95; //0.7
+            dumpSlowPow = 0.15;
+            robot.dump.setPIDCoefficients(DcMotor.RunMode.RUN_TO_POSITION,new PIDCoefficients(6,0,0));   // p = 4.5, i=d=0
         }
 
         if(!h && gamepad2.b){
@@ -267,6 +271,10 @@ public class worldsTeleOp extends OpMode {
         //endregion
 
         //region dump toggle
+        if(!x && gamepad1.y){
+            turnDump = !turnDump;
+        }
+        x = gamepad1.y;
 
         if(!f && gamepad2.x){
             if(dumpUp){
@@ -278,7 +286,7 @@ public class worldsTeleOp extends OpMode {
 
                 robot.rotateArm.setPosition(0.65);
 
-                robot.dump.setPower(0.12);
+                robot.dump.setPower(0.25);
             } else {
                 dumpUp = true;
                 robot.dump.setTargetPosition(-1150); //-1100
@@ -290,9 +298,11 @@ public class worldsTeleOp extends OpMode {
             }
         }
 
-        if(timer2.seconds() > 0.3 && dumpTrigger3){
+
+        if(timer2.seconds() > 0.2 && dumpTrigger3){
             dumpTrigger3 = false;
             robot.dumpFlip.setPosition(0.3);
+            robot.dump.setPower(0.1);
         }
 
         f = gamepad2.x;
@@ -301,9 +311,11 @@ public class worldsTeleOp extends OpMode {
             dumpTrigger = false;
         }
 
-        if(dumpTrigger2 && timer1.seconds() > 0.5){
+        if(dumpTrigger2 && timer1.seconds() > 0.65){
             robot.dump.setPower(-dumpSlowPow);
-            robot.rotateArm.setPosition(0.45);
+            if(turnDump) {
+                robot.rotateArm.setPosition(0.45);
+            }
             dumpTrigger2 = false;
         }
 
@@ -385,11 +397,12 @@ public class worldsTeleOp extends OpMode {
         //endregion
 
         //region telemetry
-        if(higherPower){
-            telemetry.addData("higherPower","high");
+        if(lowBattery){
+            telemetry.addData("lowBattery","");
         } else {
-            telemetry.addData("lowerPower","low");
+            telemetry.addData("highBattery","");
         }
+        telemetry.addData("turnDump",turnDump);
         telemetry.addData("spine",robot.spine.getCurrentPosition());
         telemetry.addData("pos",pos);
         telemetry.addData("flip",robot.dump.getCurrentPosition());
