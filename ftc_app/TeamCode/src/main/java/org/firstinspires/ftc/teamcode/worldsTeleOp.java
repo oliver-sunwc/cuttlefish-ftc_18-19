@@ -8,6 +8,7 @@ import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.PIDCoefficients;
+import com.qualcomm.robotcore.hardware.PIDFCoefficients;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.Range;
 
@@ -73,8 +74,17 @@ public class worldsTeleOp extends OpMode {
     boolean turnDump = true;
     boolean x = false;
 
+    ElapsedTime driveTimer = new ElapsedTime();
+    boolean isDriving = false;
+    boolean delay = false;
+
     ElapsedTime loopTimer1 = new ElapsedTime();
     ElapsedTime loopTimer2 = new ElapsedTime();
+
+
+    int tick = 1150;
+    int fartick = 1250;
+    int increment = 0;
     @Override
     public void init() {
         robot.init(hardwareMap,false);
@@ -87,6 +97,7 @@ public class worldsTeleOp extends OpMode {
         robot.flipLArm.setPosition(1);
         robot.flipRArm.setPosition(0);
         robot.dumpFlip.setPosition(0.3);
+        driveTimer.startTime();
         timer1.startTime();
         timer2.startTime();
         timer3.startTime();
@@ -211,11 +222,11 @@ public class worldsTeleOp extends OpMode {
         if(lowBattery){
             dumpFastPow = 0.9; //0.8
             dumpSlowPow = 0.35; //0.5
-            robot.dump.setPIDCoefficients(DcMotor.RunMode.RUN_TO_POSITION,new PIDCoefficients(6,0,0)); // p = 5, i=d=0
+            robot.dump.setPIDCoefficients(DcMotor.RunMode.RUN_TO_POSITION,new PIDCoefficients(6.5,0,0)); // p = 5, i=d=0
         } else {
             dumpFastPow = 0.95; //0.7
-            dumpSlowPow = 0.15;
-            robot.dump.setPIDCoefficients(DcMotor.RunMode.RUN_TO_POSITION,new PIDCoefficients(6,0,0));   // p = 4.5, i=d=0
+            dumpSlowPow = 0.25;
+            robot.dump.setPIDCoefficients(DcMotor.RunMode.RUN_TO_POSITION,new PIDCoefficients(6.5,0,0));   // p = 4.5, i=d=0
         }
 
         if(!h && gamepad2.b){
@@ -272,7 +283,7 @@ public class worldsTeleOp extends OpMode {
 
         //region dump toggle
         if(!x && gamepad1.y){
-            turnDump = !turnDump;
+            increment+= 10;
         }
         x = gamepad1.y;
 
@@ -283,13 +294,13 @@ public class worldsTeleOp extends OpMode {
                 robot.dump.setTargetPosition(0);
                 timer2.reset();
                 dumpTrigger3 = true;
-
+                driveTimer.reset();
                 robot.rotateArm.setPosition(0.65);
-
+                delay = true;
                 robot.dump.setPower(0.25);
             } else {
                 dumpUp = true;
-                robot.dump.setTargetPosition(-1150); //-1100
+                robot.dump.setTargetPosition(-tick-increment); //-1100
                 dumpTrigger = true;
                 dumpTrigger2 = true;
                 timer1.reset();
@@ -299,7 +310,17 @@ public class worldsTeleOp extends OpMode {
         }
 
 
-        if(timer2.seconds() > 0.2 && dumpTrigger3){
+        if(driveTimer.seconds() > 0.5){
+            isDriving = false;
+        }
+
+        if(delay && driveTimer.seconds() > 0.2){
+            isDriving = true;
+            delay = false;
+        }
+
+
+        if(robot.dump.getCurrentPosition() > -825-increment && dumpTrigger3){
             dumpTrigger3 = false;
             robot.dumpFlip.setPosition(0.3);
             robot.dump.setPower(0.1);
@@ -326,7 +347,7 @@ public class worldsTeleOp extends OpMode {
 
 
         if(gamepad2.y){
-            robot.dump.setTargetPosition(-1250);
+            robot.dump.setTargetPosition(-fartick-increment);
         }
         //endregion
 
@@ -334,6 +355,10 @@ public class worldsTeleOp extends OpMode {
         rx = Math.pow(gamepad1.right_stick_x, 1);
         ry = -Math.pow(gamepad1.right_stick_y, 1);
         lx = -Math.pow(gamepad1.left_stick_x, 1);
+
+        if(isDriving){
+            ry = Range.clip(ry + 0.7,-1,1);
+        }
         //endregion
 
         //region ninja turn
@@ -402,7 +427,7 @@ public class worldsTeleOp extends OpMode {
         } else {
             telemetry.addData("highBattery","");
         }
-        telemetry.addData("turnDump",turnDump);
+        telemetry.addData("increment",increment);
         telemetry.addData("spine",robot.spine.getCurrentPosition());
         telemetry.addData("pos",pos);
         telemetry.addData("flip",robot.dump.getCurrentPosition());

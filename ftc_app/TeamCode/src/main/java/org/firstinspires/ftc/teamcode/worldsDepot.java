@@ -29,6 +29,8 @@ public class worldsDepot extends LinearOpMode {
 
 
     public void runOpMode() throws InterruptedException {
+        ElapsedTime timer1 = new ElapsedTime();
+        timer1.startTime();
         robot = new roverHMAP();
         robot.init(hardwareMap,true);
         robotAuto = new roverAuto(robot);
@@ -37,6 +39,14 @@ public class worldsDepot extends LinearOpMode {
         robot.bl.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         robot.fr.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         robot.br.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        robot.dump.setPIDCoefficients(DcMotor.RunMode.RUN_TO_POSITION,new PIDCoefficients(4,0,0));
+        robot.dump.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        robot.dump.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        robot.spine.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        robot.spine.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        robot.spine.setTargetPositionTolerance(15);
+        double dumpFastPow = 0.7;
+        double dumpSlowPow = 0.5;
 
         //region setUp vision
 
@@ -77,6 +87,17 @@ public class worldsDepot extends LinearOpMode {
 
         waitForStart();
 
+
+        //region set dump arm
+        robot.trapDoor.setPosition(1);
+        robot.inFlip.setPosition(0.15);
+        robot.rotateArm.setPosition(0.1);
+        robot.dump.setTargetPosition(-600);
+        robot.dump.setPower(-0.8);
+        while(robot.dump.getCurrentPosition() > -475){
+            telemetry.addData("dump",robot.dump.getCurrentPosition());
+        }
+        //endregion
         //region vision code
         int left=0;
         int right=0;
@@ -148,34 +169,204 @@ public class worldsDepot extends LinearOpMode {
         //region hang drop
         robot.hang.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         robot.hang.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        int currPos = robot.hang.getCurrentPosition();
-
         robot.hang.setPower(1);
-        telemetry.addData("verdict:",verdict);
-        telemetry.addData("gyro",getHeading());
-        telemetry.addData("position:","brake disengaged");
-        telemetry.addData("left",left);
-        telemetry.addData("right",right);
-        telemetry.update();
-        Thread.sleep(375);
+        while(robot.hang.getCurrentPosition() < 50) {
+            telemetry.addData("hang",robot.hang.getCurrentPosition());
+            telemetry.addData("verdict:", verdict);
+            telemetry.addData("gyro", getHeading());
+            telemetry.addData("position:", "brake disengaged");
+            telemetry.addData("left", left);
+            telemetry.addData("right", right);
+            telemetry.update();
+        }
         robot.hang.setPower(0);
 
         robot.hang.setPower(-1);
-        //telemetry.addData("position:","firstDrop");
-        //telemetry.update();
-        Thread.sleep(1550);
+        while(robot.hang.getCurrentPosition() > -4500) {
+            telemetry.addData("hangpos", robot.hang.getCurrentPosition());
+            telemetry.addData("hangpow", robot.hang.getPower());
+            telemetry.update();
+        }
+        sleep(10);
         robot.hang.setPower(0);
-
-
-
-        robot.hang.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        robot.hang.setPower(0);
-        Thread.sleep(10);
         //endregion
 
-        //region set dump arm up
-        //endregion
+
         vision.disable();
+
+        //region pid coefficients
+        double p = 12;
+        double i = 0.2;
+        double d = 0.3;
+
+        PIDCoefficients hi = new PIDCoefficients(p,i,d);
+
+        robot.fl.setPIDCoefficients(DcMotor.RunMode.RUN_TO_POSITION, hi);
+        robot.fr.setPIDCoefficients(DcMotor.RunMode.RUN_TO_POSITION, hi);
+        robot.bl.setPIDCoefficients(DcMotor.RunMode.RUN_TO_POSITION, hi);
+        robot.br.setPIDCoefficients(DcMotor.RunMode.RUN_TO_POSITION, hi);
+
+        robotAuto.stopAndReset();
+
+        robotAuto.runToPosition();
+        //endregion
+
+        //region driveForward deposit and drive back
+        robot.spine.setTargetPosition(-1200);
+        robot.spine.setPower(-1);
+
+        robotAuto.stopAndReset();
+        robotAuto.runToPosition();
+
+        robot.fl.setTargetPosition(1050);
+        robot.bl.setTargetPosition(1050);
+        robot.fr.setTargetPosition(1050);
+        robot.br.setTargetPosition(1050);
+
+        robot.fl.setPower(0.45);
+        robot.bl.setPower(0.45);
+        robot.br.setPower(0.45);
+        robot.fr.setPower(0.45);
+
+        while(robot.fl.isBusy() || robot.fr.isBusy() || robot.bl.isBusy() || robot.br.isBusy()){
+
+
+        }
+        robot.intake.setPower(1);
+        Thread.sleep(1500);
+        robot.intake.setPower(0);
+
+        robot.spine.setTargetPosition(-325);
+        robot.spine.setPower(1);
+        robot.dump.setTargetPosition(500);
+        robot.dump.setPower(0.2);
+        robot.inFlip.setPosition(0.3);
+
+        robotAuto.stopAndReset();
+        robotAuto.runToPosition();
+
+        robot.fl.setTargetPosition(-750);
+        robot.bl.setTargetPosition(-750);
+        robot.fr.setTargetPosition(-750);
+        robot.br.setTargetPosition(-750);
+
+        robot.fl.setPower(-0.45);
+        robot.bl.setPower(-0.45);
+        robot.br.setPower(-0.45);
+        robot.fr.setPower(-0.45);
+
+        while(robot.fl.isBusy() || robot.fr.isBusy() || robot.bl.isBusy() || robot.br.isBusy()){
+
+
+        }
+        Thread.sleep(50);
+        robot.inFlip.setPosition(0.67);
+        //endregion
+
+        //region case code
+        if(verdict.equals("left")){
+            //region left case code
+            robotAuto.stopAndReset();
+            robotAuto.runUsing();
+
+            while(getHeading() < 15){
+                robot.fl.setPower(0.2);
+                robot.bl.setPower(0.2);
+                robot.fr.setPower(-0.2);
+                robot.br.setPower(-0.2);
+            }
+
+            robotAuto.stopDriving();
+
+            robot.intake.setPower(-1);
+            robot.spine.setTargetPosition(-1000);
+            robot.spine.setPower(-1);
+
+            while(robot.spine.isBusy()){
+
+            }
+
+            robot.inFlip.setPosition(0.15);
+            robot.trapDoor.setPosition(0.13);
+            Thread.sleep(250);
+            robot.spine.setTargetPosition(-325);
+            robot.spine.setPower(1);
+
+            while(robot.spine.isBusy()){
+
+            }
+
+            while(getHeading() > 3){
+                robot.fl.setPower(-0.1);
+                robot.bl.setPower(-0.1);
+                robot.fr.setPower(0.1);
+                robot.br.setPower(0.1);
+            }
+
+            robotAuto.stopAndReset();
+            robotAuto.runToPosition();
+
+            robot.fl.setTargetPosition(-450);
+            robot.bl.setTargetPosition(-450);
+            robot.fr.setTargetPosition(-450);
+            robot.br.setTargetPosition(-450);
+
+            robot.fl.setPower(-0.45);
+            robot.bl.setPower(-0.45);
+            robot.br.setPower(-0.45);
+            robot.fr.setPower(-0.45);
+
+            while(robot.fl.isBusy() || robot.fr.isBusy() || robot.bl.isBusy() || robot.br.isBusy()){
+
+            }
+
+            robot.spine.setPower(-1);
+            robot.spine.setTargetPosition(-850);
+            Thread.sleep(200);
+            robot.dumpFlip.setPosition(0.1);
+            timer1.reset();
+            robot.dump.setTargetPosition(-800);
+            robot.dump.setPower(-dumpFastPow);
+            while(timer1.seconds() < 0.6){
+                if(timer1.seconds() > 0.3){
+                    robot.dumpFlip.setPosition(0.9);
+                }
+            }
+            robot.rotateArm.setPosition(0.5);
+            robot.dump.setPower(-dumpSlowPow);
+
+            //endregion
+        } else if(verdict.equals("middle")){
+
+        } else if(verdict.equals("right")){
+            //region right case code
+            robotAuto.stopAndReset();
+            robotAuto.runUsing();
+
+            while(getHeading() > -15){
+                robot.fl.setPower(-0.25);
+                robot.bl.setPower(-0.25);
+                robot.fr.setPower(0.25);
+                robot.br.setPower(0.25);
+            }
+
+            robotAuto.stopDriving();
+
+            robot.intake.setPower(-1);
+            robot.spine.setTargetPosition(-1000);
+            robot.spine.setPower(-1);
+            //endregion
+        }
+        //endregion
+
+        //region drive back and dump code
+
+        //endregion
+
+        //region path to crater
+
+        //endregion
+
     }
 
     void checkStop(){
