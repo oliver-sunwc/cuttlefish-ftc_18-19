@@ -182,6 +182,7 @@ public class worldsCrater extends LinearOpMode {
 
         robot.hang.setPower(-1);
         while(robot.hang.getCurrentPosition() > -4500) {
+            telemetry.addData("verdict:", verdict);
             telemetry.addData("hangpos", robot.hang.getCurrentPosition());
             telemetry.addData("hangpow", robot.hang.getPower());
             telemetry.update();
