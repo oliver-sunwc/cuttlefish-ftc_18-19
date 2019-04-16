@@ -397,8 +397,8 @@ public class worldsCrater extends LinearOpMode {
             robot.bl.setPower(-0.4);
             robot.fr.setPower(0.4);
             robot.br.setPower(0.4);
-            while(getHeading() > 45){
-                if(getHeading() < 69){
+            while(getHeading() > 38){
+                if(getHeading() < 60){
                     robot.fl.setPower(-0.1);
                     robot.bl.setPower(-0.1);
                     robot.fr.setPower(0.1);
@@ -730,9 +730,9 @@ public class worldsCrater extends LinearOpMode {
             robot.fr.setPower(-0.35);
             robot.br.setPower(-0.35);
 
-            while(getHeading() < -12){
+            while(getHeading() < -15){
 
-                if(getHeading() > -30) {
+                if(getHeading() > -35) {
                     robot.fl.setPower(0.15);
                     robot.bl.setPower(0.15);
                     robot.fr.setPower(-0.15);
@@ -795,10 +795,10 @@ public class worldsCrater extends LinearOpMode {
         robotAuto.stopAndReset();
         robotAuto.runToPosition();
 
-        robot.fl.setTargetPosition(1050);
-        robot.bl.setTargetPosition(1050);
-        robot.fr.setTargetPosition(1050);
-        robot.br.setTargetPosition(1050);
+        robot.fl.setTargetPosition(1010);
+        robot.bl.setTargetPosition(1010);
+        robot.fr.setTargetPosition(1010);
+        robot.br.setTargetPosition(1010);
 
         robot.fl.setPower(0.7);
         robot.bl.setPower(0.7);
@@ -809,7 +809,6 @@ public class worldsCrater extends LinearOpMode {
         while((robot.fl.isBusy() || robot.fr.isBusy() || robot.bl.isBusy() || robot.br.isBusy())) {
             if(robot.fl.getCurrentPosition() > 550){
                 robot.inFlip.setPosition(0.65);
-                robot.intake.setPower(-1);
             }
 
             if(robot.fl.getCurrentPosition() > 550){
@@ -825,8 +824,9 @@ public class worldsCrater extends LinearOpMode {
         robot.bl.setPower(0.35);
         robot.fr.setPower(-0.35);
         robot.br.setPower(-0.35);
+        robot.intake.setPower(-1);
 
-        while(getHeading() < 13){
+        while(getHeading() < 16){
 
         }
 
@@ -838,7 +838,8 @@ public class worldsCrater extends LinearOpMode {
         robot.fr.setPower(0.25);
         robot.br.setPower(0.25);
 
-        while(getHeading() > 5){
+        while(getHeading() > 7){
+
 
         }
 
@@ -854,20 +855,21 @@ public class worldsCrater extends LinearOpMode {
         Thread.sleep(50);
         robot.trapDoor.setPosition(0.13);
 
+        robot.intake.setPower(-1);
+
         robotAuto.stopAndReset();
         robotAuto.runToPosition();
 
-        robot.fl.setTargetPosition(-1100);
-        robot.bl.setTargetPosition(-1100);
-        robot.fr.setTargetPosition(-1100);
-        robot.br.setTargetPosition(-1100);
+        robot.fl.setTargetPosition(-1070);
+        robot.bl.setTargetPosition(-1070);
+        robot.fr.setTargetPosition(-1070);
+        robot.br.setTargetPosition(-1070);
 
         robot.fl.setPower(-0.6);
         robot.bl.setPower(-0.6);
         robot.br.setPower(-0.6);
         robot.fr.setPower(-0.6);
 
-        robot.intake.setPower(-1);
         while((robot.fl.isBusy() || robot.fr.isBusy() || robot.bl.isBusy() || robot.br.isBusy())) {
 
         }
@@ -876,8 +878,8 @@ public class worldsCrater extends LinearOpMode {
         Thread.sleep(50);
         robot.spine.setTargetPosition(-1000);
         robot.spine.setPower(-1);
-        Thread.sleep(200);
 
+        Thread.sleep(150);
 
         robot.dumpFlip.setPosition(0.1);
         timer1.reset();
@@ -913,10 +915,10 @@ public class worldsCrater extends LinearOpMode {
         robotAuto.stopAndReset();
         robotAuto.runToPosition();
 
-        robot.fl.setTargetPosition(1050);
-        robot.bl.setTargetPosition(1050);
-        robot.fr.setTargetPosition(1050);
-        robot.br.setTargetPosition(1050);
+        robot.fl.setTargetPosition(710);
+        robot.bl.setTargetPosition(710);
+        robot.fr.setTargetPosition(1170);
+        robot.br.setTargetPosition(1170);
 
         robot.fl.setPower(0.7);
         robot.bl.setPower(0.7);
@@ -940,6 +942,27 @@ public class worldsCrater extends LinearOpMode {
 
         }
 
+        robotAuto.stopAndReset();
+        robotAuto.runUsing();
+
+        robot.fl.setPower(0.35);
+        robot.bl.setPower(0.35);
+        robot.fr.setPower(-0.35);
+        robot.br.setPower(-0.35);
+        robot.intake.setPower(-1);
+
+        while(getHeading() < -10){
+            if(getHeading() > -30){
+                robot.fl.setPower(0.15);
+                robot.bl.setPower(0.15);
+                robot.fr.setPower(-0.15);
+                robot.br.setPower(-0.15);
+            }
+
+        }
+
+        robotAuto.stopDriving();
+
         robot.inFlip.setPosition(0.15);
         Thread.sleep(150);
 
@@ -948,6 +971,8 @@ public class worldsCrater extends LinearOpMode {
         robot.spine.setPower(1);
         Thread.sleep(50);
         robot.trapDoor.setPosition(0.13);
+
+        robot.intake.setPower(-1);
 
         robotAuto.stopAndReset();
         robotAuto.runToPosition();
@@ -962,7 +987,6 @@ public class worldsCrater extends LinearOpMode {
         robot.br.setPower(-0.7);
         robot.fr.setPower(-0.7);
 
-        robot.intake.setPower(-1);
         while((robot.fl.isBusy() || robot.fr.isBusy() || robot.bl.isBusy() || robot.br.isBusy())) {
 
         }
@@ -1008,10 +1032,10 @@ public class worldsCrater extends LinearOpMode {
         robotAuto.stopAndReset();
         robotAuto.runToPosition();
 
-        robot.fl.setTargetPosition(600);
-        robot.bl.setTargetPosition(600);
-        robot.fr.setTargetPosition(600);
-        robot.br.setTargetPosition(600);
+        robot.fl.setTargetPosition(800);
+        robot.bl.setTargetPosition(800);
+        robot.fr.setTargetPosition(800);
+        robot.br.setTargetPosition(800);
 
         robot.fl.setPower(0.7);
         robot.bl.setPower(0.7);

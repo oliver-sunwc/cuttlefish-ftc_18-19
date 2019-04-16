@@ -42,7 +42,7 @@ public class worldsTeleOp extends OpMode {
 
     boolean flipDown = true;
 
-    boolean inFlipUp = false;
+    boolean inFlipUp = true;
     boolean i;
 
     boolean trapDoorUp = true;
